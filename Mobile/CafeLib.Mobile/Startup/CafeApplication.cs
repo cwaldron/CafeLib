@@ -34,6 +34,9 @@ namespace CafeLib.Mobile.Startup
             Registry = serviceRegistry ?? throw new ArgumentNullException(nameof(serviceRegistry));
         }
 
+        /// <summary>
+        /// Configure the application service registry.
+        /// </summary>
         public virtual void Configure()
         {
             Registry.AddScoped<IAlertService>(x => this);
