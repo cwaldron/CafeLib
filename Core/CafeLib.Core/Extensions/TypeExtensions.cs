@@ -5,13 +5,14 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+// ReSharper disable UnusedMember.Global
 
 namespace CafeLib.Core.Extensions
 {
     public static class TypeExtensions
     {
         /// <summary>
-        /// Create instnace of specfied type.
+        /// Create instance of specified type.
         /// </summary>
         /// <typeparam name="T">type</typeparam>
         /// <param name="type">type object</param>
@@ -22,7 +23,7 @@ namespace CafeLib.Core.Extensions
         }
 
         /// <summary>
-        /// Create instnace of specfied type.
+        /// Create instance of specified type.
         /// </summary>
         /// <typeparam name="T">type</typeparam>
         /// <param name="type">type object</param>
@@ -35,7 +36,7 @@ namespace CafeLib.Core.Extensions
         }
 
         /// <summary>
-        /// Create instnace of specfied type.
+        /// Create instance of specified type.
         /// </summary>
         /// <param name="type">type object</param>
         /// <param name="args"></param>
@@ -180,9 +181,9 @@ namespace CafeLib.Core.Extensions
         }
 
         /// <summary>
-        /// Create a delegate from a methodinfo.
+        /// Create a delegate from a method.
         /// </summary>
-        /// <param name="method">method methodinfo</param>
+        /// <param name="method">method info</param>
         /// <param name="instance">object instance</param>
         /// <returns>delegate</returns>
         public static Delegate CreateDelegate(this MethodInfo method, object instance)

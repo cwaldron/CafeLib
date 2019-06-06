@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using CafeLib.Core.IoC;
 using CafeLib.Mobile.Services;
@@ -43,19 +44,60 @@ namespace CafeLib.Mobile.Startup
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Display an alert dialog.
+        /// </summary>
+        /// <param name="title">dialog title</param>
+        /// <param name="message">dialog message</param>
+        /// <param name="ok">accept button display</param>
         public void Alert(string title, string message, string ok = "OK")
         {
-            throw new NotImplementedException();
+            Device.BeginInvokeOnMainThread(async () =>
+            {
+                await MainPage.DisplayAlert(title, message, ok);
+            });
         }
 
-        public Task<bool> Confirm(string title, string message, string ok = "OK", string cancel = "Cancel")
+        /// <summary>
+        /// Display confirmation dialog
+        /// </summary>
+        /// <param name="title">dialog title</param>
+        /// <param name="message">dialog message</param>
+        /// <param name="ok">accept button display</param>
+        /// <param name="cancel">cancel button display</param>
+        /// <returns></returns>
+        public async Task<bool> Confirm(string title, string message, string ok = "OK", string cancel = "Cancel")
         {
-            throw new NotImplementedException();
+            var completed = new TaskCompletionSource<bool>();
+
+            Device.BeginInvokeOnMainThread(async () =>
+            {
+                var answer = await MainPage.DisplayAlert(title, message, ok, cancel);
+                completed.SetResult(answer);
+            });
+
+            return await completed.Task;
         }
 
-        public Task<string> Popup(string title, string cancel, string destroy, IEnumerable<string> options)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="title">dialog title</param>
+        /// <param name="cancel">cancel button display</param>
+        /// <param name="delete">delete button display</param>
+        /// <param name="options">enumerable list of option strings</param>
+        /// <returns></returns>
+        public async Task<string> SelectOption(string title, string cancel, string delete, IEnumerable<string> options)
         {
-            throw new NotImplementedException();
+            var completed = new TaskCompletionSource<string>();
+
+            Device.BeginInvokeOnMainThread(async () =>
+            {
+                var answer = await MainPage.DisplayActionSheet(title, cancel, delete, options.ToArray());
+                completed.SetResult(answer);
+            });
+
+            return await completed.Task;
         }
     }
 }

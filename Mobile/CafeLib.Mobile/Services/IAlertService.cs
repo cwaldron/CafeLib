@@ -30,11 +30,11 @@ namespace CafeLib.Mobile.Services
         /// Displays an action sheet (list of buttons) on the page, asking for user input.
         /// </summary>
         /// <param name="title">dialog title</param>
-        /// <param name="cancel">cancellation string</param>
-        /// <param name="destroy">destroy string</param>
+        /// <param name="cancel">cancel button display</param>
+        /// <param name="delete">delete button display</param>
         /// <param name="options">option list</param>
         /// <returns></returns>
         [UsedImplicitly]
-        Task<string> Popup(string title, string cancel, string destroy, IEnumerable<string> options);
+        Task<string> SelectOption(string title, string cancel, string delete, IEnumerable<string> options);
     }
 }
