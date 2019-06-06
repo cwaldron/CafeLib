@@ -13,7 +13,7 @@ namespace CafeLib.Mobile.Startup
         /// <summary>
         /// ServiceProvider instance constructor.
         /// </summary>
-        public CafeRegistry()
+        internal CafeRegistry()
         {
             var mobileService = new MobileService();
             _serviceRegistry = IocFactory.CreateRegistry()
