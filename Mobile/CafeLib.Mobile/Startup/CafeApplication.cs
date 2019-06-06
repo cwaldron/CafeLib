@@ -4,6 +4,8 @@ using System.Threading.Tasks;
 using CafeLib.Core.IoC;
 using CafeLib.Mobile.Services;
 using Xamarin.Forms;
+// ReSharper disable PublicConstructorInAbstractClass
+// ReSharper disable UnusedMember.Global
 
 namespace CafeLib.Mobile.Startup
 {
@@ -13,6 +15,14 @@ namespace CafeLib.Mobile.Startup
     public abstract class CafeApplication : Application, IAlertService, IDisposable
     {
         protected IServiceRegistry Registry { get; }
+
+        /// <summary>
+        /// Default constructor used to suppress XAML warnings.
+        /// </summary>
+        public CafeApplication()
+        {
+            throw new Exception(@"Cannot instantiate cafe application via default constructor.");
+        }
 
         /// <summary>
         /// Cafe mobile application constructor.
