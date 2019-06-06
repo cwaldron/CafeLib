@@ -1,6 +1,7 @@
 ﻿using System;
 using CafeLib.Core.Extensions;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 
 // ReSharper disable UnusedMember.Global
@@ -55,7 +56,7 @@ namespace CafeLib.Core.IoC
         public IServiceRegistry AddScoped<TService, TImpl>() where TService : class where TImpl : class, TService
         {
             if (_serviceProvider != null) throw new InvalidOperationException(nameof(_serviceProvider));
-            _serviceCollection.AddScoped<TService, TImpl>();
+            _serviceCollection.TryAddScoped<TService, TImpl>();
             return this;
         }
 
@@ -68,7 +69,7 @@ namespace CafeLib.Core.IoC
         public IServiceRegistry AddScoped<TService>(Func<IServiceProvider, TService> factory) where TService : class
         {
             if (_serviceProvider != null) throw new InvalidOperationException(nameof(_serviceProvider));
-            _serviceCollection.AddScoped(factory.Invoke);
+            _serviceCollection.TryAddScoped(factory.Invoke);
             return this;
         }
 
@@ -81,7 +82,7 @@ namespace CafeLib.Core.IoC
         public IServiceRegistry AddSingleton<TService, TImpl>() where TService : class where TImpl : class, TService
         {
             if (_serviceProvider != null) throw new InvalidOperationException(nameof(_serviceProvider));
-            _serviceCollection.AddSingleton<TService, TImpl>();
+            _serviceCollection.TryAddSingleton<TService, TImpl>();
             return this;
         }
 
@@ -94,7 +95,7 @@ namespace CafeLib.Core.IoC
         public IServiceRegistry AddSingleton<TService>(Func<IServiceProvider, TService> factory) where TService : class
         {
             if (_serviceProvider != null) throw new InvalidOperationException(nameof(_serviceProvider));
-            _serviceCollection.AddSingleton(factory.Invoke);
+            _serviceCollection.TryAddSingleton(factory.Invoke);
             return this;
         }
 
@@ -107,7 +108,7 @@ namespace CafeLib.Core.IoC
         public IServiceRegistry AddTransient<TService, TImpl>() where TService : class where TImpl : class, TService
         {
             if (_serviceProvider != null) throw new InvalidOperationException(nameof(_serviceProvider));
-            _serviceCollection.AddTransient<TService, TImpl>();
+            _serviceCollection.TryAddTransient<TService, TImpl>();
             return this;
         }
 
@@ -120,7 +121,7 @@ namespace CafeLib.Core.IoC
         public IServiceRegistry AddTransient<T>(Func<IServiceProvider, T> factory) where T : class
         {
             if (_serviceProvider != null) throw new InvalidOperationException(nameof(_serviceProvider));
-            _serviceCollection.AddTransient(factory.Invoke);
+            _serviceCollection.TryAddTransient(factory.Invoke);
             return this;
         }
 
