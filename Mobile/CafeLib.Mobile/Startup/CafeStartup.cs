@@ -9,20 +9,20 @@ namespace CafeLib.Mobile.Startup
     /// </summary>
     public class CafeStartup<T> where T : CafeApplication
     {
-        private readonly IPlatformApplication _platformApplication;
+        private readonly ICafeStartup _cafeApplication;
         private readonly CafeRegistry _cafeRegistry;
         private readonly T _application;
 
-        public CafeStartup(IPlatformApplication platformApplication)
+        public CafeStartup(ICafeStartup cafeApplication)
         {
-            _platformApplication = platformApplication ?? throw new ArgumentNullException(nameof(platformApplication));
+            _cafeApplication = cafeApplication ?? throw new ArgumentNullException(nameof(cafeApplication));
             _cafeRegistry = new CafeRegistry();
             _application = typeof(T).CreateInstance<T>(_cafeRegistry);
         }
 
         public T Configure()
         {
-            _platformApplication.Configure(_cafeRegistry);
+            _cafeApplication.Configure(_cafeRegistry);
             _application.Configure();
             return _application;
         }

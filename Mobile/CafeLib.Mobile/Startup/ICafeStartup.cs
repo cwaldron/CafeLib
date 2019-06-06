@@ -3,9 +3,9 @@
 namespace CafeLib.Mobile.Startup
 {
     /// <summary>
-    /// Base class of the native application.
+    /// Cafe startup interface.
     /// </summary>
-    public interface IPlatformApplication
+    public interface ICafeStartup
     {
         void Configure(IServiceRegistry registry);
     }
