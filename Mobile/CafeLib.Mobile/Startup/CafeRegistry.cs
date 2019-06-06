@@ -1,18 +1,19 @@
 ﻿using System;
 using CafeLib.Core.IoC;
+using CafeLib.Mobile.Services;
 using JetBrains.Annotations;
 using Microsoft.Extensions.Logging;
 
-namespace CafeLib.Mobile.Services
+namespace CafeLib.Mobile.Startup
 {
-    public sealed class MobileServices : IServiceRegistry, IServiceResolver
+    internal sealed class CafeRegistry : IServiceRegistry, IServiceResolver
     {
         private readonly IServiceRegistry _serviceRegistry;
 
         /// <summary>
         /// ServiceProvider instance constructor.
         /// </summary>
-        public MobileServices()
+        public CafeRegistry()
         {
             var mobileService = new MobileService();
             _serviceRegistry = IocFactory.CreateRegistry()
