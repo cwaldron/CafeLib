@@ -1,7 +1,6 @@
 ﻿using System;
 using CafeLib.Core.IoC;
 using CafeLib.Mobile.Services;
-using JetBrains.Annotations;
 using Microsoft.Extensions.Logging;
 
 namespace CafeLib.Mobile.Startup
@@ -15,21 +14,18 @@ namespace CafeLib.Mobile.Startup
         /// </summary>
         internal CafeRegistry()
         {
-            var mobileService = new MobileService();
+            var mobileService = new Lazy<MobileService>(() => new MobileService());
             _serviceRegistry = IocFactory.CreateRegistry()
                 .AddSingleton<IServiceResolver>(x => this)
-                .AddSingleton(x => mobileService as IPageService)
-                .AddSingleton(x => mobileService as INavigationService)
-                .AddSingleton(x => mobileService as IDeviceService);
+                .AddSingleton(x => mobileService.Value as IPageService)
+                .AddSingleton(x => mobileService.Value as INavigationService)
+                .AddSingleton(x => mobileService.Value as IDeviceService);
         }
 
-        [UsedImplicitly]
         internal IPageService PageService => GetResolver().Resolve<IPageService>();
 
-        [UsedImplicitly]
         internal INavigationService NavigationService => GetResolver().Resolve<INavigationService>();
 
-        [UsedImplicitly]
         internal IDeviceService DeviceService => GetResolver().Resolve<IDeviceService>();
 
         /// <summary>
@@ -130,7 +126,6 @@ namespace CafeLib.Mobile.Startup
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        [UsedImplicitly]
         public T Resolve<T>() where T : class
         {
             return GetResolver().Resolve<T>();

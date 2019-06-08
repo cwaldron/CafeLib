@@ -16,6 +16,7 @@ namespace CafeLib.Mobile.Startup
     public abstract class CafeApplication : Application, IAlertService, IDisposable
     {
         protected IServiceRegistry Registry { get; }
+        public IServiceResolver Resolver => Registry.GetResolver();
 
         /// <summary>
         /// Default constructor used to suppress XAML warnings.
@@ -53,7 +54,7 @@ namespace CafeLib.Mobile.Startup
         /// <param name="title">dialog title</param>
         /// <param name="message">dialog message</param>
         /// <param name="ok">accept button display</param>
-        public void Alert(string title, string message, string ok = "OK")
+        public void DisplayAlert(string title, string message, string ok = "OK")
         {
             Device.BeginInvokeOnMainThread(async () =>
             {
@@ -68,8 +69,8 @@ namespace CafeLib.Mobile.Startup
         /// <param name="message">dialog message</param>
         /// <param name="ok">accept button display</param>
         /// <param name="cancel">cancel button display</param>
-        /// <returns></returns>
-        public async Task<bool> Confirm(string title, string message, string ok = "OK", string cancel = "Cancel")
+        /// <returns>true for OK, false for cancel</returns>
+        public async Task<bool> DisplayConfirm(string title, string message, string ok = "OK", string cancel = "Cancel")
         {
             var completed = new TaskCompletionSource<bool>();
 
@@ -83,14 +84,14 @@ namespace CafeLib.Mobile.Startup
         }
 
         /// <summary>
-        /// 
+        /// Display option selection dialog.
         /// </summary>
         /// <param name="title">dialog title</param>
         /// <param name="cancel">cancel button display</param>
         /// <param name="delete">delete button display</param>
         /// <param name="options">enumerable list of option strings</param>
-        /// <returns></returns>
-        public async Task<string> SelectOption(string title, string cancel, string delete, IEnumerable<string> options)
+        /// <returns>the selected option string</returns>
+        public async Task<string> DisplayOptions(string title, string cancel, string delete, IEnumerable<string> options)
         {
             var completed = new TaskCompletionSource<string>();
 
