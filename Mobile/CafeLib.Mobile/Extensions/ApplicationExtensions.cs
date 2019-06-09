@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using CafeLib.Core.IoC;
 using CafeLib.Mobile.Startup;
+using CafeLib.Mobile.ViewModels;
 using Xamarin.Forms;
 // ReSharper disable UnusedMember.Global
 
@@ -27,6 +29,15 @@ namespace CafeLib.Mobile.Extensions
         public static IServiceResolver GetResolver(this Application app)
             => (app as CafeApplication)?.Resolver;
 
+        /// <summary>
+        /// Resolve view model.
+        /// </summary>
+        /// <typeparam name="T">view model type</typeparam>
+        /// <param name="app">application</param>
+        /// <returns></returns>
+        public static T ResolveViewModel<T>(this Application app) where T : BaseViewModel
+            => (app as CafeApplication)?.Resolver.Resolve<T>();
+ 
         /// <summary>
         /// Display an alert dialog.
         /// </summary>
