@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <Version>0.5.7</Version>
-    <PackageIconUrl>https://raw.githubusercontent.com/cwaldron/CafeLib/master/favicon.icos</PackageIconUrl>
+    <PackageIconUrl>https://raw.githubusercontent.com/cwaldron/CafeLib/master/favicon.ico</PackageIconUrl>
     <PackageLicenseUrl></PackageLicenseUrl>
     <Copyright></Copyright>
     <Description>Producer-consumer queuing provider</Description>

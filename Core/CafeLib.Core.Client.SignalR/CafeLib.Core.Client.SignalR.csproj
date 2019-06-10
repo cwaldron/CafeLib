@@ -5,7 +5,7 @@
     <Version>0.5.7</Version>
     <Description>Cafe Signal/R support package supporting method binding &amp; webchannels</Description>
     <Copyright></Copyright>
-    <PackageIconUrl></PackageIconUrl>
+    <PackageIconUrl>https://raw.githubusercontent.com/cwaldron/CafeLib/master/favicon.ico</PackageIconUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageReleaseNotes></PackageReleaseNotes>
     <AssemblyVersion>0.5.7.0</AssemblyVersion>
