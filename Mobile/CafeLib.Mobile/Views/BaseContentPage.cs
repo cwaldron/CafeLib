@@ -1,5 +1,4 @@
-﻿using CafeLib.Mobile.Extensions;
-using CafeLib.Mobile.ViewModels;
+﻿using CafeLib.Mobile.ViewModels;
 // ReSharper disable UnusedMember.Global
 
 namespace CafeLib.Mobile.Views
@@ -35,7 +34,7 @@ namespace CafeLib.Mobile.Views
         /// <returns></returns>
         protected T ResolveViewModel()
         {
-            return this.GetResolver().Resolve<T>();
+            return Resolver.Resolve<T>();
         }
     }
 }

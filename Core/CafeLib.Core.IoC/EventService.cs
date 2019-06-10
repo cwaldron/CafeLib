@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using CafeLib.Core.Eventing;
+using CafeLib.Core.Extensions;
 
 namespace CafeLib.Core.IoC
 {
-    internal class EventService : CafeLib.Core.IoC.IEventService
+    internal class EventService : IEventService
     {
         /// <summary>
         /// This map contains the event Message type key and a collection of subscribers associated with the message type.
@@ -48,14 +48,9 @@ namespace CafeLib.Core.IoC
         /// </typeparam>
         public void Publish<T>(T message) where T : IEventMessage
         {
-            if (_subscriptions.ContainsKey(typeof(T)))
-            {
-                var subscribers = _subscriptions[typeof(T)];
-                foreach (var subscriber in subscribers)
-                {
-                    ((Action<T>)subscriber.Value)?.Invoke(message);
-                }
-            }
+            if (!_subscriptions.ContainsKey(typeof(T))) return;
+            var subscribers = _subscriptions[typeof(T)];
+            subscribers.ForEach(x => ((Action<T>) x.Value)?.Invoke(message));
         }
 
         /// <summary>
@@ -66,16 +61,10 @@ namespace CafeLib.Core.IoC
         /// </typeparam>
         public void Unsubscribe<T>() where T : IEventMessage
         {
-            if (_subscriptions.ContainsKey(typeof(T)))
-            {
-                var subscribers = _subscriptions[typeof(T)];
-                foreach (KeyValuePair<Guid, object> subscriber in subscribers)
-                {
-                    subscribers.TryRemove(subscriber.Key, out _);
-                }
-
-                _subscriptions.TryRemove(typeof(T), out _);
-            }
+            if (!_subscriptions.ContainsKey(typeof(T))) return;
+            var subscribers = _subscriptions[typeof(T)];
+            subscribers.ForEach(x => subscribers.TryRemove(x.Key, out _));
+            _subscriptions.TryRemove(typeof(T), out _);
         }
 
         /// <summary>
@@ -87,14 +76,12 @@ namespace CafeLib.Core.IoC
         /// </typeparam>
         public void Unsubscribe<T>(Guid actionId) where T : IEventMessage
         {
-            if (_subscriptions.ContainsKey(typeof(T)))
+            if (!_subscriptions.ContainsKey(typeof(T))) return;
+            var subscribers = _subscriptions[typeof(T)];
+            subscribers.TryRemove(actionId, out _);
+            if (subscribers.Count == 0)
             {
-                var subscribers = _subscriptions[typeof(T)];
-                subscribers.TryRemove(actionId, out _);
-                if (subscribers.Count == 0)
-                {
-                    _subscriptions.TryRemove(typeof(T), out _);
-                }
+                _subscriptions.TryRemove(typeof(T), out _);
             }
         }
     }

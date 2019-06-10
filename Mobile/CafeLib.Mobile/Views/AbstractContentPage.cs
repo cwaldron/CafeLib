@@ -1,4 +1,6 @@
 ﻿using System;
+using CafeLib.Core.IoC;
+using CafeLib.Mobile.Extensions;
 using CafeLib.Mobile.ViewModels;
 using Xamarin.Forms;
 // ReSharper disable UnusedMember.Global
@@ -8,6 +10,11 @@ namespace CafeLib.Mobile.Views
     public abstract class AbstractContentPage : ContentPage
     {
         private bool _disposed;
+
+        /// <summary>
+        /// The viewmodel bound to the page.
+        /// </summary>
+        protected IServiceResolver Resolver => this.GetResolver();
 
         /// <summary>
         /// Dispose.
