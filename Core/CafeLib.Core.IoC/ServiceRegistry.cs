@@ -36,10 +36,10 @@ namespace CafeLib.Core.IoC
         #region Methods
 
         /// <summary>
-        /// 
+        /// Register logging service.
         /// </summary>
         /// <param name="configuration">configuration action</param>
-        /// <returns></returns>
+        /// <returns>service registry</returns>
         public IServiceRegistry AddLogging(Action<ILoggingBuilder> configuration)
         {
             if (_serviceProvider != null) throw new InvalidOperationException(nameof(_serviceProvider));
@@ -48,11 +48,23 @@ namespace CafeLib.Core.IoC
         }
 
         /// <summary>
-        /// 
+        /// Register service of scoped lifetime.
         /// </summary>
-        /// <typeparam name="TService"></typeparam>
-        /// <typeparam name="TImpl"></typeparam>
-        /// <returns></returns>
+        /// <typeparam name="TService">service type</typeparam>
+        /// <returns>service registry</returns>
+        public IServiceRegistry AddScoped<TService>() where TService : class
+        {
+            if (_serviceProvider != null) throw new InvalidOperationException(nameof(_serviceProvider));
+            _serviceCollection.TryAddScoped<TService>();
+            return this;
+        }
+
+        /// <summary>
+        /// Register service of scoped lifetime.
+        /// </summary>
+        /// <typeparam name="TService">service type</typeparam>
+        /// <typeparam name="TImpl">service implementation type</typeparam>
+        /// <returns>service registry</returns>
         public IServiceRegistry AddScoped<TService, TImpl>() where TService : class where TImpl : class, TService
         {
             if (_serviceProvider != null) throw new InvalidOperationException(nameof(_serviceProvider));
@@ -61,11 +73,11 @@ namespace CafeLib.Core.IoC
         }
 
         /// <summary>
-        /// 
+        /// Register service of scoped lifetime.
         /// </summary>
-        /// <typeparam name="TService"></typeparam>
-        /// <param name="factory"></param>
-        /// <returns></returns>
+        /// <typeparam name="TService">service type</typeparam>
+        /// <param name="factory">service factory</param>
+        /// <returns>service registry</returns>
         public IServiceRegistry AddScoped<TService>(Func<IServiceProvider, TService> factory) where TService : class
         {
             if (_serviceProvider != null) throw new InvalidOperationException(nameof(_serviceProvider));
@@ -74,11 +86,23 @@ namespace CafeLib.Core.IoC
         }
 
         /// <summary>
-        /// 
+        /// Register service as a singleton.
         /// </summary>
-        /// <typeparam name="TService"></typeparam>
-        /// <typeparam name="TImpl"></typeparam>
-        /// <returns></returns>
+        /// <typeparam name="TService">service type</typeparam>
+        /// <returns>service registry</returns>
+        public IServiceRegistry AddSingleton<TService>() where TService : class
+        {
+            if (_serviceProvider != null) throw new InvalidOperationException(nameof(_serviceProvider));
+            _serviceCollection.TryAddSingleton<TService>();
+            return this;
+        }
+
+        /// <summary>
+        /// Register service as a singleton.
+        /// </summary>
+        /// <typeparam name="TService">service type</typeparam>
+        /// <typeparam name="TImpl">service implementation type</typeparam>
+        /// <returns>service registry</returns>
         public IServiceRegistry AddSingleton<TService, TImpl>() where TService : class where TImpl : class, TService
         {
             if (_serviceProvider != null) throw new InvalidOperationException(nameof(_serviceProvider));
@@ -87,11 +111,11 @@ namespace CafeLib.Core.IoC
         }
 
         /// <summary>
-        /// 
+        /// Register service as a singleton.
         /// </summary>
-        /// <typeparam name="TService"></typeparam>
-        /// <param name="factory"></param>
-        /// <returns></returns>
+        /// <typeparam name="TService">service type</typeparam>
+        /// <param name="factory">service factory</param>
+        /// <returns>service registry</returns>
         public IServiceRegistry AddSingleton<TService>(Func<IServiceProvider, TService> factory) where TService : class
         {
             if (_serviceProvider != null) throw new InvalidOperationException(nameof(_serviceProvider));
@@ -100,10 +124,22 @@ namespace CafeLib.Core.IoC
         }
 
         /// <summary>
-        /// 
+        /// Register service as transient.
         /// </summary>
-        /// <typeparam name="TService"></typeparam>
-        /// <typeparam name="TImpl"></typeparam>
+        /// <typeparam name="TService">service type</typeparam>
+        /// <returns>service registry</returns>
+        public IServiceRegistry AddTransient<TService>() where TService : class
+        {
+            if (_serviceProvider != null) throw new InvalidOperationException(nameof(_serviceProvider));
+            _serviceCollection.TryAddTransient<TService>();
+            return this;
+        }
+
+        /// <summary>
+        /// Register service as transient.
+        /// </summary>
+        /// <typeparam name="TService">service type</typeparam>
+        /// <typeparam name="TImpl">service implementation type</typeparam>
         /// <returns></returns>
         public IServiceRegistry AddTransient<TService, TImpl>() where TService : class where TImpl : class, TService
         {
@@ -115,10 +151,10 @@ namespace CafeLib.Core.IoC
         /// <summary>
         /// 
         /// </summary>
-        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="TService">service type</typeparam>
         /// <param name="factory"></param>
         /// <returns></returns>
-        public IServiceRegistry AddTransient<T>(Func<IServiceProvider, T> factory) where T : class
+        public IServiceRegistry AddTransient<TService>(Func<IServiceProvider, TService> factory) where TService : class
         {
             if (_serviceProvider != null) throw new InvalidOperationException(nameof(_serviceProvider));
             _serviceCollection.TryAddTransient(factory.Invoke);
