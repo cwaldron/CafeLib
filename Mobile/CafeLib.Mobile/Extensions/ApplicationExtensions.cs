@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using CafeLib.Core.IoC;
 using CafeLib.Mobile.Startup;
@@ -26,8 +25,8 @@ namespace CafeLib.Mobile.Extensions
         /// </summary>
         /// <param name="app">application</param>
         /// <returns></returns>
-        public static IServiceResolver GetResolver(this Application app)
-            => (app as CafeApplication)?.Resolver;
+        public static T Resolve<T> (this Application app) where T : class
+            => (app as CafeApplication)?.Resolver.Resolve<T>();
 
         /// <summary>
         /// Resolve view model.

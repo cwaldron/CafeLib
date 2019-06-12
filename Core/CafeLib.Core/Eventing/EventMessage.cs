@@ -12,6 +12,11 @@ namespace CafeLib.Core.Eventing
         public Guid Id { get; }
 
         /// <summary>
+        /// Event message sender;
+        /// </summary>
+        public object Sender { get; }
+
+        /// <summary>
         /// Message timestamp.
         /// </summary>
         public DateTime TimeStamp { get; protected set; }
@@ -26,18 +31,17 @@ namespace CafeLib.Core.Eventing
         protected EventMessage()
         {
             Id = Guid.NewGuid();
+            Sender = new object();
             TimeStamp = DateTime.UtcNow;
         }
 
         /// <summary>
-        /// Message constructor
+        /// Message default constructor.
         /// </summary>
-        /// <param name="id">guid id</param>
-        /// <param name="dateTime">timestamp</param>
-        protected EventMessage(Guid id, DateTime dateTime)
+        protected EventMessage(object sender)
+            : this()
         {
-            Id = id;
-            TimeStamp = dateTime;
+            Sender = sender ?? new object();
         }
 
         /// <summary>
@@ -47,6 +51,7 @@ namespace CafeLib.Core.Eventing
         protected EventMessage(IEventMessage message)
         {
             Id = message.Id;
+            Sender = message.Sender;
             TimeStamp = message.TimeStamp;
         }
 

@@ -1,24 +1,10 @@
-﻿using System.Reflection;
-using System.Windows.Input;
-using CafeLib.Core.IoC;
-using CafeLib.Mobile.Startup;
-using CafeLib.Mobile.ViewModels;
+﻿using CafeLib.Mobile.ViewModels;
 using Xamarin.Forms;
 
 namespace CafeLib.Mobile.Extensions
 {
     public static class PageExtensions
     {
-        /// <summary>
-        /// Get the application service resolver.
-        /// </summary>
-        /// <param name="page">page</param>
-        /// <returns></returns>
-        public static IServiceResolver GetResolver(this Page page)
-        {
-            return Application.Current.GetResolver();
-        }
-
         /// <summary>
         /// Get the view model bound to the page.
         /// </summary>

@@ -19,7 +19,7 @@ namespace CafeLib.Core.IoC
         /// <inheritdoc />
         public T GetProperty<T>()
         {
-            return _dictionary.TryGetValue(typeof(T).FullName ?? throw new ArgumentNullException(typeof(T).Name), out var value) ? (T)value : default(T);
+            return _dictionary.TryGetValue(typeof(T).FullName ?? throw new ArgumentNullException(typeof(T).Name), out var value) ? (T)value : default;
         }
 
         /// <inheritdoc />
@@ -31,7 +31,7 @@ namespace CafeLib.Core.IoC
         /// <inheritdoc />
         public T GetProperty<T>(string key)
         {
-            return _dictionary.TryGetValue(key, out var value) ? (T)value : default(T);
+            return _dictionary.TryGetValue(key, out var value) ? (T)value : default;
         }
 
         /// <inheritdoc />
@@ -43,7 +43,7 @@ namespace CafeLib.Core.IoC
         /// <inheritdoc />
         public T GetProperty<T>(Guid guid)
         {
-            return _dictionary.TryGetValue(guid.ToString("B"), out var value) ? (T)value : default(T);
+            return _dictionary.TryGetValue(guid.ToString("B"), out var value) ? (T)value : default;
         }
 
         /// <inheritdoc />

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using CafeLib.Core.Extensions;
+using CafeLib.Core.IoC;
 using CafeLib.Mobile.Extensions;
 using CafeLib.Mobile.Support;
 using CafeLib.Mobile.ViewModels;
@@ -12,10 +13,11 @@ using Xamarin.Forms;
 
 namespace CafeLib.Mobile.Services
 {
-    internal class MobileService : IPageService, IAlertService, INavigationService, IDeviceService
+    internal class MobileService : IPageService, IAlertService, INavigationService, IDeviceService, IServiceResolver
     {
         private readonly Assembly _appAssembly;
         private readonly Dictionary<Type, PageResolver> _pageResolvers;
+        private readonly IServiceResolver _resolver;
 
         private const string ViewModelSuffix = "ViewModel";
         private const string PageSuffix = "Page";
@@ -27,11 +29,22 @@ namespace CafeLib.Mobile.Services
         /// <summary>
         /// Bootstrapper constructor
         /// </summary>
-        internal MobileService()
+        internal MobileService(IServiceResolver resolver)
         {
+            _resolver = resolver ?? throw new ArgumentNullException(nameof(resolver));
             _appAssembly = Application.Current.GetType().Assembly;
             _pageResolvers = new Dictionary<Type, PageResolver>();
             InitPageResolvers();
+        }
+
+        /// <summary>
+        /// Resolve the dependency.
+        /// </summary>
+        /// <typeparam name="T">dependency type</typeparam>
+        /// <returns>instance of dependency type</returns>
+        public T Resolve<T>() where T : class
+        {
+            return _resolver.Resolve<T>();
         }
 
         /// <summary>
@@ -52,6 +65,16 @@ namespace CafeLib.Mobile.Services
         public AbstractContentPage ResolvePage(BaseViewModel viewModel)
         {
             return (AbstractContentPage)ResolvePage(viewModel.GetType());
+        }
+
+        /// <summary>
+        /// Resolve view model.
+        /// </summary>
+        /// <typeparam name="T">view model type</typeparam>
+        /// <returns>resolves the view model</returns>
+        public T ResolveViewModel<T>() where T : BaseViewModel
+        {
+            return _resolver.Resolve<T>();
         }
 
         /// <summary>
@@ -114,9 +137,25 @@ namespace CafeLib.Mobile.Services
         /// <returns></returns>
         public async Task PushAsync<T>(T viewModel, bool animate = false) where T : BaseViewModel
         {
-            var page = viewModel.ResolvePage();
-            page.SetViewModel(viewModel);
+            var vm = viewModel ?? ResolveViewModel<T>();
+            var page = vm.ResolvePage();
+            page.SetViewModel(vm);
             await NavigationPage.Navigation.PushAsync(page, animate);
+        }
+
+        /// <summary>
+        /// Asynchronously adds page to the top of the modal stack.
+        /// </summary>
+        /// <typeparam name="T">view model type</typeparam>
+        /// <param name="viewModel">view model</param>
+        /// <param name="animate">optional animation</param>
+        /// <returns></returns>
+        public async Task PushModalAsync<T>(T viewModel, bool animate = false) where T : BaseViewModel
+        {
+            var vm = viewModel ?? ResolveViewModel<T>();
+            var page = vm.ResolvePage();
+            page.SetViewModel(vm);
+            await NavigationPage.Navigation.PushModalAsync(page, animate);
         }
 
         /// <summary>
@@ -129,6 +168,38 @@ namespace CafeLib.Mobile.Services
         {
             var page = await NavigationPage.Navigation.PopAsync(animate);
             return page.GetViewModel<T>();
+        }
+
+        /// <summary>
+        /// Asynchronously remove most recent page from the modal stack.
+        /// </summary>
+        /// <typeparam name="T">view model type</typeparam>
+        /// <param name="animate">optional animation</param>
+        /// <returns>The page previously at top of the navigation stack</returns>
+        public async Task<T> PopModalAsync<T>(bool animate = false) where T : BaseViewModel
+        {
+            var page = await NavigationPage.Navigation.PopModalAsync(animate);
+            return page.GetViewModel<T>();
+        }
+
+        /// <summary>
+        /// Pops all but the root Page off the navigation stack.
+        /// </summary>
+        /// <param name="animate">transition animation flag</param>
+        public async Task PopToRootAsync(bool animate = false)
+        {
+            await NavigationPage.Navigation.PopToRootAsync(animate);
+        }
+
+        /// <summary>
+        /// Remove from navigation stack.
+        /// </summary>
+        /// <typeparam name="T">view model type</typeparam>
+        public void Remove<T>(T viewModel) where T : BaseViewModel
+        {
+            var vm = viewModel ?? ResolveViewModel<T>();
+            var page = vm.ResolvePage();
+            NavigationPage.Navigation.RemovePage(page);
         }
 
         /// <summary>
@@ -200,7 +271,7 @@ namespace CafeLib.Mobile.Services
         }
 
         /// <summary>
-        /// Resolves page associasted with the viewmodel.
+        /// Resolves page associated with the viewmodel.
         /// </summary>
         /// <param name="viewModelType">view model type</param>
         /// <returns>bounded page</returns>
@@ -245,5 +316,6 @@ namespace CafeLib.Mobile.Services
             var pageResolver = _pageResolvers[viewModelType];
             return (Page)pageResolver.Resolve();
         }
+
     }
 }

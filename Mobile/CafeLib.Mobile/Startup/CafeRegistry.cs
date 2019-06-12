@@ -2,6 +2,7 @@
 using CafeLib.Core.IoC;
 using CafeLib.Mobile.Services;
 using Microsoft.Extensions.Logging;
+// ReSharper disable UnusedMember.Global
 
 namespace CafeLib.Mobile.Startup
 {
@@ -14,9 +15,9 @@ namespace CafeLib.Mobile.Startup
         /// </summary>
         internal CafeRegistry()
         {
-            var mobileService = new Lazy<MobileService>(() => new MobileService());
+            var mobileService = new Lazy<MobileService>(() => new MobileService(GetResolver()));
             _serviceRegistry = IocFactory.CreateRegistry()
-                .AddSingleton<IServiceResolver>(x => this)
+                .AddSingleton(x => mobileService.Value as IServiceResolver)
                 .AddSingleton(x => mobileService.Value as IPageService)
                 .AddSingleton(x => mobileService.Value as INavigationService)
                 .AddSingleton(x => mobileService.Value as IDeviceService);
@@ -122,10 +123,10 @@ namespace CafeLib.Mobile.Startup
         }
 
         /// <summary>
-        /// 
+        /// Resolve the dependency.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
+        /// <typeparam name="T">dependency type</typeparam>
+        /// <returns>instance of dependency type</returns>
         public T Resolve<T>() where T : class
         {
             return GetResolver().Resolve<T>();

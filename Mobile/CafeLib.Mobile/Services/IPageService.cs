@@ -1,5 +1,7 @@
 ﻿using CafeLib.Mobile.ViewModels;
 using CafeLib.Mobile.Views;
+// ReSharper disable UnusedMember.Global
+// ReSharper disable UnusedMemberInSuper.Global
 
 namespace CafeLib.Mobile.Services
 {
@@ -17,5 +19,12 @@ namespace CafeLib.Mobile.Services
         /// </summary>
         /// <returns>page instance that corresponds to the view model</returns>
         AbstractContentPage ResolvePage(BaseViewModel viewModel);
+
+        /// <summary>
+        /// Resolve view model
+        /// </summary>
+        /// <typeparam name="T">view model type</typeparam>
+        /// <returns>view model instance</returns>
+        T ResolveViewModel<T>() where T : BaseViewModel;
     }
 }

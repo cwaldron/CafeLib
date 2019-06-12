@@ -7,6 +7,7 @@ using CafeLib.Mobile.Extensions;
 using CafeLib.Mobile.Services;
 using CafeLib.Mobile.Views;
 using Xamarin.Forms;
+// ReSharper disable UnusedMember.Global
 
 namespace CafeLib.Mobile.ViewModels
 {
@@ -26,7 +27,23 @@ namespace CafeLib.Mobile.ViewModels
         /// </summary>
         protected IServiceResolver Resolver { get; }
 
+        /// <summary>
+        /// Resolve the associated page.
+        /// </summary>
         protected AbstractContentPage Page => PageService.ResolvePage(this);
+
+        /// <summary>
+        /// Resolve a view model via its type.
+        /// </summary>
+        /// <typeparam name="T">view model type</typeparam>
+        /// <returns>view model instance</returns>
+        protected T ResolveViewModel<T>() where T : BaseViewModel => Resolver.Resolve<T>();
+
+        /// <summary>
+        /// Resolves viewmodel to is associated view.
+        /// </summary>
+        /// <returns>bounded page</returns>
+        internal Page ResolvePage() => PageService.ResolvePage(this);
 
         /// <summary>
         /// Back button pressed listener.
@@ -66,15 +83,6 @@ namespace CafeLib.Mobile.ViewModels
         {
             NavigationService.SetNavigationPage(PageService.ResolvePage(this));
             return NavigationService.NavigationPage;
-        }
-
-        /// <summary>
-        /// Resolves viewmodel to is associated view.
-        /// </summary>
-        /// <returns>bounded page</returns>
-        public Page ResolvePage()
-        {
-            return PageService.ResolvePage(this);
         }
 
         /// <summary>

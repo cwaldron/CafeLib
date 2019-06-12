@@ -14,7 +14,7 @@ namespace CafeLib.Mobile.Views
         /// <summary>
         /// The viewmodel bound to the page.
         /// </summary>
-        protected IServiceResolver Resolver => this.GetResolver();
+        protected IServiceResolver Resolver => Application.Current.Resolve<IServiceResolver>();
 
         /// <summary>
         /// Dispose.

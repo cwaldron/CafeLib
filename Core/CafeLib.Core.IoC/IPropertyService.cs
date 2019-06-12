@@ -1,4 +1,5 @@
 ﻿using System;
+// ReSharper disable UnusedMember.Global
 
 namespace CafeLib.Core.IoC
 {
@@ -51,7 +52,7 @@ namespace CafeLib.Core.IoC
         void SetProperty<T>(Guid guid, T value);
 
         /// <summary>
-        /// Set a property in the property bag using a guid.
+        /// Convert the property bag to an object.
         /// </summary>
         T ToObject<T>();
     }
