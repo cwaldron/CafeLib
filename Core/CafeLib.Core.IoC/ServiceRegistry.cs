@@ -140,7 +140,7 @@ namespace CafeLib.Core.IoC
         /// </summary>
         /// <typeparam name="TService">service type</typeparam>
         /// <typeparam name="TImpl">service implementation type</typeparam>
-        /// <returns></returns>
+        /// <returns>service registry</returns>
         public IServiceRegistry AddTransient<TService, TImpl>() where TService : class where TImpl : class, TService
         {
             if (_serviceProvider != null) throw new InvalidOperationException(nameof(_serviceProvider));
@@ -149,11 +149,11 @@ namespace CafeLib.Core.IoC
         }
 
         /// <summary>
-        /// 
+        /// Register service as transient.
         /// </summary>
         /// <typeparam name="TService">service type</typeparam>
-        /// <param name="factory"></param>
-        /// <returns></returns>
+        /// <param name="factory">service factory</param>
+        /// <returns>service registry</returns>
         public IServiceRegistry AddTransient<TService>(Func<IServiceProvider, TService> factory) where TService : class
         {
             if (_serviceProvider != null) throw new InvalidOperationException(nameof(_serviceProvider));
