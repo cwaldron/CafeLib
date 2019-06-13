@@ -4,26 +4,16 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <PackageIconUrl>https://raw.githubusercontent.com/cwaldron/CafeLib/master/favicon.ico</PackageIconUrl>
     <Description>Cafe library for Mobile applications.</Description>
-    <AssemblyVersion>0.6.8.0</AssemblyVersion>
-    <Version>0.6.8</Version>
+    <AssemblyVersion>0.6.9.0</AssemblyVersion>
+    <Version>0.6.9</Version>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="CafeLib.Core" Version="0.6.1" />
+    <PackageReference Include="CafeLib.Core.IoC" Version="0.6.1" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="2.2.0" />
     <PackageReference Include="Xamarin.Forms" Version="4.0.0.482894" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="CafeLib.Core">
-      <HintPath>..\..\Core\CafeLib.Core\bin\Debug\netstandard2.0\CafeLib.Core.dll</HintPath>	
-    </Reference>
-    <Reference Include="CafeLib.Core.IoC">
-      <HintPath>..\..\Core\CafeLib.Core.IoC\bin\Debug\netstandard2.0\CafeLib.Core.IoC.dll</HintPath>	
-    </Reference>
-    <Reference Include="CafeLib.Core.Runnable">
-      <HintPath>..\..\Core\CafeLib.Core.Runnable\bin\Debug\netstandard2.0\CafeLib.Core.Runnable.dll</HintPath>	
-    </Reference>
   </ItemGroup>
 
 </Project>
