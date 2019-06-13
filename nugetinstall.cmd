@@ -21,7 +21,8 @@ nuget push %cafelibpath%\Core\CafeLib.Core.Messaging\%libPath%\CafeLib.Core.Mess
 nuget push %cafelibpath%\Core\CafeLib.Core.Queueing\%libPath%\CafeLib.Core.Queueing.0.6.1.nupkg %apikey% -source %nugetRepo%
 nuget push %cafelibpath%\Core\CafeLib.Core.Runnable\%libPath%\CafeLib.Core.Runnable.0.6.1.nupkg %apikey% -source %nugetRepo%
 
-rem nuget push %cafelibpath%\Mobile\CafeLib.Mobile\%libPath%\CafeLib.Mobile.0.6.2.nupkg %apikey% -source %nugetRepo%
+rem nuget push %cafelibpath%\Mobile\CafeLib.Mobile\%libPath%\CafeLib.Mobile.0.7.1.nupkg %apikey% -source %nugetRepo%
+rem nuget delete CafeLib.Mobile 0.6.9 -source %nugetRepo%
 
 @echo off
 
