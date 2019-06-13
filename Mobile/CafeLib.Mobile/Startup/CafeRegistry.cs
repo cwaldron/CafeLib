@@ -17,6 +17,8 @@ namespace CafeLib.Mobile.Startup
         {
             var mobileService = new Lazy<MobileService>(() => new MobileService(GetResolver()));
             _serviceRegistry = IocFactory.CreateRegistry()
+                .AddEventService()
+                .AddPropertyService()
                 .AddSingleton(x => mobileService.Value as IServiceResolver)
                 .AddSingleton(x => mobileService.Value as IPageService)
                 .AddSingleton(x => mobileService.Value as INavigationService)

@@ -14,7 +14,7 @@ namespace CafeLib.Mobile.Commands
         /// </summary>
         /// <param name="action">The action to run when the command executes.</param>
         public XamCommand(Action action)
-            : base(p => action(), null)
+            : base(p => action())
         {
         }
 

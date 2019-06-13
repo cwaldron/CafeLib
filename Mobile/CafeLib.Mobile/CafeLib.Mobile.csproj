@@ -4,8 +4,8 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <PackageIconUrl>https://raw.githubusercontent.com/cwaldron/CafeLib/master/favicon.ico</PackageIconUrl>
     <Description>Cafe library for Mobile applications.</Description>
-    <AssemblyVersion>0.6.9.0</AssemblyVersion>
-    <Version>0.6.9</Version>
+    <AssemblyVersion>0.7.1.0</AssemblyVersion>
+    <Version>0.7.1</Version>
   </PropertyGroup>
 
   <ItemGroup>
