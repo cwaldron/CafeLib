@@ -31,7 +31,7 @@ namespace CafeLib.Mobile.Views
         /// </summary>
         /// <typeparam name="T">viewmodel type</typeparam>
         /// <param name="viewModel">viewmodel instance</param>
-        public void SetViewModel<T>(T viewModel) where T : BaseViewModel
+        public void SetViewModel<T>(T viewModel) where T : AbstractViewModel
         {
             BindingContext = viewModel;
         }

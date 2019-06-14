@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using CafeLib.Core.IoC;
 using CafeLib.Mobile.Startup;
 using CafeLib.Mobile.ViewModels;
 using Xamarin.Forms;
@@ -34,7 +33,7 @@ namespace CafeLib.Mobile.Extensions
         /// <typeparam name="T">view model type</typeparam>
         /// <param name="app">application</param>
         /// <returns></returns>
-        public static T ResolveViewModel<T>(this Application app) where T : BaseViewModel
+        public static T ResolveViewModel<T>(this Application app) where T : AbstractViewModel
             => (app as CafeApplication)?.Resolver.Resolve<T>();
  
         /// <summary>

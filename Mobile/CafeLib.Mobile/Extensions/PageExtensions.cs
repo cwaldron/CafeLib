@@ -1,15 +1,26 @@
 ﻿using CafeLib.Mobile.ViewModels;
 using Xamarin.Forms;
+// ReSharper disable UnusedMember.Global
 
 namespace CafeLib.Mobile.Extensions
 {
     public static class PageExtensions
     {
         /// <summary>
+        /// GetResource from the page.
+        /// </summary>
+        /// <typeparam name="T">resource type</typeparam>
+        /// <param name="page">current page</param>
+        /// <param name="name">resource name</param>
+        /// <returns></returns>
+        public static T GetResource<T>(this Page page, string name)
+            => (T)page.Resources[name];
+
+        /// <summary>
         /// Get the view model bound to the page.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="page"></param>
+        /// <typeparam name="T">view model type</typeparam>
+        /// <param name="page">current page</param>
         /// <returns></returns>
         public static T GetViewModel<T>(this Page page) where T : BaseViewModel
         {
@@ -19,8 +30,9 @@ namespace CafeLib.Mobile.Extensions
         /// <summary>
         /// Set the view model to the binding context of the page.
         /// </summary>
-        /// <param name="page"></param>
-        /// <param name="viewModel"></param>
+        /// <typeparam name="T">view model type</typeparam>
+        /// <param name="page">current page</param>
+        /// <param name="viewModel">view model</param>
         public static void SetViewModel<T>(this Page page, T viewModel) where T : BaseViewModel
         {
             if (page.BindingContext == viewModel) return;

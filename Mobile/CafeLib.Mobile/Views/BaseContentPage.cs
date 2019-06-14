@@ -1,6 +1,5 @@
-﻿using CafeLib.Mobile.Extensions;
-using CafeLib.Mobile.ViewModels;
-using Xamarin.Forms;
+﻿using CafeLib.Mobile.ViewModels;
+
 // ReSharper disable UnusedMember.Global
 
 namespace CafeLib.Mobile.Views
@@ -27,7 +26,7 @@ namespace CafeLib.Mobile.Views
         /// <returns></returns>
         protected override bool OnBackButtonPressed()
         {
-            return ViewModel.OnBackButtonPressed();
+            return ViewModel.BackButtonPressed();
         }
 
         /// <summary>

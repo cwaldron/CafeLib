@@ -9,8 +9,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="CafeLib.Core" Version="0.6.1" />
-    <PackageReference Include="CafeLib.Core.IoC" Version="0.6.1" />
+    <PackageReference Include="CafeLib.Core" Version="0.6.3" />
+    <PackageReference Include="CafeLib.Core.IoC" Version="0.6.3" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="2.2.0" />
     <PackageReference Include="Xamarin.Forms" Version="4.0.0.482894" />

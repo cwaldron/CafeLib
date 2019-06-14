@@ -11,4 +11,8 @@ namespace CafeLib.Mobile.Commands
     {
         void ChangeCanExecute();
     }
+
+    public interface IXamCommand<T, TResult> : IXamCommand
+    {
+    }
 }
