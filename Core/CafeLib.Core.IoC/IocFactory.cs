@@ -4,9 +4,7 @@
     {
         public static IServiceRegistry CreateRegistry()
         {
-            var registry = new ServiceRegistry();
-            registry.AddSingleton<IServiceResolver>(x => registry);
-            return registry;
+            return new ServiceRegistry();
         }
     }
 }

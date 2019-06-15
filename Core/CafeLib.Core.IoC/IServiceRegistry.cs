@@ -34,7 +34,7 @@ namespace CafeLib.Core.IoC
         /// <typeparam name="TService">service type</typeparam>
         /// <param name="factory">service factory</param>
         /// <returns>service registry</returns>
-        IServiceRegistry AddScoped<TService>(Func<IServiceProvider, TService> factory) where TService : class;
+        IServiceRegistry AddScoped<TService>(Func<IServiceResolver, TService> factory) where TService : class;
 
         /// <summary>
         /// Register service as a singleton.
@@ -57,7 +57,7 @@ namespace CafeLib.Core.IoC
         /// <typeparam name="TService">service type</typeparam>
         /// <param name="factory">service factory</param>
         /// <returns>service registry</returns>
-        IServiceRegistry AddSingleton<TService>(Func<IServiceProvider, TService> factory) where TService : class;
+        IServiceRegistry AddSingleton<TService>(Func<IServiceResolver, TService> factory) where TService : class;
 
         /// <summary>
         /// Register service as transient.
@@ -80,7 +80,7 @@ namespace CafeLib.Core.IoC
         /// <typeparam name="TService">service type</typeparam>
         /// <param name="factory">service factory</param>
         /// <returns>service registry</returns>
-        IServiceRegistry AddTransient<TService>(Func<IServiceProvider, TService> factory) where TService : class;
+        IServiceRegistry AddTransient<TService>(Func<IServiceResolver, TService> factory) where TService : class;
 
         /// <summary>
         /// Obtain the service resolver.

@@ -1,9 +1,9 @@
 ﻿using System;
+using System.Linq;
 using CafeLib.Core.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
-
 // ReSharper disable UnusedMember.Global
 
 namespace CafeLib.Core.IoC
@@ -23,6 +23,7 @@ namespace CafeLib.Core.IoC
         internal ServiceRegistry()
         {
             _serviceCollection = new ServiceCollection();
+            _serviceCollection.TryAddSingleton<IServiceResolver>(x => this);
         }
 
         #endregion
@@ -78,11 +79,9 @@ namespace CafeLib.Core.IoC
         /// <typeparam name="TService">service type</typeparam>
         /// <param name="factory">service factory</param>
         /// <returns>service registry</returns>
-        public IServiceRegistry AddScoped<TService>(Func<IServiceProvider, TService> factory) where TService : class
+        public IServiceRegistry AddScoped<TService>(Func<IServiceResolver, TService> factory) where TService : class
         {
-            if (_serviceProvider != null) throw new InvalidOperationException(nameof(_serviceProvider));
-            _serviceCollection.TryAddScoped(factory.Invoke);
-            return this;
+            return AddScopedInternal(x => factory(x.GetServices<IServiceResolver>().First()));
         }
 
         /// <summary>
@@ -116,11 +115,9 @@ namespace CafeLib.Core.IoC
         /// <typeparam name="TService">service type</typeparam>
         /// <param name="factory">service factory</param>
         /// <returns>service registry</returns>
-        public IServiceRegistry AddSingleton<TService>(Func<IServiceProvider, TService> factory) where TService : class
+        public IServiceRegistry AddSingleton<TService>(Func<IServiceResolver, TService> factory) where TService : class
         {
-            if (_serviceProvider != null) throw new InvalidOperationException(nameof(_serviceProvider));
-            _serviceCollection.TryAddSingleton(factory.Invoke);
-            return this;
+            return AddSingletonInternal(x => factory(x.GetServices<IServiceResolver>().First()));
         }
 
         /// <summary>
@@ -154,11 +151,9 @@ namespace CafeLib.Core.IoC
         /// <typeparam name="TService">service type</typeparam>
         /// <param name="factory">service factory</param>
         /// <returns>service registry</returns>
-        public IServiceRegistry AddTransient<TService>(Func<IServiceProvider, TService> factory) where TService : class
+        public IServiceRegistry AddTransient<TService>(Func<IServiceResolver, TService> factory) where TService : class
         {
-            if (_serviceProvider != null) throw new InvalidOperationException(nameof(_serviceProvider));
-            _serviceCollection.TryAddTransient(factory.Invoke);
-            return this;
+            return AddTransientInternal(x => factory(x.GetServices<IServiceResolver>().First()));
         }
 
         public IServiceResolver GetResolver()
@@ -190,6 +185,49 @@ namespace CafeLib.Core.IoC
 
         #region Helpers
 
+        /// <summary>
+        /// Register service of scoped lifetime.
+        /// </summary>
+        /// <typeparam name="TService">service type</typeparam>
+        /// <param name="factory">service factory</param>
+        /// <returns>service registry</returns>
+        private IServiceRegistry AddScopedInternal<TService>(Func<IServiceProvider, TService> factory) where TService : class
+        {
+            if (_serviceProvider != null) throw new InvalidOperationException(nameof(_serviceProvider));
+            _serviceCollection.TryAddScoped(factory.Invoke);
+            return this;
+        }
+
+        /// <summary>
+        /// Register service as a singleton.
+        /// </summary>
+        /// <typeparam name="TService">service type</typeparam>
+        /// <param name="factory">service factory</param>
+        /// <returns>service registry</returns>
+        private IServiceRegistry AddSingletonInternal<TService>(Func<IServiceProvider, TService> factory) where TService : class
+        {
+            if (_serviceProvider != null) throw new InvalidOperationException(nameof(_serviceProvider));
+            _serviceCollection.TryAddSingleton(factory.Invoke);
+            return this;
+        }
+
+        /// <summary>
+        /// Register service as transient.
+        /// </summary>
+        /// <typeparam name="TService">service type</typeparam>
+        /// <param name="factory">service factory</param>
+        /// <returns>service registry</returns>
+        private IServiceRegistry AddTransientInternal<TService>(Func<IServiceProvider, TService> factory) where TService : class
+        {
+            if (_serviceProvider != null) throw new InvalidOperationException(nameof(_serviceProvider));
+            _serviceCollection.TryAddTransient(factory.Invoke);
+            return this;
+        }
+
+        /// <summary>
+        /// Dispose service provider
+        /// </summary>
+        /// <param name="disposing"></param>
         private void Dispose(bool disposing)
         {
             if (!disposing) return;
