@@ -68,7 +68,7 @@ namespace CafeLib.Mobile.Startup
         /// <typeparam name="TService">service type</typeparam>
         /// <param name="factory">service factory</param>
         /// <returns>service registry</returns>
-        public IServiceRegistry AddScoped<TService>(Func<IServiceProvider, TService> factory) where TService : class
+        public IServiceRegistry AddScoped<TService>(Func<IServiceResolver, TService> factory) where TService : class
         {
             return _serviceRegistry.AddScoped(factory);
         }
@@ -100,7 +100,7 @@ namespace CafeLib.Mobile.Startup
         /// <typeparam name="TService">service type</typeparam>
         /// <param name="factory">service factory</param>
         /// <returns>service registry</returns>
-        public IServiceRegistry AddSingleton<TService>(Func<IServiceProvider, TService> factory) where TService : class
+        public IServiceRegistry AddSingleton<TService>(Func<IServiceResolver, TService> factory) where TService : class
         {
             return _serviceRegistry.AddSingleton(factory);
         }
@@ -132,7 +132,7 @@ namespace CafeLib.Mobile.Startup
         /// <typeparam name="TService">service type</typeparam>
         /// <param name="factory">service factory</param>
         /// <returns>service registry</returns>
-        public IServiceRegistry AddTransient<TService>(Func<IServiceProvider, TService> factory) where TService : class
+        public IServiceRegistry AddTransient<TService>(Func<IServiceResolver, TService> factory) where TService : class
         {
             return _serviceRegistry.AddTransient(factory);
         }

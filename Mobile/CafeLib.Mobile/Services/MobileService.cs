@@ -52,9 +52,9 @@ namespace CafeLib.Mobile.Services
         /// </summary>
         /// <typeparam name="T">view model type</typeparam>
         /// <returns>page instance that corresponds to the view model type</returns>
-        public AbstractContentPage ResolvePage<T>() where T : BaseViewModel
+        public BaseContentPage ResolvePage<T>() where T : BaseViewModel
         {
-            return (AbstractContentPage)ResolvePage(typeof(T));
+            return (BaseContentPage)ResolvePage(typeof(T));
         }
 
         /// <summary>
@@ -62,9 +62,9 @@ namespace CafeLib.Mobile.Services
         /// </summary>
         /// <param name="viewModel">view model</param>
         /// <returns>page instance that corresponds to the view model type</returns>
-        public AbstractContentPage ResolvePage(BaseViewModel viewModel)
+        public BaseContentPage ResolvePage(BaseViewModel viewModel)
         {
-            return (AbstractContentPage)ResolvePage(viewModel.GetType());
+            return (BaseContentPage)ResolvePage(viewModel.GetType());
         }
 
         /// <summary>
@@ -250,7 +250,7 @@ namespace CafeLib.Mobile.Services
         {
             var pageTypeInfo = _appAssembly
                 .CreatableTypes()
-                .Inherits<AbstractContentPage>()
+                .Inherits<BaseContentPage>()
                 .SingleOrDefault(x => x.Name == PageNameFromViewModel(viewModelTypeInfo));
 
             return pageTypeInfo?.AsType();

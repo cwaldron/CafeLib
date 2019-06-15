@@ -33,7 +33,7 @@ namespace CafeLib.Mobile.Extensions
         /// <typeparam name="T">view model type</typeparam>
         /// <param name="app">application</param>
         /// <returns></returns>
-        public static T ResolveViewModel<T>(this Application app) where T : AbstractViewModel
+        public static T ResolveViewModel<T>(this Application app) where T : BaseViewModel
             => (app as CafeApplication)?.Resolver.Resolve<T>();
  
         /// <summary>
