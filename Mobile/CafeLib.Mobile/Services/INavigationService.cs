@@ -13,13 +13,13 @@ namespace CafeLib.Mobile.Services
         Page NavigationPage { get; }
 
         /// <summary>
-        /// Insert view model before the current view model.
+        /// Insert viewmodel ahead of another viewmodel
         /// </summary>
-        /// <typeparam name="T1"></typeparam>
-        /// <typeparam name="T2"></typeparam>
-        /// <param name="viewModel"></param>
-        /// <param name="currentViewModel"></param>
-        /// <returns></returns>
+        /// <typeparam name="T1">type of view model to insert before</typeparam>
+        /// <typeparam name="T2">type of the current view model</typeparam>
+        /// <param name="viewModel">view model to insert before</param>
+        /// <param name="currentViewModel">current view model</param>
+        /// <returns>awaitable task</returns>
         Task InsertBeforeAsync<T1, T2>(T1 viewModel, T2 currentViewModel) where T1 : BaseViewModel where T2 : BaseViewModel;
 
         /// <summary>

@@ -18,6 +18,7 @@ namespace CafeLib.Mobile.Services
         private readonly Assembly _appAssembly;
         private readonly Dictionary<Type, PageResolver> _pageResolvers;
         private readonly IServiceResolver _resolver;
+        private readonly int _mainThreadId;
 
         private const string ViewModelSuffix = "ViewModel";
         private const string PageSuffix = "Page";
@@ -34,6 +35,7 @@ namespace CafeLib.Mobile.Services
             _resolver = resolver ?? throw new ArgumentNullException(nameof(resolver));
             _appAssembly = Application.Current.GetType().Assembly;
             _pageResolvers = new Dictionary<Type, PageResolver>();
+            _mainThreadId = Environment.CurrentManagedThreadId;
             InitPageResolvers();
         }
 
@@ -115,16 +117,20 @@ namespace CafeLib.Mobile.Services
         }
 
         /// <summary>
-        /// 
+        /// Insert viewmodel ahead of another viewmodel
         /// </summary>
-        /// <typeparam name="T1"></typeparam>
-        /// <typeparam name="T2"></typeparam>
-        /// <param name="viewModel"></param>
-        /// <param name="currentViewModel"></param>
-        /// <returns></returns>
+        /// <typeparam name="T1">type of view model to insert before</typeparam>
+        /// <typeparam name="T2">type of the current view model</typeparam>
+        /// <param name="viewModel">view model to insert before</param>
+        /// <param name="currentViewModel">current view model</param>
+        /// <returns>awaitable task</returns>
         public async Task InsertBeforeAsync<T1, T2>(T1 viewModel, T2 currentViewModel) where T1 : BaseViewModel where T2 : BaseViewModel
         {
-            NavigationPage.Navigation.InsertPageBefore(viewModel.ResolvePage(), currentViewModel.ResolvePage());
+            RunOnMainThread(() =>
+            {
+                NavigationPage.Navigation.InsertPageBefore(viewModel.ResolvePage(), currentViewModel.ResolvePage());
+            });
+
             await Task.CompletedTask;
         }
 
@@ -137,10 +143,15 @@ namespace CafeLib.Mobile.Services
         /// <returns></returns>
         public async Task PushAsync<T>(T viewModel, bool animate = false) where T : BaseViewModel
         {
-            var vm = viewModel ?? ResolveViewModel<T>();
-            var page = vm.ResolvePage();
-            page.SetViewModel(vm);
-            await NavigationPage.Navigation.PushAsync(page, animate);
+            RunOnMainThread(async () =>
+            {
+                var vm = viewModel ?? ResolveViewModel<T>();
+                var page = vm.ResolvePage();
+                page.SetViewModel(vm);
+                await NavigationPage.Navigation.PushAsync(page, animate);
+            });
+
+            await Task.CompletedTask;
         }
 
         /// <summary>
@@ -152,10 +163,15 @@ namespace CafeLib.Mobile.Services
         /// <returns></returns>
         public async Task PushModalAsync<T>(T viewModel, bool animate = false) where T : BaseViewModel
         {
-            var vm = viewModel ?? ResolveViewModel<T>();
-            var page = vm.ResolvePage();
-            page.SetViewModel(vm);
-            await NavigationPage.Navigation.PushModalAsync(page, animate);
+            RunOnMainThread(async () =>
+            {
+                var vm = viewModel ?? ResolveViewModel<T>();
+                var page = vm.ResolvePage();
+                page.SetViewModel(vm);
+                await NavigationPage.Navigation.PushModalAsync(page, animate);
+            });
+
+            await Task.CompletedTask;
         }
 
         /// <summary>
@@ -164,10 +180,17 @@ namespace CafeLib.Mobile.Services
         /// <typeparam name="T">view model type</typeparam>
         /// <param name="animate">optional animation</param>
         /// <returns>The page previously at top of the navigation stack</returns>
-        public async Task<T> PopAsync<T>(bool animate = false) where T : BaseViewModel
+        public Task<T> PopAsync<T>(bool animate = false) where T : BaseViewModel
         {
-            var page = await NavigationPage.Navigation.PopAsync(animate);
-            return page.GetViewModel<T>();
+            var tcs = new TaskCompletionSource<T>();
+
+            RunOnMainThread(async () =>
+            {
+                var page = await NavigationPage.Navigation.PopAsync(animate);
+                tcs.SetResult(page.GetViewModel<T>());
+            });
+
+            return tcs.Task;
         }
 
         /// <summary>
@@ -176,10 +199,17 @@ namespace CafeLib.Mobile.Services
         /// <typeparam name="T">view model type</typeparam>
         /// <param name="animate">optional animation</param>
         /// <returns>The page previously at top of the navigation stack</returns>
-        public async Task<T> PopModalAsync<T>(bool animate = false) where T : BaseViewModel
+        public Task<T> PopModalAsync<T>(bool animate = false) where T : BaseViewModel
         {
-            var page = await NavigationPage.Navigation.PopModalAsync(animate);
-            return page.GetViewModel<T>();
+            var tcs = new TaskCompletionSource<T>();
+
+            RunOnMainThread(async () =>
+            {
+                var page = await NavigationPage.Navigation.PopModalAsync(animate);
+                tcs.SetResult(page.GetViewModel<T>());
+            });
+
+            return tcs.Task;
         }
 
         /// <summary>
@@ -188,7 +218,12 @@ namespace CafeLib.Mobile.Services
         /// <param name="animate">transition animation flag</param>
         public async Task PopToRootAsync(bool animate = false)
         {
-            await NavigationPage.Navigation.PopToRootAsync(animate);
+            RunOnMainThread(async () =>
+            {
+                await NavigationPage.Navigation.PopToRootAsync(animate);
+            });
+
+            await Task.CompletedTask;
         }
 
         /// <summary>
@@ -197,9 +232,12 @@ namespace CafeLib.Mobile.Services
         /// <typeparam name="T">view model type</typeparam>
         public void Remove<T>(T viewModel) where T : BaseViewModel
         {
-            var vm = viewModel ?? ResolveViewModel<T>();
-            var page = vm.ResolvePage();
-            NavigationPage.Navigation.RemovePage(page);
+            RunOnMainThread(() =>
+            {
+                var vm = viewModel ?? ResolveViewModel<T>();
+                var page = vm.ResolvePage();
+                NavigationPage.Navigation.RemovePage(page);
+            });
         }
 
         /// <summary>
@@ -215,12 +253,25 @@ namespace CafeLib.Mobile.Services
         }
 
         /// <summary>
+        /// Check whether the current managed thread id is the main thread.
+        /// </summary>
+        /// <returns>true if running on the main thread; otherwise false.</returns>
+        public bool IsOnMainThread() => Environment.CurrentManagedThreadId == _mainThreadId;
+
+        /// <summary>
         /// Run action on main UI thread.
         /// </summary>
         /// <param name="action">action</param>
         public void RunOnMainThread(Action action)
         {
-            Device.BeginInvokeOnMainThread(action);
+            if (IsOnMainThread())
+            {
+                action();
+            }
+            else
+            {
+                Device.BeginInvokeOnMainThread(action);
+            }
         }
 
         /// <summary>
