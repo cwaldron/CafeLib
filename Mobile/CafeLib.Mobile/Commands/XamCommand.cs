@@ -32,7 +32,7 @@ namespace CafeLib.Mobile.Commands
     /// <summary>
     /// Xamarin command generic adapter.
     /// </summary>
-    public class XamCommand<T> : IXamCommand
+    public class XamCommand<T> : IXamCommand<T>
     {
         private readonly Command<T> _command;
 

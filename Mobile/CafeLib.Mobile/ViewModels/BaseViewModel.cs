@@ -14,14 +14,10 @@ namespace CafeLib.Mobile.ViewModels
 {
     public abstract class BaseViewModel : ObservableBase
     {
-        /// <summary>
-        /// ViewModelBase constructor
-        /// </summary>
-        /// <param name="resolver"></param>
-        protected BaseViewModel(IServiceResolver resolver)
+        protected BaseViewModel()
         {
-            Resolver = resolver ?? throw new ArgumentNullException(nameof(resolver));
-            AppearingCommand = new Command(() => {});
+            Resolver = Application.Current.Resolve<IServiceResolver>();
+            AppearingCommand = new Command(() => { });
             DisappearingCommand = new Command(() => { });
             BackButtonPressed = () => false;
         }
@@ -29,8 +25,9 @@ namespace CafeLib.Mobile.ViewModels
         /// <summary>
         /// Initialize the view model.
         /// </summary>
-        public virtual void Initialize()
+        public virtual async Task InitAsync()
         {
+            await Task.CompletedTask;
         }
 
         /// <summary>
@@ -160,20 +157,12 @@ namespace CafeLib.Mobile.ViewModels
     public class BaseViewModel<TParameter> : BaseViewModel
     {
         /// <summary>
-        /// ViewModelBase constructor
-        /// </summary>
-        /// <param name="resolver"></param>
-        public BaseViewModel(IServiceResolver resolver)
-            : base(resolver)
-        {
-        }
-
-        /// <summary>
         /// Initialize and pass parameter to the view model.
         /// </summary>
         /// <param name="parameter">parameter passed to view model</param>
-        public virtual void Initialize(TParameter parameter)
+        public virtual async Task InitAsync(TParameter parameter)
         {
+            await Task.CompletedTask;
         }
     }
 }

@@ -7,6 +7,13 @@ namespace CafeLib.Mobile.Extensions
     public static class PageExtensions
     {
         /// <summary>
+        /// Determines whether the page is landscape or not.
+        /// </summary>
+        /// <param name="page">page</param>
+        /// <returns>true if landscape; false otherwise</returns>
+        public static bool IsLandscape(this Page page) => page.Width > page.Height;
+
+        /// <summary>
         /// GetResource from the page.
         /// </summary>
         /// <typeparam name="T">resource type</typeparam>
