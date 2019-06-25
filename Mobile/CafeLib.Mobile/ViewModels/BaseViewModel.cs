@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using CafeLib.Core.IoC;
+using CafeLib.Mobile.Commands;
 using CafeLib.Mobile.Extensions;
 using CafeLib.Mobile.Services;
 using CafeLib.Mobile.Views;
@@ -19,7 +19,7 @@ namespace CafeLib.Mobile.ViewModels
             Resolver = Application.Current.Resolve<IServiceResolver>();
             AppearingCommand = new Command(() => { });
             DisappearingCommand = new Command(() => { });
-            BackButtonPressed = () => false;
+            BackButtonPressed = new XamCommand<object, bool>(x => false);
         }
 
         /// <summary>
@@ -56,6 +56,21 @@ namespace CafeLib.Mobile.ViewModels
         protected BaseContentPage Page => PageService.ResolvePage(this);
 
         /// <summary>
+        /// Appearing command.
+        /// </summary>
+        public ICommand AppearingCommand { get; protected set; }
+
+        /// <summary>
+        /// Disappearing command.
+        /// </summary>
+        public ICommand DisappearingCommand { get; protected set; }
+
+        /// <summary>
+        /// Back button pressed handler.
+        /// </summary>
+        public IXamCommand<object, bool> BackButtonPressed { get; protected set; }
+
+        /// <summary>
         /// Title.
         /// </summary>
         private string _title;
@@ -66,24 +81,17 @@ namespace CafeLib.Mobile.ViewModels
         }
 
         /// <summary>
-        /// Appearing command.
+        /// Determines visibility of the view model
         /// </summary>
-        public ICommand AppearingCommand { get; protected set; }
+        private bool _isVisible;
+        public virtual bool IsVisible
+        {
+            get => _isVisible;
+            set => SetValue(ref _isVisible, value);
+        }
 
         /// <summary>
-        /// Disappearing command.
-        /// </summary>
-        public ICommand DisappearingCommand { get; protected set; }
-
-
-        public Func<bool> BackButtonPressed { get; protected set; }
-
-        /// <summary>
-        /// Resolve the associated page.
-        /// </summary>
-
-        /// <summary>
-        /// Resolves viewmodel to is associated view.
+        /// Resolves viewmodel to is associated page.
         /// </summary>
         /// <returns>bounded page</returns>
         internal Page ResolvePage() => PageService.ResolvePage(this);

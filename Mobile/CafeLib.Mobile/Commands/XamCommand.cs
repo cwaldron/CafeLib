@@ -91,4 +91,57 @@ namespace CafeLib.Mobile.Commands
             remove => _command.CanExecuteChanged -= value;
         }
     }
+
+    public class XamCommand<TParameter, TResult> : IXamCommand<TParameter, TResult>
+    {
+        private readonly Func<TParameter, TResult> _command;
+        private readonly Func<TParameter, bool> _canExecute;
+
+        /// <summary>
+        /// XamCommand constructor.
+        /// </summary>
+        /// <param name="command">The command function to run when upon execution.</param>
+        public XamCommand(Func<TParameter, TResult> command)
+        {
+            _command = command ?? throw new ArgumentNullException(nameof(command));
+            _canExecute = x => true;
+        }
+
+        /// <summary>
+        /// MvxCommand constructor.
+        /// </summary>
+        /// <param name="command">The command function to run when upon execution.</param>
+        /// <param name="canExecute">The routine determining the execution state of the command.</param>
+        public XamCommand(Func<TParameter, TResult> command, Func<TParameter, bool> canExecute)
+        {
+            _command = command ?? throw new ArgumentNullException(nameof(command));
+            _canExecute = canExecute ?? throw new ArgumentNullException(nameof(canExecute));
+        }
+
+        /// <summary>
+        /// Execute the command
+        /// </summary>
+        /// <param name="parameter">command parameter</param>
+        /// <returns></returns>
+        public TResult Execute(TParameter parameter)
+        {
+            var result = CanExecute(parameter) ? _command.Invoke(parameter) : default;
+            ChangeCanExecute();
+            return result;
+        }
+
+        public bool CanExecute(object parameter) => _canExecute((TParameter)parameter);
+
+        public void Execute(object parameter)
+        {
+            Execute((TParameter) parameter);            
+        }
+
+        public event EventHandler CanExecuteChanged;
+
+        public void ChangeCanExecute()
+        {
+            CanExecuteChanged?.Invoke(this, EventArgs.Empty);
+        }
+    }
 }

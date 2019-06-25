@@ -13,7 +13,7 @@ using Xamarin.Forms;
 
 namespace CafeLib.Mobile.Services
 {
-    internal class MobileService : IPageService, IAlertService, INavigationService, IDeviceService, IServiceResolver
+    internal sealed class MobileService : IPageService, IAlertService, INavigationService, IDeviceService, IServiceResolver
     {
         private readonly Assembly _appAssembly;
         private readonly Dictionary<Type, PageResolver> _pageResolvers;

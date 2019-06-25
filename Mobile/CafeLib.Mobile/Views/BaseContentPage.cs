@@ -65,13 +65,27 @@ namespace CafeLib.Mobile.Views
             SetViewModel(ResolveViewModel());
         }
 
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+            ViewModel.IsVisible = true;
+            ViewModel.AppearingCommand.Execute(null);
+        }
+
+        protected override void OnDisappearing()
+        {
+            base.OnDisappearing();
+            ViewModel.DisappearingCommand.Execute(null);
+            ViewModel.IsVisible = false;
+        }
+
         /// <summary>
         /// Process background button press event.
         /// </summary>
         /// <returns></returns>
         protected override bool OnBackButtonPressed()
         {
-            return ViewModel.BackButtonPressed();
+            return ViewModel.BackButtonPressed.Execute(null);
         }
 
         /// <summary>

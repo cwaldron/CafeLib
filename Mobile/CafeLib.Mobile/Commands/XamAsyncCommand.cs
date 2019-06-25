@@ -73,7 +73,6 @@ namespace CafeLib.Mobile.Commands
 
         public void ChangeCanExecute()
         {
-            _isBusy ^= true;
             CanExecuteChanged?.Invoke(this, EventArgs.Empty);
         }
 
