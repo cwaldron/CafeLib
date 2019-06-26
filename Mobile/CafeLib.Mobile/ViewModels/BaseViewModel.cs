@@ -146,8 +146,6 @@ namespace CafeLib.Mobile.ViewModels
         /// </summary>
         protected virtual void InitSubscribers()
         {
-            // Call release subscribers to release any dangling subscriber references.
-            ReleaseSubscribers();
         }
 
         /// <summary>
