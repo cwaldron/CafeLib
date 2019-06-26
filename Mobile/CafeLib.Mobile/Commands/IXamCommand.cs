@@ -1,4 +1,6 @@
 ﻿using System.Windows.Input;
+// ReSharper disable UnusedMemberInSuper.Global
+// ReSharper disable UnusedTypeParameter
 
 namespace CafeLib.Mobile.Commands
 {
@@ -10,7 +12,7 @@ namespace CafeLib.Mobile.Commands
         void ChangeCanExecute();
     }
 
-    public interface IXamCommand<in T> : IXamCommand
+    public interface IXamCommand<in TParameter> : IXamCommand
     {
     }
 

@@ -1,4 +1,6 @@
 ﻿using System.Threading.Tasks;
+// ReSharper disable UnusedMember.Global
+// ReSharper disable UnusedMemberInSuper.Global
 
 namespace CafeLib.Mobile.Commands
 {
@@ -8,7 +10,7 @@ namespace CafeLib.Mobile.Commands
         bool CanExecute();
     }
 
-    public interface IXamAsyncCommand<in T> : IXamCommand
+    public interface IXamAsyncCommand<in T> : IXamCommand<T>
     {
         Task ExecuteAsync(T parameter);
 

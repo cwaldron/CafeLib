@@ -3,12 +3,12 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>0.6.4</Version>
+    <Version>0.6.5</Version>
     <Description>A simple messaging library.</Description>
     <Copyright></Copyright>
     <PackageIconUrl>https://raw.githubusercontent.com/cwaldron/CafeLib/master/favicon.ico</PackageIconUrl>
     <PackageReleaseNotes></PackageReleaseNotes>
-    <AssemblyVersion>0.6.4.0</AssemblyVersion>
+    <AssemblyVersion>0.6.5.0</AssemblyVersion>
   </PropertyGroup>
 
   <ItemGroup>

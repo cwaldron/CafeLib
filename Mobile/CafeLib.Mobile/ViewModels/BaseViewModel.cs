@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using CafeLib.Core.Eventing;
 using CafeLib.Core.IoC;
 using CafeLib.Mobile.Commands;
 using CafeLib.Mobile.Extensions;
@@ -14,12 +16,15 @@ namespace CafeLib.Mobile.ViewModels
 {
     public abstract class BaseViewModel : ObservableBase
     {
+        private readonly List<Guid> _subscriberHandles;
+
         protected BaseViewModel()
         {
             Resolver = Application.Current.Resolve<IServiceResolver>();
             AppearingCommand = new Command(() => { });
             DisappearingCommand = new Command(() => { });
             BackButtonPressed = new XamCommand<object, bool>(x => false);
+            _subscriberHandles = new List<Guid>();
         }
 
         /// <summary>
@@ -46,9 +51,14 @@ namespace CafeLib.Mobile.ViewModels
         protected INavigationService NavigationService => Resolver.Resolve<INavigationService>();
 
         /// <summary>
-        /// 
+        /// Navigation Service
         /// </summary>
         protected IDeviceService DeviceService => Resolver.Resolve<IDeviceService>();
+
+        /// <summary>
+        /// Navigation Service
+        /// </summary>
+        protected IEventService EventService => Resolver.Resolve<IEventService>();
 
         /// <summary>
         /// Resolve the associated page.
@@ -81,13 +91,64 @@ namespace CafeLib.Mobile.ViewModels
         }
 
         /// <summary>
+        /// Determines whether input is permitted.
+        /// </summary>
+        private bool _isEnabled;
+
+        public virtual bool IsEnabled
+        {
+            get => _isEnabled;
+            set => SetValue(ref _isEnabled, value);
+        }
+
+        /// <summary>
         /// Determines visibility of the view model
         /// </summary>
         private bool _isVisible;
         public virtual bool IsVisible
         {
             get => _isVisible;
-            set => SetValue(ref _isVisible, value);
+            set
+            {
+                if (SetValue(ref _isVisible, value))
+                {
+                    if (_isVisible)
+                    {
+                        InitSubscribers();
+                    }
+                    else
+                    {
+                        ReleaseSubscribers();
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Initialize event message subscribers.
+        /// </summary>
+        protected virtual void InitSubscribers()
+        {
+            // Call release subscribers to release any dangling subscriber references.
+            ReleaseSubscribers();
+        }
+
+        /// <summary>
+        /// Release event message subscribers.
+        /// </summary>
+        protected virtual void ReleaseSubscribers()
+        {
+            _subscriberHandles.ForEach(x => EventService.Unsubscribe(x));
+        }
+
+        /// <summary>
+        /// Subscribe an action to an event message.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="action"></param>
+        protected void SubscribeEvent<T>(Action<T> action) where T : IEventMessage
+        {
+            _subscriberHandles.Add(EventService.SubscribeOnMainThread(action));
         }
 
         /// <summary>
