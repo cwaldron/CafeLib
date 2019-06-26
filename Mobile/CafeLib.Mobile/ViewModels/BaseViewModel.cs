@@ -76,7 +76,7 @@ namespace CafeLib.Mobile.ViewModels
             {
                 _appearingCommand = new Command(() =>
                 {
-                    InitSubscribers();
+                    AddSubscribers();
                     value.Execute(null);
                 });
             }
@@ -142,9 +142,9 @@ namespace CafeLib.Mobile.ViewModels
         }
 
         /// <summary>
-        /// Initialize event message subscribers.
+        /// Add event message subscribers.
         /// </summary>
-        protected virtual void InitSubscribers()
+        protected virtual void AddSubscribers()
         {
         }
 
