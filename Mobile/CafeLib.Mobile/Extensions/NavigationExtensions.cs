@@ -115,5 +115,51 @@ namespace CafeLib.Mobile.Extensions
             await viewModel.InitAsync(parameter);
             await navigation.PushAsync(viewModel, animate);
         }
+
+        /// <summary>
+        /// Close the view model
+        /// </summary>
+        /// <typeparam name="T">view model type</typeparam>
+        /// <param name="navigation">navigation service</param>
+        /// <param name="animate">transition animation flag</param>
+        public static void Close<T>(this INavigationService navigation, bool animate = false) where T : BaseViewModel
+        {
+            Application.Current.Resolve<IDeviceService>().RunOnMainThread(async () => await CloseAsync<T>(navigation, animate));
+        }
+
+        /// <summary>
+        /// Close the view model
+        /// </summary>
+        /// <typeparam name="T">view model type</typeparam>
+        /// <param name="navigation">navigation service</param>
+        /// <param name="animate">transition animation flag</param>
+        /// <returns></returns>
+        public static async Task CloseAsync<T>(this INavigationService navigation, bool animate = false) where T : BaseViewModel
+        {
+            await navigation.PopAsync<T>(animate);
+        }
+
+        /// <summary>
+        /// Close the modal view model
+        /// </summary>
+        /// <typeparam name="T">view model type</typeparam>
+        /// <param name="navigation">navigation service</param>
+        /// <param name="animate">transition animation flag</param>
+        public static void CloseModal<T>(this INavigationService navigation, bool animate = false) where T : BaseViewModel
+        {
+            Application.Current.Resolve<IDeviceService>().RunOnMainThread(async () => await CloseModalAsync<T>(navigation, animate));
+        }
+
+        /// <summary>
+        /// Close the modal view model
+        /// </summary>
+        /// <typeparam name="T">view model type</typeparam>
+        /// <param name="navigation">navigation service</param>
+        /// <param name="animate">transition animation flag</param>
+        /// <returns></returns>
+        public static async Task CloseModalAsync<T>(this INavigationService navigation, bool animate = false) where T : BaseViewModel
+        {
+            await navigation.PopModalAsync<T>(animate);
+        }
     }
 }

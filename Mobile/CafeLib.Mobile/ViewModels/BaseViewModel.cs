@@ -68,12 +68,42 @@ namespace CafeLib.Mobile.ViewModels
         /// <summary>
         /// Appearing command.
         /// </summary>
-        public ICommand AppearingCommand { get; protected set; }
+        private ICommand _appearingCommand;
+        public ICommand AppearingCommand
+        {
+            get => _appearingCommand;
+            set
+            {
+                _appearingCommand = new Command(() =>
+                {
+                    InitSubscribers();
+                    value.Execute(null);
+                });
+            }
+        }
 
         /// <summary>
         /// Disappearing command.
         /// </summary>
-        public ICommand DisappearingCommand { get; protected set; }
+        private ICommand _disappearingCommand;
+        public ICommand DisappearingCommand
+        {
+            get => _disappearingCommand;
+            set
+            {
+                _disappearingCommand = new Command(() =>
+                {
+                    try
+                    {
+                        value.Execute(null);
+                    }
+                    finally
+                    {
+                        ReleaseSubscribers();
+                    }
+                });
+            }
+        }
 
         /// <summary>
         /// Back button pressed handler.
@@ -108,20 +138,7 @@ namespace CafeLib.Mobile.ViewModels
         public virtual bool IsVisible
         {
             get => _isVisible;
-            set
-            {
-                if (SetValue(ref _isVisible, value))
-                {
-                    if (_isVisible)
-                    {
-                        InitSubscribers();
-                    }
-                    else
-                    {
-                        ReleaseSubscribers();
-                    }
-                }
-            }
+            set => SetValue(ref _isVisible, value);
         }
 
         /// <summary>
