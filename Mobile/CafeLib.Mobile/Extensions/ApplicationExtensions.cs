@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using CafeLib.Core.IoC;
+using CafeLib.Mobile.Services;
 using CafeLib.Mobile.Startup;
 using CafeLib.Mobile.ViewModels;
 using Xamarin.Forms;
@@ -10,7 +12,23 @@ namespace CafeLib.Mobile.Extensions
     public static class ApplicationExtensions
     {
         /// <summary>
-        /// GetResource from the application.
+        /// Get device service.
+        /// </summary>
+        /// <param name="app">application</param>
+        /// <returns>device service</returns>
+        public static IDeviceService GetDeviceService(this Application app)
+            => app.Resolve<IDeviceService>();
+
+        /// <summary>
+        /// Get event service.
+        /// </summary>
+        /// <param name="app">application</param>
+        /// <returns>device service</returns>
+        public static IEventService GetEventService(this Application app)
+            => app.Resolve<IEventService>();
+
+        /// <summary>
+        /// Get the application's resource.
         /// </summary>
         /// <typeparam name="T">resource type</typeparam>
         /// <param name="app">application</param>
@@ -34,7 +52,7 @@ namespace CafeLib.Mobile.Extensions
         /// <param name="app">application</param>
         /// <returns></returns>
         public static T ResolveViewModel<T>(this Application app) where T : BaseViewModel
-            => (app as CafeApplication)?.Resolver.Resolve<T>();
+            => app.Resolve<T>();
  
         /// <summary>
         /// Display an alert dialog.
