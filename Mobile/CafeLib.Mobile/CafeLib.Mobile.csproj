@@ -13,7 +13,7 @@
     <PackageReference Include="CafeLib.Core.IoC" Version="0.6.5" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="2.2.0" />
-    <PackageReference Include="Xamarin.Forms" Version="4.0.0.497661" />
+    <PackageReference Include="Xamarin.Forms" Version="4.0.0.540366" />
   </ItemGroup>
 
 </Project>
