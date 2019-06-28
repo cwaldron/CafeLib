@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using CafeLib.Core.IoC;
+using CafeLib.Mobile.Messages;
 using CafeLib.Mobile.Services;
 using CafeLib.Mobile.Startup;
 using CafeLib.Mobile.ViewModels;
@@ -11,6 +12,17 @@ namespace CafeLib.Mobile.Extensions
 {
     public static class ApplicationExtensions
     {
+        /// <summary>
+        /// End the application.
+        /// </summary>
+        /// <param name="app">application</param>
+        public static void EndApplication(this Application app)
+        {
+            var eventService = Application.Current.Resolve<IEventService>();
+            eventService.Publish(new ApplicationExpiryMessage());
+            eventService.Unsubscribe<ApplicationExpiryMessage>();
+        }
+
         /// <summary>
         /// Get device service.
         /// </summary>
