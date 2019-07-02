@@ -8,7 +8,7 @@ using Xamarin.Forms;
 
 namespace CafeLib.Mobile.Views
 {
-    public abstract class BaseContentPage : ContentPage, IDisposable
+    public abstract class BaseContentPage : ContentPage, IPageBase, IDisposable
     {
         private bool _disposed;
 
@@ -28,11 +28,20 @@ namespace CafeLib.Mobile.Views
         }
 
         /// <summary>
+        /// Get the view model bound to the page.
+        /// </summary>
+        /// <typeparam name="TViewModel">view model type</typeparam>
+        public TViewModel GetViewModel<TViewModel>() where TViewModel : BaseViewModel
+        {
+            return (TViewModel) BindingContext;
+        }
+
+        /// <summary>
         /// Set the binding context to the view model
         /// </summary>
-        /// <typeparam name="T">viewmodel type</typeparam>
+        /// <typeparam name="TViewModel">view model type</typeparam>
         /// <param name="viewModel">viewmodel instance</param>
-        public void SetViewModel<T>(T viewModel) where T : BaseViewModel
+        public void SetViewModel<TViewModel>(TViewModel viewModel) where TViewModel : BaseViewModel
         {
             BindingContext = viewModel;
         }
@@ -54,7 +63,7 @@ namespace CafeLib.Mobile.Views
         /// <summary>
         /// The viewmodel bound to the page.
         /// </summary>
-        public T ViewModel => BindingContext as T;
+        public T ViewModel => GetViewModel<T>();
 
         /// <summary>
         /// Default constructor to allow creation of simple fakes for unit testing.

@@ -8,7 +8,6 @@ using CafeLib.Core.IoC;
 using CafeLib.Mobile.Commands;
 using CafeLib.Mobile.Extensions;
 using CafeLib.Mobile.Services;
-using CafeLib.Mobile.Views;
 using Xamarin.Forms;
 // ReSharper disable UnusedMember.Global
 
@@ -63,7 +62,7 @@ namespace CafeLib.Mobile.ViewModels
         /// <summary>
         /// Resolve the associated page.
         /// </summary>
-        protected BaseContentPage Page => PageService.ResolvePage(this);
+        protected Page Page => PageService.ResolvePage(this);
 
         /// <summary>
         /// Appearing command.
