@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
 using System.Threading.Tasks;
 using CafeLib.Core.Extensions;
 using CafeLib.Core.IoC;
@@ -271,6 +272,23 @@ namespace CafeLib.Mobile.Services
             else
             {
                 Device.BeginInvokeOnMainThread(action);
+            }
+        }
+
+        /// <summary>
+        /// Runs an action on a background worker thread.
+        /// </summary>
+        /// <param name="action">action</param>
+        /// <param name="cancellationToken"></param>
+        public void RunOnWorkerThread(Action action, CancellationToken cancellationToken = default)
+        {
+            if (IsOnMainThread())
+            {
+                Task.Run(action, cancellationToken);
+            }
+            else
+            {
+                action();
             }
         }
 

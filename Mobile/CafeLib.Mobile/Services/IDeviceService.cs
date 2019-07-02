@@ -1,4 +1,8 @@
 ﻿using System;
+using System.Threading;
+
+// ReSharper disable UnusedMemberInSuper.Global
+// ReSharper disable UnusedMember.Global
 
 namespace CafeLib.Mobile.Services
 {
@@ -15,5 +19,12 @@ namespace CafeLib.Mobile.Services
         /// </summary>
         /// <param name="action">action</param>
         void RunOnMainThread(Action action);
+
+        /// <summary>
+        /// Runs an action on a background worker thread.
+        /// </summary>
+        /// <param name="action">action</param>
+        /// <param name="cancellationToken"></param>
+        void RunOnWorkerThread(Action action, CancellationToken cancellationToken = default);
     }
 }
