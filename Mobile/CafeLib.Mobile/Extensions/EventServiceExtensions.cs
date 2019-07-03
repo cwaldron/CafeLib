@@ -22,5 +22,17 @@ namespace CafeLib.Mobile.Extensions
         {
             return eventService.Subscribe<T>(x => Application.Current.Resolve<IDeviceService>().RunOnMainThread(() => action(x)));
         }
+
+        /// <summary>
+        /// Subscribe to event message with action to run on a worker thread
+        /// </summary>
+        /// <typeparam name="T">event message type</typeparam>
+        /// <param name="eventService"></param>
+        /// <param name="action"></param>
+        /// <returns></returns>
+        public static Guid SubscribeOnWorkerThread<T>(this IEventService eventService, Action<T> action) where T : IEventMessage
+        {
+            return eventService.Subscribe<T>(x => Application.Current.Resolve<IDeviceService>().RunOnWorkerThread(() => action(x)));
+        }
     }
 }
