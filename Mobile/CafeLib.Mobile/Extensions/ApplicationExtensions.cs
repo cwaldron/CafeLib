@@ -50,6 +50,24 @@ namespace CafeLib.Mobile.Extensions
             => (T)app.Resources[name];
 
         /// <summary>
+        /// Navigate to view model.
+        /// </summary>
+        /// <typeparam name="T">view model type</typeparam>
+        /// <param name="app">application</param>
+        public static void Navigate<T>(this Application app) where T : BaseViewModel
+            => app.Resolve<INavigationService>().Navigate<T>();
+
+        /// <summary>
+        /// Navigate to view model.
+        /// </summary>
+        /// <typeparam name="T">view model type</typeparam>
+        /// <typeparam name="TP">view model parameter type</typeparam>
+        /// <param name="parameter">view model parameter</param>
+        /// <param name="app">application</param>
+        public static void Navigate<T, TP>(this Application app, TP parameter) where T : BaseViewModel<TP> where TP : class
+            => app.Resolve<INavigationService>().Navigate<T, TP>(parameter);
+
+        /// <summary>
         /// Get the application service resolver.
         /// </summary>
         /// <param name="app">application</param>

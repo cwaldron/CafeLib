@@ -64,10 +64,11 @@ namespace CafeLib.Mobile.Extensions
         /// <summary>
         /// Navigate to view model.
         /// </summary>
+        /// <typeparam name="T">view model type</typeparam>
+        /// <typeparam name="TP">view model parameter type</typeparam>
         /// <param name="navigation">navigation service</param>
         /// <param name="parameter">view model parameter</param>
         /// <param name="animate">transition animation flag</param>
-        /// <returns></returns>
         public static void Navigate<T, TP>(this INavigationService navigation, TP parameter, bool animate = false) where T : BaseViewModel<TP> where TP : class
         {
             Navigate(navigation, Application.Current.Resolve<IPageService>().ResolveViewModel<T>(), parameter, animate);
@@ -76,6 +77,8 @@ namespace CafeLib.Mobile.Extensions
         /// <summary>
         /// Navigate to view model.
         /// </summary>
+        /// <typeparam name="T">view model type</typeparam>
+        /// <typeparam name="TP">view model parameter type</typeparam>
         /// <param name="navigation">navigation service</param>
         /// <param name="viewModel">view model</param>
         /// <param name="parameter">view model parameter</param>
@@ -93,6 +96,8 @@ namespace CafeLib.Mobile.Extensions
         /// <summary>
         /// Navigate to view model.
         /// </summary>
+        /// <typeparam name="T">view model type</typeparam>
+        /// <typeparam name="TP">view model parameter type</typeparam>
         /// <param name="navigation">navigation service</param>
         /// <param name="parameter">view model parameter</param>
         /// <param name="animate">transition animation flag</param>
@@ -105,6 +110,8 @@ namespace CafeLib.Mobile.Extensions
         /// <summary>
         /// Navigate to view model.
         /// </summary>
+        /// <typeparam name="T">view model type</typeparam>
+        /// <typeparam name="TP">view model parameter type</typeparam>
         /// <param name="navigation">navigation service</param>
         /// <param name="viewModel">view model</param>
         /// <param name="parameter">view model parameter</param>
