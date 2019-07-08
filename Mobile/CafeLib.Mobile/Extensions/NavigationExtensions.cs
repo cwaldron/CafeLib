@@ -16,7 +16,7 @@ namespace CafeLib.Mobile.Extensions
         /// <returns></returns>
         public static void Navigate<T>(this INavigationService navigation, bool animate = false) where T : BaseViewModel
         {
-            Navigate(navigation, Application.Current.Resolve<IPageService>().ResolveViewModel<T>(), animate);
+            navigation.Navigate(Application.Current.Resolve<IPageService>().ResolveViewModel<T>(), animate);
         }
 
         /// <summary>
@@ -30,8 +30,7 @@ namespace CafeLib.Mobile.Extensions
         {
             Application.Current.Resolve<IDeviceService>().RunOnMainThread(async () =>
             {
-                await NavigateAsync(navigation, viewModel, animate);
-                await viewModel.InitAsync();
+                await navigation.NavigateAsync(viewModel, animate);
             });
         }
 
@@ -44,7 +43,7 @@ namespace CafeLib.Mobile.Extensions
         /// <returns></returns>
         public static async Task NavigateAsync<T>(this INavigationService navigation, bool animate = false) where T : BaseViewModel
         {
-            await NavigateAsync(navigation, Application.Current.Resolve<IPageService>().ResolveViewModel<T>(), animate);
+            await navigation.NavigateAsync(Application.Current.Resolve<IPageService>().ResolveViewModel<T>(), animate);
         }
 
         /// <summary>
@@ -71,7 +70,7 @@ namespace CafeLib.Mobile.Extensions
         /// <param name="animate">transition animation flag</param>
         public static void Navigate<T, TP>(this INavigationService navigation, TP parameter, bool animate = false) where T : BaseViewModel<TP> where TP : class
         {
-            Navigate(navigation, Application.Current.Resolve<IPageService>().ResolveViewModel<T>(), parameter, animate);
+            navigation.Navigate(Application.Current.Resolve<IPageService>().ResolveViewModel<T>(), parameter, animate);
         }
 
         /// <summary>
@@ -88,8 +87,7 @@ namespace CafeLib.Mobile.Extensions
         {
             Application.Current.Resolve<IDeviceService>().RunOnMainThread(async () =>
             {
-                await NavigateAsync<T, TP>(navigation, parameter, animate);
-                await viewModel.InitAsync(parameter);
+                await navigation.NavigateAsync<T, TP>(parameter, animate);
             });
         }
 
@@ -104,7 +102,7 @@ namespace CafeLib.Mobile.Extensions
         /// <returns></returns>
         public static async Task NavigateAsync<T, TP>(this INavigationService navigation, TP parameter, bool animate = false) where T : BaseViewModel<TP> where TP : class
         {
-            await NavigateAsync(navigation, Application.Current.Resolve<IPageService>().ResolveViewModel<T>(), parameter, animate);
+            await navigation.NavigateAsync(Application.Current.Resolve<IPageService>().ResolveViewModel<T>(), parameter, animate);
         }
 
         /// <summary>
