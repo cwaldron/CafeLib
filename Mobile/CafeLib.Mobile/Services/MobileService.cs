@@ -159,15 +159,10 @@ namespace CafeLib.Mobile.Services
         /// <returns></returns>
         public async Task PushModalAsync<T>(T viewModel, bool animate = false) where T : BaseViewModel
         {
-            RunOnMainThread(async () =>
-            {
-                var vm = viewModel ?? ResolveViewModel<T>();
-                var page = vm.ResolvePage();
-                page.SetViewModel(vm);
-                await NavigationPage.Navigation.PushModalAsync(page, animate);
-            });
-
-            await Task.CompletedTask;
+            var vm = viewModel ?? ResolveViewModel<T>();
+            var page = vm.ResolvePage();
+            page.SetViewModel(vm);
+            await NavigationPage.Navigation.PushModalAsync(page, animate);
         }
 
         /// <summary>
@@ -176,17 +171,10 @@ namespace CafeLib.Mobile.Services
         /// <typeparam name="T">view model type</typeparam>
         /// <param name="animate">optional animation</param>
         /// <returns>The page previously at top of the navigation stack</returns>
-        public Task<T> PopAsync<T>(bool animate = false) where T : BaseViewModel
+        public async Task<T> PopAsync<T>(bool animate = false) where T : BaseViewModel
         {
-            var tcs = new TaskCompletionSource<T>();
-
-            RunOnMainThread(async () =>
-            {
-                var page = await NavigationPage.Navigation.PopAsync(animate);
-                tcs.SetResult(page.GetViewModel<T>());
-            });
-
-            return tcs.Task;
+            var page = await NavigationPage.Navigation.PopAsync(animate);
+            return page.GetViewModel<T>();
         }
 
         /// <summary>
@@ -195,17 +183,10 @@ namespace CafeLib.Mobile.Services
         /// <typeparam name="T">view model type</typeparam>
         /// <param name="animate">optional animation</param>
         /// <returns>The page previously at top of the navigation stack</returns>
-        public Task<T> PopModalAsync<T>(bool animate = false) where T : BaseViewModel
+        public async Task<T> PopModalAsync<T>(bool animate = false) where T : BaseViewModel
         {
-            var tcs = new TaskCompletionSource<T>();
-
-            RunOnMainThread(async () =>
-            {
-                var page = await NavigationPage.Navigation.PopModalAsync(animate);
-                tcs.SetResult(page.GetViewModel<T>());
-            });
-
-            return tcs.Task;
+            var page = await NavigationPage.Navigation.PopModalAsync(animate);
+            return page.GetViewModel<T>();
         }
 
         /// <summary>
