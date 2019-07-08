@@ -30,8 +30,8 @@ namespace CafeLib.Mobile.Extensions
         {
             Application.Current.Resolve<IDeviceService>().RunOnMainThread(async () =>
             {
-                await viewModel.InitAsync();
                 await NavigateAsync(navigation, viewModel, animate);
+                await viewModel.InitAsync();
             });
         }
 
@@ -57,8 +57,8 @@ namespace CafeLib.Mobile.Extensions
         /// <returns></returns>
         public static async Task NavigateAsync<T>(this INavigationService navigation, T viewModel, bool animate = false) where T : BaseViewModel
         {
-            await viewModel.InitAsync();
             await navigation.PushAsync(viewModel, animate);
+            await viewModel.InitAsync();
         }
 
         /// <summary>
@@ -88,8 +88,8 @@ namespace CafeLib.Mobile.Extensions
         {
             Application.Current.Resolve<IDeviceService>().RunOnMainThread(async () =>
             {
-                await viewModel.InitAsync(parameter);
                 await NavigateAsync<T, TP>(navigation, parameter, animate);
+                await viewModel.InitAsync(parameter);
             });
         }
 
@@ -119,8 +119,8 @@ namespace CafeLib.Mobile.Extensions
         /// <returns></returns>
         public static async Task NavigateAsync<T, TP>(this INavigationService navigation, T viewModel, TP parameter, bool animate = false) where T : BaseViewModel<TP> where TP : class
         {
-            await viewModel.InitAsync(parameter);
             await navigation.PushAsync(viewModel, animate);
+            await viewModel.InitAsync(parameter);
         }
 
         /// <summary>

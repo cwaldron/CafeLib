@@ -144,15 +144,10 @@ namespace CafeLib.Mobile.Services
         /// <returns></returns>
         public async Task PushAsync<T>(T viewModel, bool animate = false) where T : BaseViewModel
         {
-            RunOnMainThread(async () =>
-            {
-                var vm = viewModel ?? ResolveViewModel<T>();
-                var page = vm.ResolvePage();
-                page.SetViewModel(vm);
-                await NavigationPage.Navigation.PushAsync(page, animate);
-            });
-
-            await Task.CompletedTask;
+            var vm = viewModel ?? ResolveViewModel<T>();
+            var page = vm.ResolvePage();
+            page.SetViewModel(vm);
+            await NavigationPage.Navigation.PushAsync(page, animate);
         }
 
         /// <summary>
