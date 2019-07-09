@@ -64,9 +64,11 @@ namespace CafeLib.Mobile.Commands
             return CanExecute((T) parameter);
         }
 
-        void ICommand.Execute(object parameter)
+        #pragma warning disable RECS0165 // Asynchronous methods should return a Task instead of void
+        async void ICommand.Execute(object parameter)
+        #pragma warning restore RECS0165 // Asynchronous methods should return a Task instead of void
         {
-            ExecuteAsync((T) parameter).Wait();
+            await ExecuteAsync((T) parameter);
         }
 
         public event EventHandler CanExecuteChanged;
