@@ -156,6 +156,16 @@ namespace CafeLib.Mobile.ViewModels
         }
 
         /// <summary>
+        /// Publish an event message.
+        /// </summary>
+        /// <typeparam name="T">event message type</typeparam>
+        /// <param name="message">event message</param>
+        protected void PublishEvent<T>(T message) where T : IEventMessage
+        {
+            EventService.Publish(message);
+        }
+
+        /// <summary>
         /// Subscribe an action to an event message.
         /// </summary>
         /// <typeparam name="T"></typeparam>
