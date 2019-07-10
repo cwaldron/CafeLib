@@ -73,10 +73,19 @@ namespace CafeLib.Mobile.ViewModels
             get => _appearingCommand;
             set
             {
-                _appearingCommand = new Command(() =>
+                _appearingCommand = new XamAsyncCommand(async () =>
                 {
                     AddSubscribers();
-                    value.Execute(null);
+                    switch (value)
+                    {
+                        case IXamAsyncCommand a:
+                            await a.ExecuteAsync();
+                            break;
+
+                        default:
+                            value?.Execute(null);
+                            break;
+                    }
                 });
             }
         }
@@ -90,11 +99,20 @@ namespace CafeLib.Mobile.ViewModels
             get => _disappearingCommand;
             set
             {
-                _disappearingCommand = new Command(() =>
+                _disappearingCommand = new XamAsyncCommand(async () =>
                 {
                     try
                     {
-                        value.Execute(null);
+                        switch (value)
+                        {
+                            case IXamAsyncCommand a:
+                                await a.ExecuteAsync();
+                                break;
+
+                            default:
+                                value?.Execute(null);
+                                break;
+                        }
                     }
                     finally
                     {
