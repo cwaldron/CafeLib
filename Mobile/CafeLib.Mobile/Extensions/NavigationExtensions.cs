@@ -56,8 +56,8 @@ namespace CafeLib.Mobile.Extensions
         /// <returns></returns>
         public static async Task NavigateAsync<T>(this INavigationService navigation, T viewModel, bool animate = false) where T : BaseViewModel
         {
-            await navigation.PushAsync(viewModel, animate);
             await viewModel.InitAsync();
+            await navigation.PushAsync(viewModel, animate);
         }
 
         /// <summary>
@@ -117,8 +117,8 @@ namespace CafeLib.Mobile.Extensions
         /// <returns></returns>
         public static async Task NavigateAsync<T, TP>(this INavigationService navigation, T viewModel, TP parameter, bool animate = false) where T : BaseViewModel<TP> where TP : class
         {
-            await navigation.PushAsync(viewModel, animate);
             await viewModel.InitAsync(parameter);
+            await navigation.PushAsync(viewModel, animate);
         }
 
         /// <summary>
