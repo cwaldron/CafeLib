@@ -87,7 +87,7 @@ namespace CafeLib.Mobile.Extensions
         {
             Application.Current.Resolve<IDeviceService>().RunOnMainThread(async () =>
             {
-                await navigation.NavigateAsync<T, TP>(parameter, animate);
+                await navigation.NavigateAsync(viewModel, parameter, animate);
             });
         }
 
