@@ -1,5 +1,6 @@
-﻿using System.Windows.Input;
-using Xamarin.Forms;
+﻿using CafeLib.Mobile.Commands;
+using CafeLib.Mobile.Views;
+
 // ReSharper disable UnusedMember.Global
 
 namespace CafeLib.Mobile.ViewModels
@@ -8,7 +9,7 @@ namespace CafeLib.Mobile.ViewModels
     {
         protected BaseMasterDetailViewModel()
         {
-            PresentedCommand = new Command(() => { });
+            PresentedCommand = new XamCommand<bool>(x => { });
         }
 
         private bool _isPresented;
@@ -18,15 +19,18 @@ namespace CafeLib.Mobile.ViewModels
             set
             {
                 if (SetValue(ref _isPresented, value))
+                {
+                    ((BaseMasterDetailPage) Page).IsPresented = value;
                     _presentedCommand.Execute(_isPresented);
+                }
             }
         }
 
         /// <summary>
         /// Appearing command.
         /// </summary>
-        private ICommand _presentedCommand;
-        public ICommand PresentedCommand
+        private IXamCommand<bool> _presentedCommand;
+        public IXamCommand<bool> PresentedCommand
         {
             get => _presentedCommand;
             set => SetValue(ref _presentedCommand, value);
