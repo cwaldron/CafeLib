@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using CafeLib.Core.Eventing;
+﻿using CafeLib.Core.Eventing;
 using CafeLib.Core.IoC;
 using CafeLib.Core.UnitTests.EventHosts;
 using Xunit;
+// ReSharper disable NotAccessedField.Local
 
 namespace CafeLib.Core.UnitTests
 {
@@ -13,8 +11,8 @@ namespace CafeLib.Core.UnitTests
         protected IServiceResolver Resolver;
 
         private int _commonEventMessageVisits;
-        private readonly FooHost _fooHost;
-        private readonly BarHost _barHost;
+        private readonly FooEventHost _fooHost;
+        private readonly BarEventHost _barHost;
 
         public EventServiceTest()
         {
@@ -22,8 +20,8 @@ namespace CafeLib.Core.UnitTests
                 .AddEventService()
                 .GetResolver();
 
-            _fooHost = new FooHost(Resolver);
-            _barHost = new BarHost(Resolver);
+            _fooHost = new FooEventHost(Resolver);
+            _barHost = new BarEventHost(Resolver);
         }
 
         [Fact]

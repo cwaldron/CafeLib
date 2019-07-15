@@ -2,9 +2,9 @@
 
 namespace CafeLib.Core.UnitTests.EventHosts
 {
-    public class BarHost
+    public class BarEventHost
     {
-        public BarHost(IServiceResolver resolver)
+        public BarEventHost(IServiceResolver resolver)
         {
             var eventService = resolver.Resolve<IEventService>();
             eventService.Subscribe<EventServiceTest.CommonEventMessage>(x => x.Visited());

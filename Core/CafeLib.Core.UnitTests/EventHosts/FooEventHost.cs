@@ -5,9 +5,9 @@ using System.Text;
 
 namespace CafeLib.Core.UnitTests.EventHosts
 {
-    public class FooHost
+    public class FooEventHost
     {
-        public FooHost(IServiceResolver resolver)
+        public FooEventHost(IServiceResolver resolver)
         {
             var eventService = resolver.Resolve<IEventService>();
             eventService.Subscribe<EventServiceTest.CommonEventMessage>(x => x.Visited());
