@@ -75,16 +75,26 @@ namespace CafeLib.Mobile.ViewModels
             {
                 _appearingCommand = new XamAsyncCommand(async () =>
                 {
+                    ReleaseSubscribers();
                     AddSubscribers();
-                    switch (value)
-                    {
-                        case IXamAsyncCommand a:
-                            await a.ExecuteAsync();
-                            break;
 
-                        default:
-                            value?.Execute(null);
-                            break;
+                    try
+                    {
+                        IsEnabled = false;
+                        switch (value)
+                        {
+                            case IXamAsyncCommand a:
+                                await a.ExecuteAsync();
+                                break;
+
+                            default:
+                                value?.Execute(null);
+                                break;
+                        }
+                    }
+                    finally
+                    {
+                        IsEnabled = true;
                     }
                 });
             }
@@ -171,6 +181,7 @@ namespace CafeLib.Mobile.ViewModels
         protected virtual void ReleaseSubscribers()
         {
             _subscriberHandles.ForEach(x => EventService.Unsubscribe(x));
+            _subscriberHandles.Clear();
         }
 
         /// <summary>
@@ -207,6 +218,23 @@ namespace CafeLib.Mobile.ViewModels
         {
             NavigationService.SetNavigationPage(PageService.ResolvePage(this));
             return NavigationService.NavigationPage;
+        }
+        /// <summary>
+        /// Close the view model.
+        /// </summary>
+        public void Close()
+        {
+            DeviceService.RunOnMainThread(async () =>
+            {
+                if (Page.Navigation.NavigationStack.Contains(Page))
+                {
+                    await Page.Navigation.PopAsync();
+                }
+                else if (Page.Navigation.ModalStack.Contains(Page))
+                {
+                    await Page.Navigation.PopModalAsync();
+                }
+            });
         }
 
         /// <summary>
