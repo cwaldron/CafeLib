@@ -219,22 +219,19 @@ namespace CafeLib.Mobile.ViewModels
             NavigationService.SetNavigationPage(PageService.ResolvePage(this));
             return NavigationService.NavigationPage;
         }
+
         /// <summary>
         /// Close the view model.
         /// </summary>
-        public void Close()
+        /// <param name="animate"></param>
+        public void Close(bool animate = false)
         {
-            DeviceService.RunOnMainThread(async () =>
-            {
-                if (Page.Navigation.NavigationStack.Contains(Page))
-                {
-                    await Page.Navigation.PopAsync();
-                }
-                else if (Page.Navigation.ModalStack.Contains(Page))
-                {
-                    await Page.Navigation.PopModalAsync();
-                }
-            });
+            Page.Navigation.Close(this, animate);
+        }
+
+        public void Close<TP>(TP parameter, bool animate = false) where TP : class
+        {
+            Page.Navigation.Close(this, parameter, animate);
         }
 
         /// <summary>
