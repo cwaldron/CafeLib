@@ -13,12 +13,27 @@ namespace CafeLib.Core.Extensions
         /// </summary>
         /// <typeparam name="T">item type</typeparam>
         /// <param name="enumerable">enumerable</param>
-        /// <param name="eachFunc">select function</param>
-        public static void ForEach<T>(this IEnumerable<T> enumerable, Action<T> eachFunc)
+        /// <param name="eachAction">iterative action</param>
+        public static void ForEach<T>(this IEnumerable<T> enumerable, Action<T> eachAction)
         {
             foreach (var item in enumerable)
             {
-                eachFunc?.Invoke(item);
+                eachAction?.Invoke(item);
+            }
+        }
+
+        /// <summary>
+        /// For each extension.
+        /// </summary>
+        /// <typeparam name="T">item type</typeparam>
+        /// <param name="enumerable">enumerable</param>
+        /// <param name="eachAction">iterative action</param>
+        public static void ForEach<T>(this IEnumerable<T> enumerable, Action<T, int> eachAction)
+        {
+            var index = 0;
+            foreach (var item in enumerable)
+            {
+                eachAction?.Invoke(item, index++);
             }
         }
 
@@ -85,7 +100,7 @@ namespace CafeLib.Core.Extensions
         }
 
         /// <summary>
-        /// Retreive or add a value to dictionary
+        /// Retrieve or add a value to dictionary
         /// </summary>
         /// <typeparam name="TK">key type</typeparam>
         /// <typeparam name="TV">value type</typeparam>
@@ -104,7 +119,7 @@ namespace CafeLib.Core.Extensions
         }
 
         /// <summary>
-        /// Retreive or add a value to dictionary via add function.
+        /// Retrieve or add a value to dictionary via add function.
         /// </summary>
         /// <typeparam name="TK">key type</typeparam>
         /// <typeparam name="TV">value type</typeparam>
