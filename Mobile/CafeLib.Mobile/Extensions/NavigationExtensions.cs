@@ -214,5 +214,40 @@ namespace CafeLib.Mobile.Extensions
             await viewModel.InitAsync(parameter);
             await navigation.PushAsync(viewModel, animate);
         }
+
+        /// <summary>
+        /// Navigate to modal view model.
+        /// </summary>
+        /// <typeparam name="T">view model type</typeparam>
+        /// <param name="navigation">navigation service</param>
+        /// <param name="viewModel">view model</param>
+        /// <param name="animate">transition animation flag</param>
+        public static void NavigateModal<T>(this INavigationService navigation, T viewModel, bool animate = false) where T : BaseViewModel
+        {
+            Application.Current.Resolve<IDeviceService>().RunOnMainThread(async () =>
+            {
+                await viewModel.InitAsync();
+                await navigation.PushModalAsync(viewModel, animate);
+            });
+        }
+
+        /// <summary>
+        /// Navigate to modal view model.
+        /// </summary>
+        /// <typeparam name="T">view model type</typeparam>
+        /// <typeparam name="TP">view model parameter type</typeparam>
+        /// <param name="navigation">navigation service</param>
+        /// <param name="viewModel">view model</param>
+        /// <param name="parameter">view model parameter</param>
+        /// <param name="animate">transition animation flag</param>
+        /// <returns></returns>
+        public static void NavigateModal<T, TP>(this INavigationService navigation, T viewModel, TP parameter, bool animate = false) where T : BaseViewModel<TP> where TP : class
+        {
+            Application.Current.Resolve<IDeviceService>().RunOnMainThread(async () =>
+            {
+                await viewModel.InitAsync(parameter);
+                await navigation.PushModalAsync(viewModel, animate);
+            });
+        }
     }
 }
