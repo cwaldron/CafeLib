@@ -7,7 +7,7 @@
     <PackageProjectUrl />
     <PackageIconUrl>https://raw.githubusercontent.com/cwaldron/CafeLib/master/favicon.ico</PackageIconUrl>
     <PackageReleaseNotes>Support for method binding.</PackageReleaseNotes>
-    <Version>0.6.5</Version>
+    <Version>0.6.6</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <AssemblyVersion>0.6.5.0</AssemblyVersion>
   </PropertyGroup>

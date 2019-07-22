@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Version>0.6.5</Version>
+    <Version>0.6.6</Version>
     <Description>Cafe Signal/R support package supporting method binding &amp; webchannels</Description>
     <Copyright></Copyright>
     <PackageIconUrl>https://raw.githubusercontent.com/cwaldron/CafeLib/master/favicon.ico</PackageIconUrl>
