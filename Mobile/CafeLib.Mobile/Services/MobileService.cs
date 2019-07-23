@@ -146,8 +146,12 @@ namespace CafeLib.Mobile.Services
         {
             var vm = viewModel ?? ResolveViewModel<T>();
             var page = vm.ResolvePage();
-            page.SetViewModel(vm);
-            await NavigationPage.Navigation.PushAsync(page, animate);
+
+            if (NavigationPage.Navigation.NavigationStack.Last().GetType() != page.GetType())
+            {
+                page.SetViewModel(vm);
+                await NavigationPage.Navigation.PushAsync(page, animate);
+            }
         }
 
         /// <summary>
