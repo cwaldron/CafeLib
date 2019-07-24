@@ -229,7 +229,7 @@ namespace CafeLib.Mobile.Services
         public Page SetNavigationPage(Page page)
         {
             var previousNavigator = NavigationPage;
-            NavigationPage = new NavigationPage(page);
+            NavigationPage = page is NavigationPage ? page : new NavigationPage(page);
             return previousNavigator;
         }
 
