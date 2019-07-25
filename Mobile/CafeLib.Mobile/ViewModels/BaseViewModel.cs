@@ -224,14 +224,9 @@ namespace CafeLib.Mobile.ViewModels
         /// Close the view model.
         /// </summary>
         /// <param name="animate"></param>
-        public void Close(bool animate = false)
+        public virtual void Close(bool animate = false)
         {
             Page.Navigation.Close(this, animate);
-        }
-
-        public void Close<TP>(TP parameter, bool animate = false) where TP : class
-        {
-            Page.Navigation.Close(this, parameter, animate);
         }
 
         /// <summary>
@@ -290,7 +285,7 @@ namespace CafeLib.Mobile.ViewModels
         }
     }
 
-    public class BaseViewModel<TParameter> : BaseViewModel
+    public class BaseViewModel<TParameter> : BaseViewModel where TParameter : class
     {
         /// <summary>
         /// Initialize and pass parameter to the view model.
@@ -299,6 +294,11 @@ namespace CafeLib.Mobile.ViewModels
         public virtual async Task InitAsync(TParameter parameter)
         {
             await Task.CompletedTask;
+        }
+
+        public virtual void Close(TParameter parameter, bool animate = false)
+        {
+            Page.Navigation.Close(this, parameter, animate);
         }
     }
 }

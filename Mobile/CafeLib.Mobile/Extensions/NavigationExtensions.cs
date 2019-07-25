@@ -46,7 +46,7 @@ namespace CafeLib.Mobile.Extensions
         /// <param name="viewModel">view model</param>
         /// <param name="parameter">view model parameter</param>
         /// <param name="animate">transition animation flag</param>
-        public static void Close<T, TP>(this INavigation navigator, T viewModel, TP parameter, bool animate = false) where T : BaseViewModel where TP : class
+        public static void Close<T, TP>(this INavigation navigator, T viewModel, TP parameter, bool animate = false) where T : BaseViewModel<TP> where TP : class
         {
             var page = viewModel.ResolvePage();
             var navigationType = navigator.GetNavigationType(page);
@@ -59,7 +59,7 @@ namespace CafeLib.Mobile.Extensions
 
             Application.Current.Resolve<IDeviceService>().RunOnMainThread(async () =>
             {
-                var vm = topPage.GetViewModel<BaseViewModel<TP>>();
+                var vm = topPage.GetViewModel<T>();
                 await vm.InitAsync(parameter);
             });
         }
