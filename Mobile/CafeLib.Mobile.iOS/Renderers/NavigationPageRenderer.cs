@@ -17,8 +17,6 @@ namespace CafeLib.Mobile.iOS.Renderers
 
             if (!(Element is ISoftNavigationPage page)) return;
 
-            #region for soft back button
-
             var root = NavigationController.TopViewController;
             var backButton = root.NavigationItem.LeftBarButtonItem;
 
@@ -34,8 +32,6 @@ namespace CafeLib.Mobile.iOS.Renderers
                         Messaging.void_objc_msgSend(backButton.Target.Handle, backButton.Action.Handle);
                     }
                 }), true);
-
-            #endregion
         }
     }
 }
