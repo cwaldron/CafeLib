@@ -22,7 +22,7 @@ namespace CafeLib.Mobile.ViewModels
             Resolver = Application.Current.Resolve<IServiceResolver>();
             AppearingCommand = new Command(() => { });
             DisappearingCommand = new Command(() => { });
-            BackButtonPressed = new XamCommand<object, bool>(x => false);
+            BackButtonPressed = new XamCommand<NavigationSource, bool>(x => false);
             _subscriberHandles = new List<Guid>();
         }
 
@@ -135,7 +135,7 @@ namespace CafeLib.Mobile.ViewModels
         /// <summary>
         /// Back button pressed handler.
         /// </summary>
-        public IXamCommand<object, bool> BackButtonPressed { get; protected set; }
+        public IXamCommand<NavigationSource, bool> BackButtonPressed { get; protected set; }
 
         /// <summary>
         /// Title.

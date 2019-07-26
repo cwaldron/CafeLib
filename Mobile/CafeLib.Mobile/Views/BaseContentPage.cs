@@ -58,7 +58,7 @@ namespace CafeLib.Mobile.Views
         }
     }
 
-    public abstract class BaseContentPage<T> : BaseContentPage where T : BaseViewModel
+    public abstract class BaseContentPage<T> : BaseContentPage, ISoftNavigationPage where T : BaseViewModel
     {
         /// <summary>
         /// The viewmodel bound to the page.
@@ -89,12 +89,21 @@ namespace CafeLib.Mobile.Views
         }
 
         /// <summary>
-        /// Process background button press event.
+        /// Process hardware back button press event.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>true: ignore behavior; false: default behavior</returns>
         protected override bool OnBackButtonPressed()
         {
-            return ViewModel.BackButtonPressed.Execute(null);
+            return ViewModel.BackButtonPressed.Execute(NavigationSource.Hardware);
+        }
+
+        /// <summary>
+        /// Process software back button press event.
+        /// </summary>
+        /// <returns>true: ignore behavior; false: default behavior</returns>
+        public virtual bool OnSoftBackButtonPressed()
+        {
+            return ViewModel.BackButtonPressed.Execute(NavigationSource.Software);
         }
 
         /// <summary>

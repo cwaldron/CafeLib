@@ -5,7 +5,7 @@ using Xamarin.Forms;
 
 namespace CafeLib.Mobile.Views
 {
-    public abstract class BaseMasterDetailPage : MasterDetailPage, IPageBase
+    public abstract class BaseMasterDetailPage : MasterDetailPage, IPageBase, ISoftNavigationPage
     {
         public TViewModel GetViewModel<TViewModel>() where TViewModel : BaseViewModel
         {
@@ -31,7 +31,13 @@ namespace CafeLib.Mobile.Views
 
         protected override bool OnBackButtonPressed()
         {
-            return GetViewModel<BaseViewModel>().BackButtonPressed.Execute(null);
+            return GetViewModel<BaseViewModel>().BackButtonPressed.Execute(NavigationSource.Hardware);
+        }
+
+
+        public bool OnSoftBackButtonPressed()
+        {
+            return GetViewModel<BaseViewModel>().BackButtonPressed.Execute(NavigationSource.Software);
         }
     }
 }

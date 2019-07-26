@@ -147,7 +147,7 @@ namespace CafeLib.Mobile.Services
             var vm = viewModel ?? ResolveViewModel<T>();
             var page = vm.ResolvePage();
 
-            if (NavigationPage.Navigation.NavigationStack.Last().GetType() != page.GetType())
+            if (NavigationPage.Navigation.Peek()?.GetType() != page.GetType())
             {
                 page.SetViewModel(vm);
                 await NavigationPage.Navigation.PushAsync(page, animate);
