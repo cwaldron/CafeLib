@@ -1,0 +1,45 @@
+﻿using CafeLib.Core.IoC;
+using CafeLib.Mobile.ViewModels;
+
+// ReSharper disable UnusedMember.Global
+
+namespace CafeLib.Mobile.Extensions
+{
+    public static class ServiceRegistryExtensions
+    {
+        /// <summary>
+        /// Add view model type as singleton service registry. 
+        /// </summary>
+        /// <typeparam name="T">view model type</typeparam>
+        /// <param name="serviceRegistry">service registry</param>
+        /// <param name="transient">register as transient if true; otherwise as singleton</param>
+        /// <returns>service registry</returns>
+        public static IServiceRegistry AddViewModel<T>(this IServiceRegistry serviceRegistry, bool transient = false) where T : BaseViewModel
+        {
+            return !transient ? serviceRegistry.AddViewModelSingleton<T>() : serviceRegistry.AddViewModelTransient<T>();
+        }
+
+        /// <summary>
+        /// Add singleton view model type to service registry. 
+        /// </summary>
+        /// <typeparam name="T">view model type</typeparam>
+        /// <param name="serviceRegistry">service registry</param>
+        /// <returns>service registry</returns>
+        public static IServiceRegistry AddViewModelSingleton<T>(this IServiceRegistry serviceRegistry) where T : BaseViewModel
+        {
+            return serviceRegistry.AddSingleton<T>();
+        }
+
+        /// <summary>
+        /// Add transient view model type to service registry. 
+        /// </summary>
+        /// <typeparam name="T">view model type</typeparam>
+        /// <param name="serviceRegistry">service registry</param>
+        /// <returns>service registry</returns>
+        public static IServiceRegistry AddViewModelTransient<T>(this IServiceRegistry serviceRegistry) where T : BaseViewModel
+        {
+            return serviceRegistry.AddTransient<T>();
+        }
+
+    }
+}
