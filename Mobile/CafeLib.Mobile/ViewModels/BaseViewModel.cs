@@ -19,11 +19,11 @@ namespace CafeLib.Mobile.ViewModels
 
         protected BaseViewModel()
         {
+            _subscriberHandles = new List<Guid>();
             Resolver = Application.Current.Resolve<IServiceResolver>();
             AppearingCommand = new Command(() => { });
             DisappearingCommand = new Command(() => { });
-            BackButtonPressed = new XamCommand<NavigationSource, bool>(x => false);
-            _subscriberHandles = new List<Guid>();
+            BackButtonPressed = new XamCommand<NavigationSource, bool>(x => Close());
         }
 
         /// <summary>
@@ -211,22 +211,22 @@ namespace CafeLib.Mobile.ViewModels
         internal Page ResolvePage() => PageService.ResolvePage(this);
 
         /// <summary>
-        /// Establish viewmodel as the navigation page.
+        /// Establish view model as the application navigator.
         /// </summary>
         /// <returns></returns>
-        public Page AsNavigationPage()
+        public NavigationPage AsNavigator()
         {
-            NavigationService.SetNavigationPage(PageService.ResolvePage(this));
-            return NavigationService.NavigationPage;
+            return NavigationService.SetNavigator(this);
         }
 
         /// <summary>
         /// Close the view model.
         /// </summary>
         /// <param name="animate"></param>
-        public virtual void Close(bool animate = false)
+        public virtual bool Close(bool animate = false)
         {
             Page.Navigation.Close(this, animate);
+            return true;
         }
 
         /// <summary>
@@ -296,9 +296,16 @@ namespace CafeLib.Mobile.ViewModels
             await Task.CompletedTask;
         }
 
-        public virtual void Close(TParameter parameter, bool animate = false)
+        /// <summary>
+        /// Close the view model.
+        /// </summary>
+        /// <param name="parameter">parameter to forward</param>
+        /// <param name="animate">animation flag</param>
+        /// <returns>true</returns>
+        public virtual bool Close(TParameter parameter, bool animate = false)
         {
             Page.Navigation.Close(this, parameter, animate);
+            return true;
         }
     }
 }

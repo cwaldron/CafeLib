@@ -46,8 +46,6 @@ namespace CafeLib.Mobile.Android.Renderers
             {
                 Element?.PopAsync();
             }
-
-            Element?.PopAsync();
         }
 
         protected override void SetupPageTransition(FragmentTransaction transaction, bool isPush)

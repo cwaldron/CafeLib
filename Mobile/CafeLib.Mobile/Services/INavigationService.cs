@@ -10,7 +10,7 @@ namespace CafeLib.Mobile.Services
         /// <summary>
         /// Navigation page.
         /// </summary>
-        Page NavigationPage { get; }
+        NavigationPage Navigator { get; }
 
         /// <summary>
         /// Insert viewmodel ahead of another viewmodel
@@ -66,10 +66,18 @@ namespace CafeLib.Mobile.Services
         void Remove<T>(T viewModel) where T : BaseViewModel;
 
         /// <summary>
-        /// Set the application navigator.
+        /// Set the application navigator from the view model
         /// </summary>
-        /// <param name="page"></param>
-        /// <returns>previous navigator</returns>
-        Page SetNavigationPage(Page page);
+        /// <typeparam name="T">view model type</typeparam>
+        /// <returns>navigation page</returns>
+        NavigationPage SetNavigator<T>() where T : BaseViewModel;
+
+        /// <summary>
+        /// Set the application navigator from the view model
+        /// </summary>
+        /// <typeparam name="T">view model type</typeparam>
+        /// <param name="viewModel">view model</param>
+        /// <returns>navigation page</returns>
+        NavigationPage SetNavigator<T>(T viewModel) where T : BaseViewModel;
     }
 }

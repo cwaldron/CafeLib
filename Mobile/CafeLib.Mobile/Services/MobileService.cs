@@ -26,7 +26,7 @@ namespace CafeLib.Mobile.Services
         private const string DefaultAcceptText = "OK";
         private const string DefaultCancelText = "Cancel";
 
-        public Page NavigationPage { get; private set; }
+        public NavigationPage Navigator { get; private set; }
 
         /// <summary>
         /// Bootstrapper constructor
@@ -129,7 +129,7 @@ namespace CafeLib.Mobile.Services
         {
             RunOnMainThread(() =>
             {
-                NavigationPage.Navigation.InsertPageBefore(viewModel.ResolvePage(), currentViewModel.ResolvePage());
+                Navigator.Navigation.InsertPageBefore(viewModel.ResolvePage(), currentViewModel.ResolvePage());
             });
 
             await Task.CompletedTask;
@@ -147,10 +147,10 @@ namespace CafeLib.Mobile.Services
             var vm = viewModel ?? ResolveViewModel<T>();
             var page = vm.ResolvePage();
 
-            if (NavigationPage.Navigation.Peek()?.GetType() != page.GetType())
+            if (Navigator.Navigation.Peek()?.GetType() != page.GetType())
             {
                 page.SetViewModel(vm);
-                await NavigationPage.Navigation.PushAsync(page, animate);
+                await Navigator.Navigation.PushAsync(page, animate);
             }
         }
 
@@ -166,7 +166,7 @@ namespace CafeLib.Mobile.Services
             var vm = viewModel ?? ResolveViewModel<T>();
             var page = vm.ResolvePage();
             page.SetViewModel(vm);
-            await NavigationPage.Navigation.PushModalAsync(page, animate);
+            await Navigator.Navigation.PushModalAsync(page, animate);
         }
 
         /// <summary>
@@ -177,7 +177,7 @@ namespace CafeLib.Mobile.Services
         /// <returns>The page previously at top of the navigation stack</returns>
         public async Task<T> PopAsync<T>(bool animate = false) where T : BaseViewModel
         {
-            var page = await NavigationPage.Navigation.PopAsync(animate);
+            var page = await Navigator.Navigation.PopAsync(animate);
             return page.GetViewModel<T>();
         }
 
@@ -189,7 +189,7 @@ namespace CafeLib.Mobile.Services
         /// <returns>The page previously at top of the navigation stack</returns>
         public async Task<T> PopModalAsync<T>(bool animate = false) where T : BaseViewModel
         {
-            var page = await NavigationPage.Navigation.PopModalAsync(animate);
+            var page = await Navigator.Navigation.PopModalAsync(animate);
             return page.GetViewModel<T>();
         }
 
@@ -201,7 +201,7 @@ namespace CafeLib.Mobile.Services
         {
             RunOnMainThread(async () =>
             {
-                await NavigationPage.Navigation.PopToRootAsync(animate);
+                await Navigator.Navigation.PopToRootAsync(animate);
             });
 
             await Task.CompletedTask;
@@ -217,7 +217,7 @@ namespace CafeLib.Mobile.Services
             {
                 var vm = viewModel ?? ResolveViewModel<T>();
                 var page = vm.ResolvePage();
-                NavigationPage.Navigation.RemovePage(page);
+                Navigator.Navigation.RemovePage(page);
             });
         }
 
@@ -226,11 +226,36 @@ namespace CafeLib.Mobile.Services
         /// </summary>
         /// <param name="page"></param>
         /// <returns>previous navigator</returns>
-        public Page SetNavigationPage(Page page)
+        public NavigationPage SetNavigator(Page page)
         {
-            var previousNavigator = NavigationPage;
-            NavigationPage = page is NavigationPage ? page : new NavigationPage(page);
+            if (page == null) throw new ArgumentNullException(nameof(page));
+            var previousNavigator = Navigator;
+            var candidatePage = page is MasterDetailPage masterDetailPage ? masterDetailPage.Detail : page;
+            Navigator = candidatePage is NavigationPage navPage ? navPage : new NavigationPage(page);
             return previousNavigator;
+        }
+
+        /// <summary>
+        /// Set the navigation page from the view model
+        /// </summary>
+        /// <typeparam name="T">view model type</typeparam>
+        /// <returns>navigation page</returns>
+        public NavigationPage SetNavigator<T>() where T : BaseViewModel
+        {
+            SetNavigator(ResolveViewModel<T>());
+            return Navigator;
+        }
+
+        /// <summary>
+        /// Set the navigation page from the view model
+        /// </summary>
+        /// <typeparam name="T">view model type</typeparam>
+        /// <param name="viewModel">view model</param>
+        /// <returns>navigation page</returns>
+        public NavigationPage SetNavigator<T>(T viewModel) where T : BaseViewModel
+        {
+            SetNavigator(viewModel.ResolvePage());
+            return Navigator;
         }
 
         /// <summary>

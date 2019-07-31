@@ -41,12 +41,12 @@ namespace CafeLib.Mobile.Extensions
         /// Close the view model.
         /// </summary>
         /// <typeparam name="T">view model type</typeparam>
-        /// <typeparam name="TP">view model parameter type</typeparam>
+        /// <typeparam name="TP">transition view model parameter type</typeparam>
         /// <param name="navigator">navigation object</param>
         /// <param name="viewModel">view model</param>
-        /// <param name="parameter">view model parameter</param>
+        /// <param name="parameter">transition view model parameter</param>
         /// <param name="animate">transition animation flag</param>
-        public static void Close<T, TP>(this INavigation navigator, T viewModel, TP parameter, bool animate = false) where T : BaseViewModel<TP> where TP : class
+        public static void Close<T, TP>(this INavigation navigator, T viewModel, TP parameter, bool animate = false) where T : BaseViewModel where TP : class
         {
             var page = viewModel.ResolvePage();
             var navigationType = navigator.GetNavigationType(page);
@@ -59,8 +59,10 @@ namespace CafeLib.Mobile.Extensions
 
             Application.Current.Resolve<IDeviceService>().RunOnMainThread(async () =>
             {
-                var vm = topPage.GetViewModel<T>();
-                await vm.InitAsync(parameter);
+                if (topPage.GetViewModel<T>() is BaseViewModel<TP> vm)
+                {
+                    await vm.InitAsync(parameter);
+                }
             });
         }
 
@@ -213,6 +215,30 @@ namespace CafeLib.Mobile.Extensions
         {
             await viewModel.InitAsync(parameter);
             await navigation.PushAsync(viewModel, animate);
+        }
+
+        /// <summary>
+        /// Navigate to modal view model.
+        /// </summary>
+        /// <param name="navigation">navigation service</param>
+        /// <param name="animate">transition animation flag</param>
+        /// <returns></returns>
+        public static void NavigateModal<T>(this INavigationService navigation, bool animate = false) where T : BaseViewModel
+        {
+            navigation.NavigateModal(Application.Current.Resolve<IPageService>().ResolveViewModel<T>(), animate);
+        }
+
+        /// <summary>
+        /// Navigate to modal view model.
+        /// </summary>
+        /// <typeparam name="T">view model type</typeparam>
+        /// <typeparam name="TP">view model parameter type</typeparam>
+        /// <param name="navigation">navigation service</param>
+        /// <param name="parameter">view model parameter</param>
+        /// <param name="animate">transition animation flag</param>
+        public static void NavigateModal<T, TP>(this INavigationService navigation, TP parameter, bool animate = false) where T : BaseViewModel<TP> where TP : class
+        {
+            navigation.NavigateModal(Application.Current.Resolve<IPageService>().ResolveViewModel<T>(), parameter, animate);
         }
 
         /// <summary>
