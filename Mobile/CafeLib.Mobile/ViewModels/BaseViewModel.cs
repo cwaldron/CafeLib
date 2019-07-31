@@ -23,7 +23,11 @@ namespace CafeLib.Mobile.ViewModels
             Resolver = Application.Current.Resolve<IServiceResolver>();
             AppearingCommand = new Command(() => { });
             DisappearingCommand = new Command(() => { });
-            BackButtonPressed = new XamCommand<NavigationSource, bool>(x => Close());
+            BackButtonPressed = new XamCommand<NavigationSource, bool>(x =>
+            {
+                Close();
+                return true;
+            });
         }
 
         /// <summary>
@@ -223,10 +227,9 @@ namespace CafeLib.Mobile.ViewModels
         /// Close the view model.
         /// </summary>
         /// <param name="animate"></param>
-        public virtual bool Close(bool animate = false)
+        public virtual void Close(bool animate = false)
         {
             Page.Navigation.Close(this, animate);
-            return true;
         }
 
         /// <summary>
@@ -301,11 +304,9 @@ namespace CafeLib.Mobile.ViewModels
         /// </summary>
         /// <param name="parameter">parameter to forward</param>
         /// <param name="animate">animation flag</param>
-        /// <returns>true</returns>
-        public virtual bool Close(TParameter parameter, bool animate = false)
+        public virtual void Close(TParameter parameter, bool animate = false)
         {
             Page.Navigation.Close(this, parameter, animate);
-            return true;
         }
     }
 }
