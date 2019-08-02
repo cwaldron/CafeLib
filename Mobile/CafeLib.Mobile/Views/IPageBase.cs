@@ -17,5 +17,10 @@ namespace CafeLib.Mobile.Views
         /// <typeparam name="TViewModel">view model type</typeparam>
         /// <param name="viewModel">viewmodel instance</param>
         void SetViewModel<TViewModel>(TViewModel viewModel) where TViewModel: BaseViewModel;
+
+        /// <summary>
+        /// Navigable owner.
+        /// </summary>
+        INavigableOwner Owner { get; }
     }
 }

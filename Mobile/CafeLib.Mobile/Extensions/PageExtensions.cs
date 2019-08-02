@@ -1,4 +1,6 @@
-﻿using CafeLib.Mobile.ViewModels;
+﻿using System.Linq;
+using CafeLib.Core.Extensions;
+using CafeLib.Mobile.ViewModels;
 using Xamarin.Forms;
 // ReSharper disable UnusedMember.Global
 
@@ -7,11 +9,38 @@ namespace CafeLib.Mobile.Extensions
     public static class PageExtensions
     {
         /// <summary>
+        /// Make a navigation page from a page.
+        /// </summary>
+        /// <typeparam name="T">navigation page type</typeparam>
+        /// <param name="page">page</param>
+        /// <returns>navigation page</returns>
+        internal static Page AsNavigationPage<T>(this Page page) where T : NavigationPage
+        {
+            return page.IsNavigationPage()
+                ? page
+                : typeof(T).CreateInstance<T>(page);
+        }
+
+        /// <summary>
+        /// Determines whether the page has any toolbar items.
+        /// </summary>
+        /// <param name="page"></param>
+        /// <returns></returns>
+        public static bool HasToolbarItems(this Page page) => page.ToolbarItems.Any();
+
+        /// <summary>
         /// Determines whether the page is landscape or not.
         /// </summary>
         /// <param name="page">page</param>
         /// <returns>true if landscape; false otherwise</returns>
         public static bool IsLandscape(this Page page) => page.Width > page.Height;
+
+        /// <summary>
+        /// Determines whether the page is a navigation page.
+        /// </summary>
+        /// <param name="page"></param>
+        /// <returns></returns>
+        public static bool IsNavigationPage(this Page page) => page is NavigationPage;
 
         /// <summary>
         /// GetResource from the page.
@@ -46,20 +75,5 @@ namespace CafeLib.Mobile.Extensions
             page.BindingContext = null;
             page.BindingContext = viewModel;
         }
-
-        /// <summary>
-        /// Invoke the page viewmodel back command.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <typeparam name="TPage"></typeparam>
-        /// <param name="page"></param>
-        //public static void InvokeBackCommand<T, TPage>(this TPage page) where T : BaseViewModel<TPage> where TPage : Page
-        //{
-        //    var viewModel = page.GetViewModel<T, TPage>();
-        //    var viewModelType = viewModel.GetType();
-        //    var propInfo = viewModelType.GetTypeInfo().GetDeclaredProperty("BackCommand");
-        //    var command = (ICommand)propInfo?.GetValue(viewModel);
-        //    command?.Execute(null);
-        //}
     }
 }

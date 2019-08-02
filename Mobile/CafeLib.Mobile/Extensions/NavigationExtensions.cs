@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using CafeLib.Mobile.Services;
 using CafeLib.Mobile.ViewModels;
+using CafeLib.Mobile.Views;
 using Xamarin.Forms;
 
 // ReSharper disable UnusedMember.Global
@@ -19,20 +20,20 @@ namespace CafeLib.Mobile.Extensions
         /// <param name="animate">transition animation flag</param>
         public static void Close<T>(this INavigation navigator, T viewModel, bool animate = false) where T : BaseViewModel
         {
-            var page = viewModel.ResolvePage();
-            var navigationType = navigator.GetNavigationType(page);
+            var (nav, page) = FindNavigator(navigator, viewModel.ResolvePage());
+            var navigationType = nav.GetNavigationType(page);
             if (navigationType == 0) return;
 
             Application.Current.Resolve<IDeviceService>().RunOnMainThread(async () =>
             {
                 if (navigationType == 1)
                 {
-                    if (page != navigator.Peek()) navigator.BringToTop(page);
-                    await navigator.PopAsync(animate);
+                    if (page != navigator.Peek()) nav.BringToTop(page);
+                    await nav.PopAsync(animate);
                 }
                 else
                 {
-                    await page.Navigation.PopModalAsync(animate);
+                    await nav.PopModalAsync(animate);
                 }
             });
         }
@@ -77,21 +78,6 @@ namespace CafeLib.Mobile.Extensions
             var topPage = navigator.NavigationStack.LastOrDefault();
             if (page == topPage) return;
             navigator.InsertPageBefore(topPage, page);
-        }
-
-        /// <summary>
-        /// Determine the navigation stack containing the page.
-        /// </summary>
-        /// <param name="navigator">navigation object</param>
-        /// <param name="page">page to locates</param>
-        /// <returns>-1: modal stack, 1: navigation stack, 0: neither</returns>
-        internal static int GetNavigationType(this INavigation navigator, Page page)
-        {
-            return navigator.NavigationStack.Contains(page)
-                ? 1
-                : navigator.ModalStack.Contains(page)
-                    ? -1
-                    : 0;
         }
 
         /// <summary>
@@ -275,5 +261,58 @@ namespace CafeLib.Mobile.Extensions
                 await navigation.PushModalAsync(viewModel, animate);
             });
         }
+
+
+        #region Helpers
+
+        /// <summary>
+        /// Find the proper navigator & page pair.
+        /// </summary>
+        /// <param name="navigator">navigation</param>
+        /// <param name="page">page</param>
+        /// <returns>navigator & page pair</returns>
+        private static (INavigation, Page) FindNavigator(INavigation navigator, Page page)
+        {
+            while (true)
+            {
+                // Contains page?
+                if (navigator.GetNavigationType(page) == 0) return (navigator, page);
+
+                // Is the page owned and if so find the owner of the owner.
+                var d = page as IPageBase;
+                var e = page as INavigableOwner;
+                if (d?.Owner == null && e?.Owner == null) return (navigator, page);
+
+                if (d != null)
+                {
+                    if (!(d.Owner is ModalNavigationPage dd)) return (navigator, page);
+                    navigator = dd.Navigation;
+                    page = dd;
+                }
+                else
+                {
+                    if (!(e.Owner is ModalNavigationPage ee)) return (navigator, page);
+                    navigator = ee.Navigation;
+                    page = ee;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Determine the navigation stack containing the page.
+        /// </summary>
+        /// <param name="navigator">navigation object</param>
+        /// <param name="page">page to locates</param>
+        /// <returns>-1: modal stack, 1: navigation stack, 0: neither</returns>
+        internal static int GetNavigationType(this INavigation navigator, Page page)
+        {
+            return navigator.NavigationStack.Contains(page)
+                ? 1
+                : navigator.ModalStack.Contains(page)
+                    ? -1
+                    : 0;
+        }
+
+        #endregion
     }
 }

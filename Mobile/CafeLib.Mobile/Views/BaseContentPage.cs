@@ -18,10 +18,16 @@ namespace CafeLib.Mobile.Views
         protected IServiceResolver Resolver => Application.Current.Resolve<IServiceResolver>();
 
         /// <summary>
+        /// Navigation ownership.
+        /// </summary>
+        public INavigableOwner Owner { get; internal set; }
+
+        /// <summary>
         /// Dispose.
         /// </summary>
         public void Dispose()
         {
+            if (_disposed) return;
             Dispose(!_disposed);
             _disposed = true;
             GC.SuppressFinalize(this);
@@ -47,12 +53,11 @@ namespace CafeLib.Mobile.Views
         }
 
         /// <summary>
-        /// Dispose concurrent queue.
+        /// Dispose base content page.
         /// </summary>
-        /// <param name="disposing">indicate whether the queue is disposing</param>
+        /// <param name="disposing">indicates whether the page is disposing</param>
         protected virtual void Dispose(bool disposing)
         {
-            if (!disposing) return;
             BindingContext = null;
             Content = null;
         }

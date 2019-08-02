@@ -23,6 +23,7 @@ namespace CafeLib.Mobile.ViewModels
             Resolver = Application.Current.Resolve<IServiceResolver>();
             AppearingCommand = new Command(() => { });
             DisappearingCommand = new Command(() => { });
+            CloseCommand = new Command(() => Close());
             BackButtonPressed = new XamCommand<NavigationSource, bool>(x =>
             {
                 Close();
@@ -140,6 +141,11 @@ namespace CafeLib.Mobile.ViewModels
         /// Back button pressed handler.
         /// </summary>
         public IXamCommand<NavigationSource, bool> BackButtonPressed { get; protected set; }
+
+        /// <summary>
+        /// Close command.
+        /// </summary>
+        public ICommand CloseCommand { get; set; }
 
         /// <summary>
         /// Title.

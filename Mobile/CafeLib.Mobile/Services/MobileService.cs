@@ -166,7 +166,7 @@ namespace CafeLib.Mobile.Services
             var vm = viewModel ?? ResolveViewModel<T>();
             var page = vm.ResolvePage();
             page.SetViewModel(vm);
-            await Navigator.Navigation.PushModalAsync(page, animate);
+            await Navigator.Navigation.PushModalAsync(page.HasToolbarItems() ? page.AsNavigationPage<ModalNavigationPage>() : page, animate);
         }
 
         /// <summary>
@@ -230,8 +230,8 @@ namespace CafeLib.Mobile.Services
         {
             if (page == null) throw new ArgumentNullException(nameof(page));
             var previousNavigator = Navigator;
-            var candidatePage = page is MasterDetailPage masterDetailPage ? masterDetailPage.Detail : page;
-            Navigator = candidatePage is NavigationPage navPage ? navPage : new NavigationPage(page);
+            var contentPage = page is MasterDetailPage masterDetailPage ? masterDetailPage.Detail : page;
+            Navigator = contentPage.IsNavigationPage() ? (NavigationPage)contentPage : new NavigationPage(contentPage);
             return previousNavigator;
         }
 
