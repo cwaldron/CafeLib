@@ -1,15 +1,15 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Version>0.6.6</Version>
+    <Version>0.6.8</Version>
     <Description>Cafe Signal/R support package supporting method binding &amp; webchannels</Description>
     <Copyright></Copyright>
     <PackageIconUrl>https://raw.githubusercontent.com/cwaldron/CafeLib/master/favicon.ico</PackageIconUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageReleaseNotes></PackageReleaseNotes>
-    <AssemblyVersion>0.6.5.0</AssemblyVersion>
-    <FileVersion>0.6.5.0</FileVersion>
+    <AssemblyVersion>0.6.8.0</AssemblyVersion>
+    <FileVersion>0.6.8.0</FileVersion>
     <Authors />
     <Company />
   </PropertyGroup>

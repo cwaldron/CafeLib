@@ -14,59 +14,24 @@ namespace CafeLib.Core.Extensions
         /// <summary>
         /// Create instance of specified type.
         /// </summary>
-        /// <typeparam name="T">type</typeparam>
-        /// <param name="type">type object</param>
+        /// <typeparam name="T">type to create</typeparam>
+        /// <param name="_">type object</param>
         /// <returns>instance object</returns>
-        public static T CreateInstance<T>(this Type type)
+        public static T CreateInstance<T>(this Type _)
         {
-            return CreateInstance<T>(type, null);
+            return Activator.CreateInstance<T>();
         }
 
         /// <summary>
         /// Create instance of specified type.
         /// </summary>
-        /// <typeparam name="T">type</typeparam>
-        /// <param name="type">type object</param>
-        /// <param name="args"></param>
+        /// <typeparam name="T">type to create</typeparam>
+        /// <param name="_">type object</param>
+        /// <param name="args">constructor arguments</param>
         /// <returns>instance object</returns>
-        public static T CreateInstance<T>(this Type type, params object[] args)
+        public static T CreateInstance<T>(this Type _, params object[] args)
         {
-            var activator = FindConstructor(type, args);
-            return (T)activator?.Invoke(args);
-        }
-
-        /// <summary>
-        /// Create instance of specified type.
-        /// </summary>
-        /// <param name="type">type object</param>
-        /// <param name="args"></param>
-        /// <returns>instance object</returns>
-        public static object CreateInstance(this Type type, params object[] args)
-        {
-            var activator = FindConstructor(type, args);
-            return activator?.Invoke(args);
-        }
-
-        /// <summary>
-        /// Gets the default constructor.
-        /// </summary>
-        /// <param name="type"></param>
-        /// <param name="args"></param>
-        /// <returns>
-        ///     Default constructor if found otherwise null
-        /// </returns>
-        public static ConstructorInfo FindConstructor(this Type type, params object[] args)
-        {
-            return args != null && args.Length > 0
-                ? type.GetTypeInfo().DeclaredConstructors.FirstOrDefault(MatchSignature)
-                : type.GetTypeInfo().DeclaredConstructors.FirstOrDefault(c => !c.GetParameters().Any());
-
-            bool MatchSignature(ConstructorInfo constructorInfo)
-            {
-                var argIndex = 0;
-                var parameters = constructorInfo.GetParameters();
-                return parameters.All(parameter => argIndex != args.Length && parameter.ParameterType.IsInstanceOfType(args[argIndex++]));
-            }
+            return (T)Activator.CreateInstance(typeof(T), args);
         }
 
         /// <summary>
