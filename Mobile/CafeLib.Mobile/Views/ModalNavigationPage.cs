@@ -2,7 +2,7 @@
 
 namespace CafeLib.Mobile.Views
 {
-    internal class ModalNavigationPage : NavigationPage, INavigableOwner
+    public class ModalNavigationPage : NavigationPage, INavigableOwner
     {
         /// <summary>
         /// Page owner
@@ -13,10 +13,11 @@ namespace CafeLib.Mobile.Views
         /// CafeNavigationPage constructor.
         /// </summary>
         /// <param name="root">root page</param>
-        internal ModalNavigationPage(Page root)
+        public ModalNavigationPage(Page root)
             : base(root)
         {
             SetOwner(root, this);
+            BarBackgroundColor = root.BackgroundColor;
 
             Pushed += (s, e) =>
             {
