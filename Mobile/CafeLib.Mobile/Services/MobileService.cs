@@ -166,7 +166,7 @@ namespace CafeLib.Mobile.Services
             var vm = viewModel ?? ResolveViewModel<T>();
             var page = vm.ResolvePage();
             page.SetViewModel(vm);
-            await Navigator.Navigation.PushModalAsync(page.HasToolbarItems() ? page.AsNavigationPage<NavigationPage>() : page, animate);
+            await Navigator.Navigation.PushModalAsync(page.HasToolbarItems() ? page.AsNavigationPage<ModalNavigationPage>() : page, animate);
         }
 
         /// <summary>
