@@ -5,7 +5,7 @@ namespace CafeLib.Core.Eventing
     public interface IEventMessage
     {
         /// <summary>
-        /// Eent message Id
+        /// Event message Id
         /// </summary>
         Guid Id { get; }
 
