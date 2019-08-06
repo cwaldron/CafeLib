@@ -19,7 +19,7 @@ namespace CafeLib.Core.Extensions
         /// <returns>instance object</returns>
         public static T CreateInstance<T>(this Type _)
         {
-            return _.CreateInstance<T>(null);
+            return typeof(T).CreateInstance<T>(null);
         }
 
         /// <summary>
@@ -31,7 +31,7 @@ namespace CafeLib.Core.Extensions
         /// <returns>instance object</returns>
         public static T CreateInstance<T>(this Type _, params object[] args)
         {
-            var activator = FindConstructor(_, args);
+            var activator = FindConstructor(typeof(T), args);
             return (T)activator?.Invoke(args);
         }
 
