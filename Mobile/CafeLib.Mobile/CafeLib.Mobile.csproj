@@ -9,11 +9,21 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="CafeLib.Core" Version="0.6.8" />
-    <PackageReference Include="CafeLib.Core.IoC" Version="0.6.8" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="2.2.0" />
     <PackageReference Include="Xamarin.Forms" Version="4.1.0.555618" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="CafeLib.Core">
+      <HintPath>..\..\Core\CafeLib.Core.IoC\bin\Debug\netstandard2.0\CafeLib.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="CafeLib.Core.Eventing">
+      <HintPath>..\..\Core\CafeLib.Core.IoC\bin\Debug\netstandard2.0\CafeLib.Core.Eventing.dll</HintPath>
+    </Reference>
+    <Reference Include="CafeLib.Core.IoC">
+      <HintPath>..\..\Core\CafeLib.Core.IoC\bin\Debug\netstandard2.0\CafeLib.Core.IoC.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

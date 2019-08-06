@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace CafeLib.Core.IoC
+﻿namespace CafeLib.Core.IoC
 {
     public interface IServiceResolver
     {

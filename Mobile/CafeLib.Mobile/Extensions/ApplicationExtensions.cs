@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using CafeLib.Core.IoC;
+using CafeLib.Core.Eventing;
 using CafeLib.Mobile.Messages;
 using CafeLib.Mobile.Services;
 using CafeLib.Mobile.Startup;

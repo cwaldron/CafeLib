@@ -59,7 +59,7 @@ namespace CafeLib.Core.Support
                         // Create the singleton object.
                         _singleton = typeof(T).CreateInstance<T>();
 
-                        // Asynchronous initalization of singleton.
+                        // Asynchronous initialization of singleton.
                         AsyncTask.Run(_singleton.InitAsync);
                     }
                 }
@@ -68,7 +68,7 @@ namespace CafeLib.Core.Support
         }
 
         /// <summary>
-        // Asynchronous initalization of singleton.
+        /// Asynchronous initialization of singleton.
         /// </summary>
         /// <returns>task</returns>
         public virtual async Task InitAsync()

@@ -14,7 +14,6 @@
 
   <ItemGroup>
     <Compile Remove="Extensions\StringExtensions - Copy.cs" />
-    <Compile Remove="Logging\CoreLoggerSingleton.cs" />
   </ItemGroup>
 
   <ItemGroup>

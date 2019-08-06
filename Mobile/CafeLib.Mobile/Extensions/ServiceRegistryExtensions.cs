@@ -40,6 +40,5 @@ namespace CafeLib.Mobile.Extensions
         {
             return serviceRegistry.AddTransient<T>();
         }
-
     }
 }

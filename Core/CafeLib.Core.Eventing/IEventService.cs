@@ -1,7 +1,6 @@
 ﻿using System;
-using CafeLib.Core.Eventing;
 
-namespace CafeLib.Core.IoC
+namespace CafeLib.Core.Eventing
 {
     public interface IEventService
     {

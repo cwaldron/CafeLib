@@ -19,7 +19,7 @@ namespace CafeLib.Core.Extensions
         /// <returns>instance object</returns>
         public static T CreateInstance<T>(this Type _)
         {
-            return Activator.CreateInstance<T>();
+            return _.CreateInstance<T>(null);
         }
 
         /// <summary>
@@ -31,7 +31,32 @@ namespace CafeLib.Core.Extensions
         /// <returns>instance object</returns>
         public static T CreateInstance<T>(this Type _, params object[] args)
         {
-            return (T)Activator.CreateInstance(typeof(T), args);
+            var activator = FindConstructor(_, args);
+            return (T)activator?.Invoke(args);
+        }
+
+        /// <summary>
+        /// Gets the default constructor.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="args"></param>
+        /// <returns>
+        ///     Default constructor if found otherwise null
+        /// </returns>
+        public static ConstructorInfo FindConstructor(this Type type, params object[] args)
+        {
+            return args != null && args.Length > 0
+                ? type.GetTypeInfo().DeclaredConstructors.FirstOrDefault(MatchSignature)
+                : type.GetTypeInfo().DeclaredConstructors.FirstOrDefault(c => !c.GetParameters().Any());
+
+            bool MatchSignature(ConstructorInfo constructorInfo)
+            {
+                var parameters = constructorInfo.GetParameters();
+                if (!parameters.Any()) return false;
+                var match = true;
+                parameters.ForEach((p, i) => match &= p.ParameterType.IsInstanceOfType(args[i]));
+                return match;
+            }
         }
 
         /// <summary>

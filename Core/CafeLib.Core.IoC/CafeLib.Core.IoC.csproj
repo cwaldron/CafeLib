@@ -17,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\CafeLib.Core.Eventing\CafeLib.Core.Eventing.csproj" />
     <ProjectReference Include="..\CafeLib.Core\CafeLib.Core.csproj" />
   </ItemGroup>
 

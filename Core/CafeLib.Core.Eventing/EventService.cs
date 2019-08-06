@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using CafeLib.Core.Eventing;
 using CafeLib.Core.Extensions;
+using CafeLib.Core.Support;
 
-namespace CafeLib.Core.IoC
+namespace CafeLib.Core.Eventing
 {
-    internal class EventService : IEventService
+    public class EventService : SingletonBase<EventService>, IEventService
     {
         /// <summary>
         /// This map contains the event Message type key and a collection of subscribers associated with the message type.
         /// </summary>
-        private readonly ConcurrentDictionary<Type, ConcurrentDictionary<Guid, object>> _subscriptions;
+        private readonly ConcurrentDictionary<Type, ConcurrentDictionary<Guid, EventSubscriber>> _subscriptions;
 
         /// <summary>
         /// This map provides type lookup.
@@ -25,9 +25,9 @@ namespace CafeLib.Core.IoC
         /// <summary>
         /// EventBus constructor.
         /// </summary>
-        public EventService()
+        private EventService()
         {
-            _subscriptions = new ConcurrentDictionary<Type, ConcurrentDictionary<Guid, object>>();
+            _subscriptions = new ConcurrentDictionary<Type, ConcurrentDictionary<Guid, EventSubscriber>>();
             _lookup = new ConcurrentDictionary<Guid, Type>();
         }
 
@@ -44,11 +44,11 @@ namespace CafeLib.Core.IoC
         {
             lock (Mutex)
             {
-                var subscribers = _subscriptions.GetOrAdd(typeof(T), new ConcurrentDictionary<Guid, object>());
-                var key = Guid.NewGuid();
-                subscribers.TryAdd(key, action);
-                _lookup.TryAdd(key, typeof(T));
-                return key;
+                var subscribers = _subscriptions.GetOrAdd(typeof(T), new ConcurrentDictionary<Guid, EventSubscriber>());
+                var subscriber = new EventSubscriber<T>(action);
+                subscribers.TryAdd(subscriber.Id, subscriber);
+                _lookup.TryAdd(subscriber.Id, typeof(T));
+                return subscriber.Id;
             }
         }
 
@@ -63,13 +63,13 @@ namespace CafeLib.Core.IoC
         /// </typeparam>
         public void Publish<T>(T message) where T : IEventMessage
         {
-            ConcurrentDictionary<Guid, object> subscribers;
+            ConcurrentDictionary<Guid, EventSubscriber> subscribers;
             lock (Mutex)
             {
                 if (!_subscriptions.ContainsKey(typeof(T))) return;
                 subscribers = _subscriptions[typeof(T)];
             }
-            subscribers.ForEach(x => ((Action<T>)x.Value)?.Invoke(message));
+            subscribers.ForEach(x => x.Value.Invoke(message));
         }
 
         /// <summary>

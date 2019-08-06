@@ -1,4 +1,5 @@
-﻿using CafeLib.Core.IoC;
+﻿using CafeLib.Core.Eventing;
+using CafeLib.Core.IoC;
 
 namespace CafeLib.Core.UnitTests.EventHosts
 {

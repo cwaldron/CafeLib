@@ -21,6 +21,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CafeLib.Core.Binding", "Caf
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CafeLib.Core.IoC", "CafeLib.Core.IoC\CafeLib.Core.IoC.csproj", "{077D2BD2-2E71-4601-A4CC-08C31D0469EA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CafeLib.Core.Eventing", "CafeLib.Core.Eventing\CafeLib.Core.Eventing.csproj", "{7D022F67-D087-4706-BE1C-F8EDDE177E6D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CafeLib.Core.Logging", "CafeLib.Core.Logging\CafeLib.Core.Logging.csproj", "{2F1C6641-A895-426E-9A10-108805F5A321}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -63,6 +67,14 @@ Global
 		{077D2BD2-2E71-4601-A4CC-08C31D0469EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{077D2BD2-2E71-4601-A4CC-08C31D0469EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{077D2BD2-2E71-4601-A4CC-08C31D0469EA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7D022F67-D087-4706-BE1C-F8EDDE177E6D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7D022F67-D087-4706-BE1C-F8EDDE177E6D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7D022F67-D087-4706-BE1C-F8EDDE177E6D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7D022F67-D087-4706-BE1C-F8EDDE177E6D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2F1C6641-A895-426E-9A10-108805F5A321}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2F1C6641-A895-426E-9A10-108805F5A321}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2F1C6641-A895-426E-9A10-108805F5A321}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2F1C6641-A895-426E-9A10-108805F5A321}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -33,7 +33,7 @@ namespace CafeLib.Core.UnitTests
         [Fact]
         public void LogFactoryTest()
         {
-            var messenger = new TestLogFactoryMessenger("testfactory", TestLoggerFactoryListener);
+            var messenger = new TestLogFactoryMessenger("testFactory", TestLoggerFactoryListener);
 
             messenger.Logger.Log(LogLevel.Information, 
                         new EventId(3, "TestEvent"),
