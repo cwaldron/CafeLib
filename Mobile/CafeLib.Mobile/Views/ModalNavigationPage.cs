@@ -2,7 +2,7 @@
 
 namespace CafeLib.Mobile.Views
 {
-    public class ModalNavigationPage : NavigationPage, INavigableOwner
+    internal class ModalNavigationPage : NavigationPage, INavigableOwner
     {
         /// <summary>
         /// Page owner
