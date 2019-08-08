@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using CafeLib.Core.Eventing;
 using CafeLib.Mobile.Messages;
@@ -50,6 +51,31 @@ namespace CafeLib.Mobile.Extensions
             => (T)app.Resources[name];
 
         /// <summary>
+        /// Get the application service resolver.
+        /// </summary>
+        /// <param name="app">application</param>
+        /// <returns></returns>
+        public static T Resolve<T> (this Application app) where T : class
+            => (app as CafeApplication)?.Resolver.Resolve<T>();
+
+        /// <summary>
+        /// Resolve view model.
+        /// </summary>
+        /// <typeparam name="T">view model type</typeparam>
+        /// <param name="app">application</param>
+        /// <returns></returns>
+        public static T ResolveViewModel<T>(this Application app) where T : BaseViewModel
+            => app.Resolve<T>();
+
+        /// <summary>
+        /// Runs an action on the main thread.
+        /// </summary>
+        /// <param name="app">application</param>
+        /// <param name="action">action</param>
+        public static void RunOnMainThread(this Application app, Action action)
+            => app.GetDeviceService().RunOnMainThread(action);
+
+        /// <summary>
         /// Start application on view model.
         /// </summary>
         /// <typeparam name="T">view model type</typeparam>
@@ -75,23 +101,6 @@ namespace CafeLib.Mobile.Extensions
             app.GetDeviceService().RunOnMainThread(async () => await vm.InitAsync(parameter));
         }
 
-        /// <summary>
-        /// Get the application service resolver.
-        /// </summary>
-        /// <param name="app">application</param>
-        /// <returns></returns>
-        public static T Resolve<T> (this Application app) where T : class
-            => (app as CafeApplication)?.Resolver.Resolve<T>();
-
-        /// <summary>
-        /// Resolve view model.
-        /// </summary>
-        /// <typeparam name="T">view model type</typeparam>
-        /// <param name="app">application</param>
-        /// <returns></returns>
-        public static T ResolveViewModel<T>(this Application app) where T : BaseViewModel
-            => app.Resolve<T>();
- 
         /// <summary>
         /// Display an alert dialog.
         /// </summary>
