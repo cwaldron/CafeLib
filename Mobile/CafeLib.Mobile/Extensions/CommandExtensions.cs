@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using System.Windows.Input;
 using CafeLib.Mobile.Commands;
+// ReSharper disable UnusedMember.Global
 
 namespace CafeLib.Mobile.Extensions
 {

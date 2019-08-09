@@ -3,7 +3,6 @@ using CafeLib.Mobile.Services;
 using CafeLib.Mobile.ViewModels;
 using CafeLib.Mobile.Views;
 using Xamarin.Forms;
-
 // ReSharper disable UnusedMember.Global
 
 namespace CafeLib.Mobile.Extensions
@@ -57,7 +56,7 @@ namespace CafeLib.Mobile.Extensions
             var topPage = navigator.Peek();
             if (topPage == null) return;
 
-            Application.Current.Resolve<IDeviceService>().RunOnMainThread(async () =>
+            Application.Current.RunOnMainThread(async () =>
             {
                 if (topPage.GetViewModel<T>() is BaseViewModel<TP> vm)
                 {
@@ -87,6 +86,20 @@ namespace CafeLib.Mobile.Extensions
         public static Page Peek(this INavigation navigator)
         {
             return navigator.NavigationStack.LastOrDefault();
+        }
+
+        /// <summary>
+        /// Insert viewmodel ahead of another viewmodel
+        /// </summary>
+        /// <typeparam name="T1">type of view model to insert before</typeparam>
+        /// <typeparam name="T2">type of the current view model</typeparam>
+        /// <param name="navigation">navigation service</param>
+        /// <returns>awaitable task</returns>
+        public static void InsertBefore<T1, T2>(this INavigationService navigation) where T1 : BaseViewModel where T2 : BaseViewModel
+        {
+            var vm1 = Application.Current.ResolveViewModel<T1>();
+            var vm2 = Application.Current.ResolveViewModel<T2>();
+            navigation.InsertBefore(vm1, vm2);
         }
 
         /// <summary>

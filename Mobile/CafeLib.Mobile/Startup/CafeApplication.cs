@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CafeLib.Core.IoC;
+using CafeLib.Mobile.Extensions;
 using CafeLib.Mobile.Services;
 using Xamarin.Forms;
-// ReSharper disable PublicConstructorInAbstractClass
 // ReSharper disable UnusedMember.Global
 
 namespace CafeLib.Mobile.Startup
@@ -21,6 +21,7 @@ namespace CafeLib.Mobile.Startup
         /// <summary>
         /// Default constructor used to suppress XAML warnings.
         /// </summary>
+        // ReSharper disable once PublicConstructorInAbstractClass
         public CafeApplication()
         {
             throw new Exception(@"Cannot instantiate cafe application via default constructor.");
@@ -56,7 +57,7 @@ namespace CafeLib.Mobile.Startup
         /// <param name="ok">accept button display</param>
         public void DisplayAlert(string title, string message, string ok = "OK")
         {
-            Device.BeginInvokeOnMainThread(async () =>
+            Current.RunOnMainThread(async () =>
             {
                 await MainPage.DisplayAlert(title, message, ok);
             });
@@ -74,7 +75,7 @@ namespace CafeLib.Mobile.Startup
         {
             var completed = new TaskCompletionSource<bool>();
 
-            Device.BeginInvokeOnMainThread(async () =>
+            Current.RunOnMainThread(async () =>
             {
                 var answer = await MainPage.DisplayAlert(title, message, ok, cancel);
                 completed.SetResult(answer);
@@ -95,7 +96,7 @@ namespace CafeLib.Mobile.Startup
         {
             var completed = new TaskCompletionSource<string>();
 
-            Device.BeginInvokeOnMainThread(async () =>
+            Current.RunOnMainThread(async () =>
             {
                 var answer = await MainPage.DisplayActionSheet(title, cancel, delete, options.ToArray());
                 completed.SetResult(answer);

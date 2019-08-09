@@ -17,7 +17,7 @@ namespace CafeLib.Mobile.Extensions
         /// <returns></returns>
         public static Guid SubscribeOnMainThread<T>(this IEventService eventService, Action<T> action) where T : IEventMessage
         {
-            return eventService.Subscribe<T>(x => Application.Current.Resolve<IDeviceService>().RunOnMainThread(() => action(x)));
+            return eventService.Subscribe<T>(x => Application.Current.RunOnMainThread(() => action(x)));
         }
 
         /// <summary>
@@ -29,7 +29,7 @@ namespace CafeLib.Mobile.Extensions
         /// <returns></returns>
         public static Guid SubscribeOnWorkerThread<T>(this IEventService eventService, Action<T> action) where T : IEventMessage
         {
-            return eventService.Subscribe<T>(x => Application.Current.Resolve<IDeviceService>().RunOnWorkerThread(() => action(x)));
+            return eventService.Subscribe<T>(x => Application.Current.RunOnWorkerThread(() => action(x)));
         }
     }
 }

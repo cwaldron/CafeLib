@@ -20,7 +20,7 @@ namespace CafeLib.Mobile.Services
         /// <param name="viewModel">view model to insert before</param>
         /// <param name="currentViewModel">current view model</param>
         /// <returns>awaitable task</returns>
-        Task InsertBeforeAsync<T1, T2>(T1 viewModel, T2 currentViewModel) where T1 : BaseViewModel where T2 : BaseViewModel;
+        void InsertBefore<T1, T2>(T1 viewModel, T2 currentViewModel) where T1 : BaseViewModel where T2 : BaseViewModel;
 
         /// <summary>
         /// Navigate to pushed view model.
@@ -35,22 +35,22 @@ namespace CafeLib.Mobile.Services
         /// </summary>
         /// <param name="viewModel">view model</param>
         /// <param name="animate">transition animation flag</param>
-        /// <returns></returns>
+        /// <returns>task</returns>
         Task PushModalAsync<T>(T viewModel, bool animate = false) where T : BaseViewModel;
 
         /// <summary>
         /// Navigate back to popped view model
         /// </summary>
         /// <param name="animate">transition animation flag</param>
-        /// <returns>page associated with view model</returns>
-        Task<T> PopAsync<T>(bool animate = false) where T : BaseViewModel;
+        /// <returns>task</returns>
+        Task PopAsync(bool animate = false);
 
         /// <summary>
         /// Navigate back from modal stack
         /// </summary>
         /// <param name="animate">transition animation flag</param>
-        /// <returns>page associated with view model</returns>
-        Task<T> PopModalAsync<T>(bool animate = false) where T : BaseViewModel;
+        /// <returns>task</returns>
+        Task PopModalAsync<T>(bool animate = false) where T : BaseViewModel;
 
         /// <summary>
         /// Pops all but the root Page off the navigation stack.
