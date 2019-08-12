@@ -24,6 +24,7 @@ namespace CafeLib.Mobile.ViewModels
             AppearingCommand = new Command(() => { });
             DisappearingCommand = new Command(() => { });
             CloseCommand = new Command(() => Close());
+            FocusCommand = new Command(() => { });
             BackButtonPressed = new XamCommand<NavigationSource, bool>(x =>
             {
                 Close();
@@ -146,6 +147,11 @@ namespace CafeLib.Mobile.ViewModels
         /// Close command.
         /// </summary>
         public ICommand CloseCommand { get; set; }
+
+        /// <summary>
+        /// Focus command.
+        /// </summary>
+        public ICommand FocusCommand { get; set; }
 
         /// <summary>
         /// Title.

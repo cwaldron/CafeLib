@@ -89,6 +89,16 @@ namespace CafeLib.Mobile.Extensions
         }
 
         /// <summary>
+        /// Returns the page at the top of the navigation stack.
+        /// </summary>
+        /// <param name="navigation">navigation service</param>
+        /// <returns>page at top of navigation service navigation page</returns>
+        public static Page Peek(this INavigationService navigation)
+        {
+            return navigation.Navigator.Navigation.Peek();
+        }
+
+        /// <summary>
         /// Insert viewmodel ahead of another viewmodel
         /// </summary>
         /// <typeparam name="T1">type of view model to insert before</typeparam>
