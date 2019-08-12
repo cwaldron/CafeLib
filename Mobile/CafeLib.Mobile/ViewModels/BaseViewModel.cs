@@ -141,7 +141,7 @@ namespace CafeLib.Mobile.ViewModels
         /// <summary>
         /// Back button pressed handler.
         /// </summary>
-        public IXamCommand<NavigationSource, bool> BackButtonPressed { get; protected set; }
+        public IXamCommand<NavigationSource, bool> BackButtonPressed { get; set; }
 
         /// <summary>
         /// Close command.
