@@ -1,4 +1,5 @@
-﻿using Xamarin.Forms;
+﻿using System.Linq;
+using Xamarin.Forms;
 
 namespace CafeLib.Mobile.Views
 {
@@ -17,7 +18,11 @@ namespace CafeLib.Mobile.Views
             : base(root)
         {
             SetOwner(root, this);
-            BarBackgroundColor = root.BackgroundColor;
+
+            var toolbarItem = (root as BaseContentPage)?.ToolbarItems?.FirstOrDefault() as BaseToolbarItem 
+                              ?? new BaseToolbarItem {BarBackgroundColor = root.BackgroundColor, BarTextColor = BarTextColor};
+            BarBackgroundColor = toolbarItem.BarBackgroundColor;
+            BarTextColor = toolbarItem.BarTextColor;
 
             Pushed += (s, e) =>
             {
