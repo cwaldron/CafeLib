@@ -16,4 +16,9 @@ namespace CafeLib.Mobile.Commands
 
         bool CanExecute(T parameter);
     }
+
+    public interface IXamAsyncCommand<in TParameter, TResult> : IXamCommand<TParameter>
+    {
+        Task<TResult> ExecuteAsync(TParameter parameter);
+    }
 }

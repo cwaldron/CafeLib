@@ -42,7 +42,6 @@ namespace CafeLib.Mobile.Views
             return GetViewModel<BaseViewModel>().BackButtonPressed.Execute(NavigationSource.Hardware);
         }
 
-
         public bool OnSoftBackButtonPressed()
         {
             return GetViewModel<BaseViewModel>().BackButtonPressed.Execute(NavigationSource.Software);

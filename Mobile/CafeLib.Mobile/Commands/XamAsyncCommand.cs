@@ -101,4 +101,60 @@ namespace CafeLib.Mobile.Commands
             return !_isBusy && (_canExecute?.Invoke(parameter) ?? true);
         }
     }
+
+
+    public class XamAsyncCommand<TParameter, TResult> : IXamAsyncCommand<TParameter, TResult>
+    {
+        private readonly Func<TParameter, Task<TResult>> _command;
+        private readonly Func<TParameter, bool> _canExecute;
+
+        /// <summary>
+        /// XamCommand constructor.
+        /// </summary>
+        /// <param name="command">The command function to run when upon execution.</param>
+        public XamAsyncCommand(Func<TParameter, Task<TResult>> command)
+        {
+            _command = command ?? throw new ArgumentNullException(nameof(command));
+            _canExecute = x => true;
+        }
+
+        /// <summary>
+        /// XamAsyncCommand constructor.
+        /// </summary>
+        /// <param name="command">The command function to run when upon execution.</param>
+        /// <param name="canExecute">The routine determining the execution state of the command.</param>
+        public XamAsyncCommand(Func<TParameter, Task<TResult>> command, Func<TParameter, bool> canExecute)
+        {
+            _command = command ?? throw new ArgumentNullException(nameof(command));
+            _canExecute = canExecute ?? throw new ArgumentNullException(nameof(canExecute));
+        }
+
+        /// <summary>
+        /// Execute the command
+        /// </summary>
+        /// <param name="parameter">command parameter</param>
+        /// <returns></returns>
+        public Task<TResult> ExecuteAsync(TParameter parameter)
+        {
+            var result = CanExecute(parameter) ? _command.Invoke(parameter) : default;
+            ChangeCanExecute();
+            return result;
+        }
+
+        public bool CanExecute(object parameter) => _canExecute((TParameter)parameter);
+
+#pragma warning disable RECS0165 // Asynchronous methods should return a Task instead of void
+        async void ICommand.Execute(object parameter)
+#pragma warning restore RECS0165 // Asynchronous methods should return a Task instead of void
+        {
+            await ExecuteAsync((TParameter)parameter);
+        }
+
+        public event EventHandler CanExecuteChanged;
+
+        public void ChangeCanExecute()
+        {
+            CanExecuteChanged?.Invoke(this, EventArgs.Empty);
+        }
+    }
 }

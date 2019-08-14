@@ -46,7 +46,7 @@ namespace CafeLib.Mobile.Commands
         }
 
         /// <summary>
-        /// MvxCommand constructor.
+        /// XamCommand constructor.
         /// </summary>
         /// <param name="action">The action to run when the command executes.</param>
         /// <param name="canExecute">The routine determining the execution state of the command.</param>
@@ -108,7 +108,7 @@ namespace CafeLib.Mobile.Commands
         }
 
         /// <summary>
-        /// MvxCommand constructor.
+        /// XamCommand constructor.
         /// </summary>
         /// <param name="command">The command function to run when upon execution.</param>
         /// <param name="canExecute">The routine determining the execution state of the command.</param>
