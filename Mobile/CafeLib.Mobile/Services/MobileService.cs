@@ -223,8 +223,7 @@ namespace CafeLib.Mobile.Services
         /// <returns>navigation page</returns>
         public NavigationPage SetNavigator<T>() where T : BaseViewModel
         {
-            Navigator = _navigators.GetOrAdd(typeof(T), () => CreateNavigator(ResolveViewModel<T>().ResolvePage()));
-            return Navigator;
+            return SetNavigator(ResolveViewModel<T>());
         }
 
         /// <summary>
