@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using CafeLib.Core.Extensions;
 using CafeLib.Core.IoC;
+using CafeLib.Mobile.Attributes;
 using CafeLib.Mobile.Extensions;
 using CafeLib.Mobile.Support;
 using CafeLib.Mobile.ViewModels;
@@ -147,6 +148,7 @@ namespace CafeLib.Mobile.Services
             if (Navigator.Navigation.Peek()?.GetType() != page.GetType())
             {
                 page.SetViewModel(vm);
+                animate = page.GetType().GetCustomAttribute<AnimateNavigationAttribute>()?.Push ?? animate;
                 await Navigator.Navigation.PushAsync(page, animate);
             }
         }
@@ -163,6 +165,7 @@ namespace CafeLib.Mobile.Services
             var vm = viewModel ?? ResolveViewModel<T>();
             var page = vm.ResolvePage();
             page.SetViewModel(vm);
+            animate = page.GetType().GetCustomAttribute<AnimateNavigationAttribute>()?.Push ?? animate;
             await Navigator.Navigation.PushModalAsync(page.HasToolbarItems() ? page.AsNavigationPage<ModalNavigationPage>() : page, animate);
         }
 
