@@ -28,12 +28,14 @@ namespace CafeLib.Mobile.Views
         protected override void OnAppearing()
         {
             base.OnAppearing();
+            GetViewModel<BaseViewModel>().IsVisible = true;
             GetViewModel<BaseViewModel>().AppearingCommand.Execute(null);
         }
 
         protected override void OnDisappearing()
         {
             base.OnDisappearing();
+            GetViewModel<BaseViewModel>().IsVisible = false;
             GetViewModel<BaseViewModel>().DisappearingCommand.Execute(null);
         }
 

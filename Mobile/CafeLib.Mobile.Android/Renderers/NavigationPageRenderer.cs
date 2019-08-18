@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Linq;
 using Android.Content;
 using Android.Support.V4.App;
 using CafeLib.Mobile.Android.Renderers;
 using CafeLib.Mobile.Extensions;
 using CafeLib.Mobile.Views;
 using Xamarin.Forms;
-using Xamarin.Forms.Platform.Android;
 using View = Android.Views.View;
 
 [assembly: ExportRenderer(typeof(NavigationPage), typeof(NavigationPageRenderer))]

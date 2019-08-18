@@ -55,12 +55,17 @@ namespace CafeLib.Mobile.Startup
         /// <param name="title">dialog title</param>
         /// <param name="message">dialog message</param>
         /// <param name="ok">accept button display</param>
-        public void DisplayAlert(string title, string message, string ok = "OK")
+        public async Task DisplayAlert(string title, string message, string ok = "OK")
         {
+            var completed = new TaskCompletionSource<bool>();
+
             Current.RunOnMainThread(async () =>
             {
                 await MainPage.DisplayAlert(title, message, ok);
+                completed.SetResult(true);
             });
+
+            await completed.Task;
         }
 
         /// <summary>

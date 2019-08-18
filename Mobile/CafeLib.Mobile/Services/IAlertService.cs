@@ -11,7 +11,7 @@ namespace CafeLib.Mobile.Services
         /// <param name="title">title</param>
         /// <param name="message">message</param>
         /// <param name="ok">OK</param>
-        void DisplayAlert(string title, string message, string ok = "OK");
+        Task DisplayAlert(string title, string message, string ok = "OK");
 
         /// <summary>
         /// Displays an alert (simple question) on the page.

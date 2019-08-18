@@ -116,7 +116,7 @@ namespace CafeLib.Mobile.Extensions
         /// <param name="title">dialog title</param>
         /// <param name="message">message</param>
         /// <param name="ok"></param>
-        public static void AlertDialog(this Application app, string title, string message, string ok = "OK")
+        public static Task AlertDialog(this Application app, string title, string message, string ok = "OK")
             => (app as CafeApplication)?.DisplayAlert(title, message, ok);
 
         /// <summary>

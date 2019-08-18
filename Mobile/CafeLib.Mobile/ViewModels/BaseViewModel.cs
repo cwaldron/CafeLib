@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using CafeLib.Core.Eventing;
@@ -250,12 +249,9 @@ namespace CafeLib.Mobile.ViewModels
         /// <param name="title">title</param>
         /// <param name="message">message</param>
         /// <param name="ok">OK</param>
-        public void DisplayAlert(string title, string message, string ok = "OK")
+        public Task DisplayAlert(string title, string message, string ok = "OK")
         {
-            DeviceService.RunOnMainThread(() =>
-            {
-                Application.Current.AlertDialog(title, message, ok);
-            });
+            return Application.Current.AlertDialog(title, message, ok);
         }
 
         /// <summary>
@@ -265,17 +261,9 @@ namespace CafeLib.Mobile.ViewModels
         /// <param name="message">message</param>
         /// <param name="ok">OK</param>
         /// <param name="cancel">cancel</param>
-        public async Task<bool> DisplayConfirm(string title, string message, string ok = "OK", string cancel = "Cancel")
+        public Task<bool> DisplayConfirm(string title, string message, string ok = "OK", string cancel = "Cancel")
         {
-            var completed = new TaskCompletionSource<bool>();
-
-            DeviceService.RunOnMainThread(async () =>
-            {
-                var answer = await Application.Current.ConfirmDialog(title, message, ok, cancel);
-                completed.SetResult(answer);
-            });
-
-            return await completed.Task;
+            return Application.Current.ConfirmDialog(title, message, ok, cancel);
         }
 
         /// <summary>
@@ -286,17 +274,9 @@ namespace CafeLib.Mobile.ViewModels
         /// <param name="destroy">destroy string</param>
         /// <param name="options">option list</param>
         /// <returns></returns>
-        public async Task<string> DisplayOptions(string title, string cancel, string destroy, IEnumerable<string> options)
+        public Task<string> DisplayOptions(string title, string cancel, string destroy, IEnumerable<string> options)
         {
-            var completed = new TaskCompletionSource<string>();
-
-            DeviceService.RunOnMainThread(async () =>
-            {
-                var answer = await Application.Current.OptionsDialog(title, cancel, destroy, options.ToArray());
-                completed.SetResult(answer);
-            });
-
-            return await completed.Task;
+            return Application.Current.OptionsDialog(title, cancel, destroy, options);
         }
     }
 

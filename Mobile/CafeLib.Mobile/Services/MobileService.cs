@@ -88,9 +88,9 @@ namespace CafeLib.Mobile.Services
         /// <param name="title">dialog title</param>
         /// <param name="message">dialog message</param>
         /// <param name="ok">accept button display</param>
-        public void DisplayAlert(string title, string message, string ok = DefaultAcceptText)
+        public Task DisplayAlert(string title, string message, string ok = DefaultAcceptText)
         {
-            Application.Current.AlertDialog(title, message, ok);
+            return Application.Current.AlertDialog(title, message, ok);
         }
 
         /// <summary>

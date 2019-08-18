@@ -91,11 +91,22 @@ namespace CafeLib.Mobile.Extensions
         /// <summary>
         /// Returns the page at the top of the navigation stack.
         /// </summary>
-        /// <param name="navigation">navigation service</param>
+        /// <param name="service">navigation service</param>
         /// <returns>page at top of navigation service navigation page</returns>
-        public static Page Peek(this INavigationService navigation)
+        public static Page Peek(this INavigationService service)
         {
-            return navigation.Navigator.Navigation.Peek();
+            return service.Navigator.Navigation.Peek();
+        }
+
+        /// <summary>
+        /// Determine whether the viewmodel type is at the top of the current navigation stack
+        /// </summary>
+        /// <param name="service"></param>
+        /// <param name="viewModel">view model</param>
+        /// <returns>true if view model is at the top of current navigation stack; false otherwise</returns>
+        public static bool IsPeek(this INavigationService service, BaseViewModel viewModel)
+        {
+            return service.Peek().BindingContext == viewModel;
         }
 
         /// <summary>
@@ -103,39 +114,39 @@ namespace CafeLib.Mobile.Extensions
         /// </summary>
         /// <typeparam name="T1">type of view model to insert before</typeparam>
         /// <typeparam name="T2">type of the current view model</typeparam>
-        /// <param name="navigation">navigation service</param>
+        /// <param name="service">navigation service</param>
         /// <returns>awaitable task</returns>
-        public static void InsertBefore<T1, T2>(this INavigationService navigation) where T1 : BaseViewModel where T2 : BaseViewModel
+        public static void InsertBefore<T1, T2>(this INavigationService service) where T1 : BaseViewModel where T2 : BaseViewModel
         {
             var vm1 = Application.Current.ResolveViewModel<T1>();
             var vm2 = Application.Current.ResolveViewModel<T2>();
-            navigation.InsertBefore(vm1, vm2);
+            service.InsertBefore(vm1, vm2);
         }
 
         /// <summary>
         /// Navigate to view model.
         /// </summary>
-        /// <param name="navigation">navigation service</param>
+        /// <param name="service">navigation service</param>
         /// <param name="animate">transition animation flag</param>
         /// <returns></returns>
-        public static void Navigate<T>(this INavigationService navigation, bool animate = false) where T : BaseViewModel
+        public static void Navigate<T>(this INavigationService service, bool animate = false) where T : BaseViewModel
         {
-            navigation.Navigate(Application.Current.Resolve<IPageService>().ResolveViewModel<T>(), animate);
+            service.Navigate(Application.Current.Resolve<IPageService>().ResolveViewModel<T>(), animate);
         }
 
         /// <summary>
         /// Navigate to view model.
         /// </summary>
         /// <typeparam name="T">view model type</typeparam>
-        /// <param name="navigation">navigation service</param>
+        /// <param name="service">navigation service</param>
         /// <param name="viewModel">view model</param>
         /// <param name="animate">transition animation flag</param>
-        public static void Navigate<T>(this INavigationService navigation, T viewModel, bool animate = false) where T : BaseViewModel
+        public static void Navigate<T>(this INavigationService service, T viewModel, bool animate = false) where T : BaseViewModel
         {
             Application.Current.Resolve<IDeviceService>().RunOnMainThread(async () =>
             {
                 await viewModel.InitAsync();
-                await navigation.PushAsync(viewModel, animate);
+                await service.PushAsync(viewModel, animate);
             });
         }
 
@@ -144,12 +155,12 @@ namespace CafeLib.Mobile.Extensions
         /// </summary>
         /// <typeparam name="T">view model type</typeparam>
         /// <typeparam name="TP">view model parameter type</typeparam>
-        /// <param name="navigation">navigation service</param>
+        /// <param name="service">navigation service</param>
         /// <param name="parameter">view model parameter</param>
         /// <param name="animate">transition animation flag</param>
-        public static void Navigate<T, TP>(this INavigationService navigation, TP parameter, bool animate = false) where T : BaseViewModel<TP> where TP : class
+        public static void Navigate<T, TP>(this INavigationService service, TP parameter, bool animate = false) where T : BaseViewModel<TP> where TP : class
         {
-            navigation.Navigate(Application.Current.Resolve<IPageService>().ResolveViewModel<T>(), parameter, animate);
+            service.Navigate(Application.Current.Resolve<IPageService>().ResolveViewModel<T>(), parameter, animate);
         }
 
         /// <summary>
@@ -157,29 +168,29 @@ namespace CafeLib.Mobile.Extensions
         /// </summary>
         /// <typeparam name="T">view model type</typeparam>
         /// <typeparam name="TP">view model parameter type</typeparam>
-        /// <param name="navigation">navigation service</param>
+        /// <param name="service">navigation service</param>
         /// <param name="viewModel">view model</param>
         /// <param name="parameter">view model parameter</param>
         /// <param name="animate">transition animation flag</param>
         /// <returns></returns>
-        public static void Navigate<T, TP>(this INavigationService navigation, T viewModel, TP parameter, bool animate = false) where T : BaseViewModel<TP> where TP : class
+        public static void Navigate<T, TP>(this INavigationService service, T viewModel, TP parameter, bool animate = false) where T : BaseViewModel<TP> where TP : class
         {
             Application.Current.Resolve<IDeviceService>().RunOnMainThread(async () =>
             {
                 await viewModel.InitAsync(parameter);
-                await navigation.PushAsync(viewModel, animate);
+                await service.PushAsync(viewModel, animate);
             });
         }
 
         /// <summary>
         /// Navigate to modal view model.
         /// </summary>
-        /// <param name="navigation">navigation service</param>
+        /// <param name="service">navigation service</param>
         /// <param name="animate">transition animation flag</param>
         /// <returns></returns>
-        public static void NavigateModal<T>(this INavigationService navigation, bool animate = false) where T : BaseViewModel
+        public static void NavigateModal<T>(this INavigationService service, bool animate = false) where T : BaseViewModel
         {
-            navigation.NavigateModal(Application.Current.Resolve<IPageService>().ResolveViewModel<T>(), animate);
+            service.NavigateModal(Application.Current.Resolve<IPageService>().ResolveViewModel<T>(), animate);
         }
 
         /// <summary>
@@ -187,27 +198,27 @@ namespace CafeLib.Mobile.Extensions
         /// </summary>
         /// <typeparam name="T">view model type</typeparam>
         /// <typeparam name="TP">view model parameter type</typeparam>
-        /// <param name="navigation">navigation service</param>
+        /// <param name="service">navigation service</param>
         /// <param name="parameter">view model parameter</param>
         /// <param name="animate">transition animation flag</param>
-        public static void NavigateModal<T, TP>(this INavigationService navigation, TP parameter, bool animate = false) where T : BaseViewModel<TP> where TP : class
+        public static void NavigateModal<T, TP>(this INavigationService service, TP parameter, bool animate = false) where T : BaseViewModel<TP> where TP : class
         {
-            navigation.NavigateModal(Application.Current.Resolve<IPageService>().ResolveViewModel<T>(), parameter, animate);
+            service.NavigateModal(Application.Current.Resolve<IPageService>().ResolveViewModel<T>(), parameter, animate);
         }
 
         /// <summary>
         /// Navigate to modal view model.
         /// </summary>
         /// <typeparam name="T">view model type</typeparam>
-        /// <param name="navigation">navigation service</param>
+        /// <param name="service">navigation service</param>
         /// <param name="viewModel">view model</param>
         /// <param name="animate">transition animation flag</param>
-        public static void NavigateModal<T>(this INavigationService navigation, T viewModel, bool animate = false) where T : BaseViewModel
+        public static void NavigateModal<T>(this INavigationService service, T viewModel, bool animate = false) where T : BaseViewModel
         {
             Application.Current.Resolve<IDeviceService>().RunOnMainThread(async () =>
             {
                 await viewModel.InitAsync();
-                await navigation.PushModalAsync(viewModel, animate);
+                await service.PushModalAsync(viewModel, animate);
             });
         }
 
@@ -216,17 +227,17 @@ namespace CafeLib.Mobile.Extensions
         /// </summary>
         /// <typeparam name="T">view model type</typeparam>
         /// <typeparam name="TP">view model parameter type</typeparam>
-        /// <param name="navigation">navigation service</param>
+        /// <param name="service">navigation service</param>
         /// <param name="viewModel">view model</param>
         /// <param name="parameter">view model parameter</param>
         /// <param name="animate">transition animation flag</param>
         /// <returns></returns>
-        public static void NavigateModal<T, TP>(this INavigationService navigation, T viewModel, TP parameter, bool animate = false) where T : BaseViewModel<TP> where TP : class
+        public static void NavigateModal<T, TP>(this INavigationService service, T viewModel, TP parameter, bool animate = false) where T : BaseViewModel<TP> where TP : class
         {
             Application.Current.Resolve<IDeviceService>().RunOnMainThread(async () =>
             {
                 await viewModel.InitAsync(parameter);
-                await navigation.PushModalAsync(viewModel, animate);
+                await service.PushModalAsync(viewModel, animate);
             });
         }
 
@@ -236,7 +247,7 @@ namespace CafeLib.Mobile.Extensions
         /// <summary>
         /// Find the proper navigator & page pair.
         /// </summary>
-        /// <param name="navigator">navigation</param>
+        /// <param name="navigator">navigation object</param>
         /// <param name="page">page</param>
         /// <returns>navigator & page pair</returns>
         private static (INavigation, Page) FindNavigator(INavigation navigator, Page page)
