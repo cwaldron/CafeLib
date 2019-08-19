@@ -1,5 +1,6 @@
 ﻿using System;
 using CafeLib.Core.IoC;
+using CafeLib.Mobile.Effects;
 using CafeLib.Mobile.Extensions;
 using CafeLib.Mobile.ViewModels;
 using Xamarin.Forms;
@@ -23,6 +24,18 @@ namespace CafeLib.Mobile.Views
         public INavigableOwner Owner { get; internal set; }
 
         /// <summary>
+        /// BaseContextPage constructor.
+        /// </summary>
+        // ReSharper disable once PublicConstructorInAbstractClass
+        public BaseContentPage()
+        {
+            var lifecycleEffect = new ViewLifecycleEffect();
+            lifecycleEffect.Loaded += (s, e) => OnLoad();
+            lifecycleEffect.Unloaded += (s, e) => OnUnload();
+            Effects.Add(lifecycleEffect);
+        }
+
+        /// <summary>
         /// Dispose.
         /// </summary>
         public void Dispose()
@@ -39,7 +52,7 @@ namespace CafeLib.Mobile.Views
         /// <typeparam name="TViewModel">view model type</typeparam>
         public TViewModel GetViewModel<TViewModel>() where TViewModel : BaseViewModel
         {
-            return (TViewModel) BindingContext;
+            return (TViewModel)(BindingContext as BaseViewModel);
         }
 
         /// <summary>
@@ -61,6 +74,28 @@ namespace CafeLib.Mobile.Views
             BindingContext = null;
             Content = null;
         }
+
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+            GetViewModel<BaseViewModel>()?.AppearingCommand.Execute(null);
+        }
+
+        protected override void OnDisappearing()
+        {
+            base.OnDisappearing();
+            GetViewModel<BaseViewModel>()?.DisappearingCommand.Execute(null);
+        }
+
+        protected virtual void OnLoad()
+        {
+            GetViewModel<BaseViewModel>()?.LoadCommand.Execute(null);
+        }
+
+        protected virtual void OnUnload()
+        {
+            GetViewModel<BaseViewModel>()?.UnloadCommand.Execute(null);
+        }
     }
 
     public abstract class BaseContentPage<T> : BaseContentPage, ISoftNavigationPage where T : BaseViewModel
@@ -77,20 +112,6 @@ namespace CafeLib.Mobile.Views
         protected BaseContentPage()
         {
             SetViewModel(ResolveViewModel());
-        }
-
-        protected override void OnAppearing()
-        {
-            base.OnAppearing();
-            ViewModel.IsVisible = true;
-            ViewModel.AppearingCommand.Execute(null);
-        }
-
-        protected override void OnDisappearing()
-        {
-            base.OnDisappearing();
-            ViewModel.DisappearingCommand.Execute(null);
-            ViewModel.IsVisible = false;
         }
 
         /// <summary>

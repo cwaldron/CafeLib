@@ -15,7 +15,13 @@ namespace CafeLib.Mobile.ViewModels
     public abstract class BaseViewModel : ObservableBase
     {
         private readonly List<Guid> _subscriberHandles;
+        protected readonly Func<ICommand, Task> ExecuteCommand; 
 
+        protected enum LifecycleState { Load, Appearing, Disappearing, Unload }
+
+        /// <summary>
+        /// BaseViewModel constructor.
+        /// </summary>
         protected BaseViewModel()
         {
             _subscriberHandles = new List<Guid>();
@@ -24,11 +30,27 @@ namespace CafeLib.Mobile.ViewModels
             DisappearingCommand = new Command(() => { });
             CloseCommand = new Command(() => Close());
             FocusCommand = new Command(() => { });
+            LoadCommand = new Command(() => { });
+            UnloadCommand = new Command(() => { });
             BackButtonPressed = new XamCommand<NavigationSource, bool>(x =>
             {
                 Close();
                 return true;
             });
+
+            ExecuteCommand = async command =>
+            {
+                switch (command)
+                {
+                    case IXamAsyncCommand a:
+                        await a.ExecuteAsync();
+                        break;
+
+                    default:
+                        command?.Execute(null);
+                        break;
+                }
+            };
         }
 
         /// <summary>
@@ -38,6 +60,8 @@ namespace CafeLib.Mobile.ViewModels
         {
             await Task.CompletedTask;
         }
+
+        protected LifecycleState Lifecycle { get; private set; }
 
         /// <summary>
         /// Service resolver.
@@ -80,22 +104,15 @@ namespace CafeLib.Mobile.ViewModels
             {
                 _appearingCommand = new XamAsyncCommand(async () =>
                 {
+                    Lifecycle = LifecycleState.Appearing;
+                    IsVisible = true;
                     ReleaseSubscribers();
                     AddSubscribers();
 
                     try
                     {
                         IsEnabled = false;
-                        switch (value)
-                        {
-                            case IXamAsyncCommand a:
-                                await a.ExecuteAsync();
-                                break;
-
-                            default:
-                                value?.Execute(null);
-                                break;
-                        }
+                        await ExecuteCommand(value);
                     }
                     finally
                     {
@@ -118,21 +135,48 @@ namespace CafeLib.Mobile.ViewModels
                 {
                     try
                     {
-                        switch (value)
-                        {
-                            case IXamAsyncCommand a:
-                                await a.ExecuteAsync();
-                                break;
-
-                            default:
-                                value?.Execute(null);
-                                break;
-                        }
+                        Lifecycle = LifecycleState.Disappearing;
+                        await ExecuteCommand(value);
                     }
                     finally
                     {
                         ReleaseSubscribers();
+                        IsVisible = false;
                     }
+                });
+            }
+        }
+
+        /// <summary>
+        /// Load command.
+        /// </summary>
+        private ICommand _loadCommand;
+        public ICommand LoadCommand
+        {
+            get => _loadCommand;
+            set
+            {
+                _loadCommand = new XamAsyncCommand(async () =>
+                {
+                    Lifecycle = LifecycleState.Load;
+                    await ExecuteCommand(value);
+                });
+            }
+        }
+
+        /// <summary>
+        /// Load command.
+        /// </summary>
+        private ICommand _unloadCommand;
+        public ICommand UnloadCommand
+        {
+            get => _unloadCommand;
+            set
+            {
+                _unloadCommand = new XamAsyncCommand(async () =>
+                {
+                    Lifecycle = LifecycleState.Unload;
+                    await ExecuteCommand(value);
                 });
             }
         }
