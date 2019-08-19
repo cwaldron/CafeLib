@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using CafeLib.Core.Eventing;
+using CafeLib.Core.IoC;
 using CafeLib.Mobile.Effects;
 using CafeLib.Mobile.Extensions;
 using CafeLib.Mobile.ViewModels;
@@ -10,20 +13,39 @@ namespace CafeLib.Mobile.Views
 {
     public class BaseContentView : ContentView
     {
-        public Action Appearing;
-        public Action Disappearing;
+        private readonly List<Guid> _subscriberHandles;
+
+        /// <summary>
+        /// The viewmodel bound to the page.
+        /// </summary>
+        protected IServiceResolver Resolver => Application.Current.Resolve<IServiceResolver>();
+
+        /// <summary>
+        /// Navigation Service
+        /// </summary>
+        protected IEventService EventService => Resolver.Resolve<IEventService>();
+
+        /// <summary>
+        /// Notify appearance of content view from external source.
+        /// </summary>
+        public Action Appearing => OnAppearing;
+
+        /// <summary>
+        /// Notify disappearance of content view from external source.
+        /// </summary>
+        public Action Disappearing => OnDisappearing;
+
 
         /// <summary>
         /// BaseContextView constructor.
         /// </summary>
         public BaseContentView()
         {
+            _subscriberHandles = new List<Guid>();
             var lifecycleEffect = new ViewLifecycleEffect();
             lifecycleEffect.Loaded += (s, e) => OnLoad();
             lifecycleEffect.Unloaded += (s, e) => OnUnload();
             Effects.Add(lifecycleEffect);
-            Appearing = OnAppearing;
-            Disappearing = OnDisappearing;
         }
 
         /// <summary>
@@ -55,6 +77,8 @@ namespace CafeLib.Mobile.Views
 
         protected virtual void OnUnload()
         {
+            _subscriberHandles.ForEach(x => EventService.Unsubscribe(x));
+            _subscriberHandles.Clear();
         }
 
         protected override void OnBindingContextChanged()
@@ -64,6 +88,26 @@ namespace CafeLib.Mobile.Views
             {
                 Application.Current.RunOnMainThread(async () => await vm.InitAsync());
             }
+        }
+
+        /// <summary>
+        /// Publish an event message.
+        /// </summary>
+        /// <typeparam name="T">event message type</typeparam>
+        /// <param name="message">event message</param>
+        protected void PublishEvent<T>(T message) where T : IEventMessage
+        {
+            EventService.Publish(message);
+        }
+
+        /// <summary>
+        /// Subscribe an action to an event message.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="action"></param>
+        protected void SubscribeEvent<T>(Action<T> action) where T : IEventMessage
+        {
+            _subscriberHandles.Add(EventService.SubscribeOnMainThread(action));
         }
     }
 }
