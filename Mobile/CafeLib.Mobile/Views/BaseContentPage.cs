@@ -1,5 +1,4 @@
-﻿using System;
-using CafeLib.Core.IoC;
+﻿using CafeLib.Core.IoC;
 using CafeLib.Mobile.Effects;
 using CafeLib.Mobile.Extensions;
 using CafeLib.Mobile.ViewModels;
@@ -9,10 +8,8 @@ using Xamarin.Forms;
 
 namespace CafeLib.Mobile.Views
 {
-    public abstract class BaseContentPage : ContentPage, IPageBase, IDisposable
+    public abstract class BaseContentPage : ContentPage, IPageBase
     {
-        private bool _disposed;
-
         /// <summary>
         /// The viewmodel bound to the page.
         /// </summary>
@@ -33,17 +30,6 @@ namespace CafeLib.Mobile.Views
             lifecycleEffect.Loaded += (s, e) => OnLoad();
             lifecycleEffect.Unloaded += (s, e) => OnUnload();
             Effects.Add(lifecycleEffect);
-        }
-
-        /// <summary>
-        /// Dispose.
-        /// </summary>
-        public void Dispose()
-        {
-            if (_disposed) return;
-            Dispose(!_disposed);
-            _disposed = true;
-            GC.SuppressFinalize(this);
         }
 
         /// <summary>

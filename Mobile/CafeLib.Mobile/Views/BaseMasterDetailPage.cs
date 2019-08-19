@@ -1,4 +1,4 @@
-﻿using System;
+﻿using CafeLib.Mobile.Effects;
 using CafeLib.Mobile.ViewModels;
 using Xamarin.Forms;
 
@@ -6,9 +6,19 @@ using Xamarin.Forms;
 
 namespace CafeLib.Mobile.Views
 {
-    public abstract class BaseMasterDetailPage : MasterDetailPage, IPageBase, ISoftNavigationPage, IDisposable
+    public abstract class BaseMasterDetailPage : MasterDetailPage, IPageBase, ISoftNavigationPage
     {
-        private bool _disposed;
+        /// <summary>
+        /// BaseMasterDetailPage constructor.
+        /// </summary>
+        // ReSharper disable once PublicConstructorInAbstractClass
+        public BaseMasterDetailPage()
+        {
+            var lifecycleEffect = new ViewLifecycleEffect();
+            lifecycleEffect.Loaded += (s, e) => OnLoad();
+            lifecycleEffect.Unloaded += (s, e) => OnUnload();
+            Effects.Add(lifecycleEffect);
+        }
 
         /// <summary>
         /// Navigation ownership.
@@ -17,7 +27,7 @@ namespace CafeLib.Mobile.Views
 
         public TViewModel GetViewModel<TViewModel>() where TViewModel : BaseViewModel
         {
-            return (TViewModel)BindingContext;
+            return (TViewModel)(BindingContext as BaseViewModel);
         }
 
         public void SetViewModel<TViewModel>(TViewModel viewModel) where TViewModel : BaseViewModel
@@ -28,44 +38,33 @@ namespace CafeLib.Mobile.Views
         protected override void OnAppearing()
         {
             base.OnAppearing();
-            GetViewModel<BaseViewModel>().IsVisible = true;
-            GetViewModel<BaseViewModel>().AppearingCommand.Execute(null);
+            GetViewModel<BaseViewModel>()?.AppearingCommand.Execute(null);
         }
 
         protected override void OnDisappearing()
         {
             base.OnDisappearing();
-            GetViewModel<BaseViewModel>().IsVisible = false;
-            GetViewModel<BaseViewModel>().DisappearingCommand.Execute(null);
+            GetViewModel<BaseViewModel>()?.DisappearingCommand.Execute(null);
+        }
+
+        protected virtual void OnLoad()
+        {
+            GetViewModel<BaseViewModel>()?.LoadCommand.Execute(null);
+        }
+
+        protected virtual void OnUnload()
+        {
+            GetViewModel<BaseViewModel>()?.UnloadCommand.Execute(null);
         }
 
         protected override bool OnBackButtonPressed()
         {
-            return GetViewModel<BaseViewModel>().BackButtonPressed.Execute(NavigationSource.Hardware);
+            return GetViewModel<BaseViewModel>() != null && GetViewModel<BaseViewModel>().BackButtonPressed.Execute(NavigationSource.Hardware);
         }
 
         public bool OnSoftBackButtonPressed()
         {
-            return GetViewModel<BaseViewModel>().BackButtonPressed.Execute(NavigationSource.Software);
-        }
-
-        /// <summary>
-        /// Dispose.
-        /// </summary>
-        public void Dispose()
-        {
-            if (_disposed) return;
-            Dispose(!_disposed);
-            _disposed = true;
-            GC.SuppressFinalize(this);
-        }
-
-        /// <summary>
-        /// Dispose base master detail page.
-        /// </summary>
-        /// <param name="disposing">indicate whether the queue is disposing</param>
-        protected virtual void Dispose(bool disposing)
-        {
+            return GetViewModel<BaseViewModel>() != null && GetViewModel<BaseViewModel>().BackButtonPressed.Execute(NavigationSource.Software);
         }
     }
 }

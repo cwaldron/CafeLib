@@ -14,7 +14,10 @@ namespace CafeLib.Mobile.ViewModels
 {
     public abstract class BaseViewModel : ObservableBase
     {
-        private readonly List<Guid> _subscriberHandles;
+        private readonly List<Guid> _onAppearingSubscribers;
+        private readonly List<Guid> _onLoadSubscribers;
+
+        //private readonly List<Guid> _subscriberHandles;
         protected readonly Func<ICommand, Task> ExecuteCommand; 
 
         protected enum LifecycleState { Load, Appearing, Disappearing, Unload }
@@ -24,7 +27,8 @@ namespace CafeLib.Mobile.ViewModels
         /// </summary>
         protected BaseViewModel()
         {
-            _subscriberHandles = new List<Guid>();
+            _onAppearingSubscribers = new List<Guid>();
+            _onLoadSubscribers = new List<Guid>();
             Resolver = Application.Current.Resolve<IServiceResolver>();
             AppearingCommand = new Command(() => { });
             DisappearingCommand = new Command(() => { });
@@ -159,6 +163,7 @@ namespace CafeLib.Mobile.ViewModels
                 _loadCommand = new XamAsyncCommand(async () =>
                 {
                     Lifecycle = LifecycleState.Load;
+                    ReleaseSubscribers();
                     await ExecuteCommand(value);
                 });
             }
@@ -175,8 +180,15 @@ namespace CafeLib.Mobile.ViewModels
             {
                 _unloadCommand = new XamAsyncCommand(async () =>
                 {
-                    Lifecycle = LifecycleState.Unload;
-                    await ExecuteCommand(value);
+                    try
+                    {
+                        Lifecycle = LifecycleState.Disappearing;
+                        await ExecuteCommand(value);
+                    }
+                    finally
+                    {
+                        ReleaseSubscribers();
+                    }
                 });
             }
         }
@@ -239,8 +251,21 @@ namespace CafeLib.Mobile.ViewModels
         /// </summary>
         protected virtual void ReleaseSubscribers()
         {
-            _subscriberHandles.ForEach(x => EventService.Unsubscribe(x));
-            _subscriberHandles.Clear();
+            // ReSharper disable once SwitchStatementMissingSomeCases
+            switch (Lifecycle)
+            {
+                case LifecycleState.Appearing:
+                case LifecycleState.Disappearing:
+                    _onAppearingSubscribers.ForEach(x => EventService.Unsubscribe(x));
+                    _onAppearingSubscribers.Clear();
+                    break;
+
+                case LifecycleState.Load:
+                case LifecycleState.Unload:
+                    _onLoadSubscribers.ForEach(x => EventService.Unsubscribe(x));
+                    _onLoadSubscribers.Clear();
+                    break;
+            }
         }
 
         /// <summary>
@@ -260,7 +285,17 @@ namespace CafeLib.Mobile.ViewModels
         /// <param name="action"></param>
         protected void SubscribeEvent<T>(Action<T> action) where T : IEventMessage
         {
-            _subscriberHandles.Add(EventService.SubscribeOnMainThread(action));
+            // ReSharper disable once SwitchStatementMissingSomeCases
+            switch (Lifecycle)
+            {
+                case LifecycleState.Appearing:
+                    _onAppearingSubscribers.Add(EventService.SubscribeOnMainThread(action));
+                    break;
+
+                case LifecycleState.Load:
+                    _onLoadSubscribers.Add(EventService.SubscribeOnMainThread(action));
+                    break;
+            }
         }
 
         /// <summary>
