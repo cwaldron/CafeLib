@@ -19,7 +19,7 @@ namespace CafeLib.Mobile.ViewModels
 
         protected readonly Func<ICommand, Task> ExecuteCommand; 
 
-        protected enum LifecycleState { Load, Appearing, Disappearing, Unload }
+        protected enum LifecycleState { Initial, Appearing, Load, Disappearing, Unload }
 
         /// <summary>
         /// BaseViewModel constructor.
@@ -29,6 +29,7 @@ namespace CafeLib.Mobile.ViewModels
             _onAppearingSubscribers = new List<Guid>();
             _onLoadSubscribers = new List<Guid>();
             Resolver = Application.Current.Resolve<IServiceResolver>();
+            Lifecycle = LifecycleState.Initial;
             AppearingCommand = new Command(() => { });
             DisappearingCommand = new Command(() => { });
             CloseCommand = new Command(() => Close());
@@ -181,7 +182,7 @@ namespace CafeLib.Mobile.ViewModels
                 {
                     try
                     {
-                        Lifecycle = LifecycleState.Disappearing;
+                        Lifecycle = LifecycleState.Unload;
                         await ExecuteCommand(value);
                     }
                     finally
@@ -259,6 +260,7 @@ namespace CafeLib.Mobile.ViewModels
                     _onAppearingSubscribers.Clear();
                     break;
 
+                case LifecycleState.Initial:
                 case LifecycleState.Load:
                 case LifecycleState.Unload:
                     _onLoadSubscribers.ForEach(x => EventService.Unsubscribe(x));
@@ -291,6 +293,7 @@ namespace CafeLib.Mobile.ViewModels
                     _onAppearingSubscribers.Add(EventService.SubscribeOnMainThread(action));
                     break;
 
+                case LifecycleState.Initial: 
                 case LifecycleState.Load:
                     _onLoadSubscribers.Add(EventService.SubscribeOnMainThread(action));
                     break;
