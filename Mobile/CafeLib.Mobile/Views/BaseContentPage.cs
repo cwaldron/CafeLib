@@ -52,16 +52,6 @@ namespace CafeLib.Mobile.Views
         }
 
         /// <summary>
-        /// Dispose base content page.
-        /// </summary>
-        /// <param name="disposing">indicates whether the page is disposing</param>
-        protected virtual void Dispose(bool disposing)
-        {
-            BindingContext = null;
-            Content = null;
-        }
-
-        /// <summary>
         /// Process OnAppearing lifecycle event.
         /// </summary>
         protected override void OnAppearing()
