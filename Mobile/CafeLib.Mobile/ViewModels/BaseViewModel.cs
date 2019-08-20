@@ -17,7 +17,6 @@ namespace CafeLib.Mobile.ViewModels
         private readonly List<Guid> _onAppearingSubscribers;
         private readonly List<Guid> _onLoadSubscribers;
 
-        //private readonly List<Guid> _subscriberHandles;
         protected readonly Func<ICommand, Task> ExecuteCommand; 
 
         protected enum LifecycleState { Load, Appearing, Disappearing, Unload }
