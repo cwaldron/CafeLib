@@ -104,7 +104,7 @@ namespace CafeLib.Mobile.Extensions
         /// <param name="service"></param>
         /// <param name="viewModel">view model</param>
         /// <returns>true if view model is at the top of current navigation stack; false otherwise</returns>
-        public static bool IsPeek(this INavigationService service, BaseViewModel viewModel)
+        public static bool IsTop(this INavigationService service, BaseViewModel viewModel)
         {
             return service.Peek().BindingContext == viewModel;
         }
