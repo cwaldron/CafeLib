@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
 using CafeLib.Mobile.Services;
 using CafeLib.Mobile.ViewModels;
 using CafeLib.Mobile.Views;
@@ -175,7 +176,7 @@ namespace CafeLib.Mobile.Extensions
         /// <returns></returns>
         public static void Navigate<T, TP>(this INavigationService service, T viewModel, TP parameter, bool animate = false) where T : BaseViewModel<TP> where TP : class
         {
-            Application.Current.Resolve<IDeviceService>().RunOnMainThread(async () =>
+            Application.Current.RunOnMainThread(async () =>
             {
                 await viewModel.InitAsync(parameter);
                 await service.PushAsync(viewModel, animate);
@@ -183,11 +184,80 @@ namespace CafeLib.Mobile.Extensions
         }
 
         /// <summary>
+        /// Navigate asynchronously to view model.
+        /// </summary>
+        /// <typeparam name="T">view model type</typeparam>
+        /// <param name="service">navigation service</param>
+        /// <param name="animate">transition animation flag</param>
+        /// <returns></returns>
+        public static async Task NavigateAsync<T>(this INavigationService service, bool animate = false) where T : BaseViewModel
+        {
+            await service.NavigateAsync(Application.Current.Resolve<IPageService>().ResolveViewModel<T>(), animate);
+        }
+
+        /// <summary>
+        /// Navigate asynchronously to view model.
+        /// </summary>
+        /// <typeparam name="T">view model type</typeparam>
+        /// <param name="service">navigation service</param>
+        /// <param name="viewModel">view model</param>
+        /// <param name="animate">transition animation flag</param>
+        public static Task NavigateAsync<T>(this INavigationService service, T viewModel, bool animate = false) where T : BaseViewModel
+        {
+            var completionSource = new TaskCompletionSource<bool>();
+
+            Application.Current.RunOnMainThread(async () =>
+            {
+                await viewModel.InitAsync();
+                await service.PushAsync(viewModel, animate);
+                completionSource.SetResult(true);
+            });
+
+            return completionSource.Task;
+        }
+
+        /// <summary>
+        /// Navigate asynchronously to view model.
+        /// </summary>
+        /// <typeparam name="T">view model type</typeparam>
+        /// <typeparam name="TP">view model parameter type</typeparam>
+        /// <param name="service">navigation service</param>
+        /// <param name="parameter">view model parameter</param>
+        /// <param name="animate">transition animation flag</param>
+        public static async Task NavigateAsync<T, TP>(this INavigationService service, TP parameter, bool animate = false) where T : BaseViewModel<TP> where TP : class
+        {
+            await service.NavigateAsync(Application.Current.Resolve<IPageService>().ResolveViewModel<T>(), parameter, animate);
+        }
+
+        /// <summary>
+        /// Navigate asynchronously to view model.
+        /// </summary>
+        /// <typeparam name="T">view model type</typeparam>
+        /// <typeparam name="TP">view model parameter type</typeparam>
+        /// <param name="service">navigation service</param>
+        /// <param name="viewModel">view model</param>
+        /// <param name="parameter">view model parameter</param>
+        /// <param name="animate">transition animation flag</param>
+        /// <returns>asynchronous task</returns>
+        public static Task NavigateAsync<T, TP>(this INavigationService service, T viewModel, TP parameter, bool animate = false) where T : BaseViewModel<TP> where TP : class
+        {
+            var completionSource = new TaskCompletionSource<bool>();
+
+            Application.Current.RunOnMainThread(async () =>
+            {
+                await viewModel.InitAsync(parameter);
+                await service.PushAsync(viewModel, animate);
+                completionSource.SetResult(true);
+            });
+
+            return completionSource.Task;
+        }
+
+        /// <summary>
         /// Navigate to modal view model.
         /// </summary>
         /// <param name="service">navigation service</param>
         /// <param name="animate">transition animation flag</param>
-        /// <returns></returns>
         public static void NavigateModal<T>(this INavigationService service, bool animate = false) where T : BaseViewModel
         {
             service.NavigateModal(Application.Current.Resolve<IPageService>().ResolveViewModel<T>(), animate);
@@ -241,6 +311,77 @@ namespace CafeLib.Mobile.Extensions
             });
         }
 
+        /// <summary>
+        /// Navigate asynchronously to modal view model.
+        /// </summary>
+        /// <typeparam name="T">view model type</typeparam>
+        /// <param name="service">navigation service</param>
+        /// <param name="animate">transition animation flag</param>
+        /// <returns>asynchronous task</returns>
+        public static async Task NavigateModalAsync<T>(this INavigationService service, bool animate = false) where T : BaseViewModel
+        {
+            await service.NavigateModalAsync(Application.Current.Resolve<IPageService>().ResolveViewModel<T>(), animate);
+        }
+
+        /// <summary>
+        /// Navigate asynchronously to modal view model.
+        /// </summary>
+        /// <typeparam name="T">view model type</typeparam>
+        /// <typeparam name="TP">view model parameter type</typeparam>
+        /// <param name="service">navigation service</param>
+        /// <param name="parameter">view model parameter</param>
+        /// <param name="animate">transition animation flag</param>
+        /// <returns>asynchronous task</returns>
+        public static async Task NavigateModalAsync<T, TP>(this INavigationService service, TP parameter, bool animate = false) where T : BaseViewModel<TP> where TP : class
+        {
+            await service.NavigateModalAsync(Application.Current.Resolve<IPageService>().ResolveViewModel<T>(), parameter, animate);
+        }
+
+        /// <summary>
+        /// Navigate to modal view model.
+        /// </summary>
+        /// <typeparam name="T">view model type</typeparam>
+        /// <param name="service">navigation service</param>
+        /// <param name="viewModel">view model</param>
+        /// <param name="animate">transition animation flag</param>
+        /// <returns>asynchronous task</returns>
+        public static Task NavigateModalAsync<T>(this INavigationService service, T viewModel, bool animate = false) where T : BaseViewModel
+        {
+            var completionSource = new TaskCompletionSource<bool>();
+
+            Application.Current.RunOnMainThread(async () =>
+            {
+                await viewModel.InitAsync();
+                await service.PushModalAsync(viewModel, animate);
+                completionSource.SetResult(true);
+            });
+
+            return completionSource.Task;
+        }
+
+        /// <summary>
+        /// Navigate to modal view model.
+        /// </summary>
+        /// <typeparam name="T">view model type</typeparam>
+        /// <typeparam name="TP">view model parameter type</typeparam>
+        /// <param name="service">navigation service</param>
+        /// <param name="viewModel">view model</param>
+        /// <param name="parameter">view model parameter</param>
+        /// <param name="animate">transition animation flag</param>
+        /// <returns></returns>
+        public static Task NavigateModalAsync<T, TP>(this INavigationService service, T viewModel, TP parameter, bool animate = false) where T : BaseViewModel<TP> where TP : class
+        {
+            var completionSource = new TaskCompletionSource<bool>();
+
+            Application.Current.Resolve<IDeviceService>().RunOnMainThread(async () =>
+            {
+                await viewModel.InitAsync(parameter);
+                await service.PushModalAsync(viewModel, animate);
+                completionSource.SetResult(true);
+            });
+
+            return completionSource.Task;
+        }
 
         #region Helpers
 
