@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Dynamic;
 using System.Linq;
+// ReSharper disable UnusedMember.Global
 
 namespace CafeLib.Core.Extensions
 {
@@ -70,7 +71,7 @@ namespace CafeLib.Core.Extensions
         /// <typeparam name="T">item type</typeparam>
         /// <param name="enumerable">enumerable</param>
         /// <param name="someFunc">some function with item and index</param>
-        /// <returns>returns list of results</returns>
+        /// <returns>returns true if any item matched the criteria; false otherwise</returns>
         public static bool Some<T>(this IEnumerable<T> enumerable, Func<T, int, bool> someFunc)
         {
             var index = 0;
@@ -270,7 +271,7 @@ namespace CafeLib.Core.Extensions
         ///<param name="collection">The collection to search.</param>
         ///<param name="predicate">The expression to test the items against.</param>
         ///<returns>The index of the first matching item, or -1 if no items match.</returns>
-        public static int FindIndexInternal<T>(ICollection<T> collection, NonNullable<Predicate<T>> predicate)
+        private static int FindIndexInternal<T>(IEnumerable<T> collection, NonNullable<Predicate<T>> predicate)
         {
             var result = 0;
             foreach (var item in collection)
