@@ -162,9 +162,18 @@ namespace CafeLib.Mobile.ViewModels
             {
                 _loadCommand = new XamAsyncCommand(async () =>
                 {
-                    Lifecycle = LifecycleState.Load;
-                    ReleaseSubscribers();
-                    await ExecuteCommand(value);
+                    try
+                    {
+                        Lifecycle = LifecycleState.Load;
+                        if (!IsLoaded)
+                        {
+                            await ExecuteCommand(value);
+                        }
+                    }
+                    finally
+                    {
+                        IsLoaded = true;
+                    }
                 });
             }
         }
@@ -183,11 +192,15 @@ namespace CafeLib.Mobile.ViewModels
                     try
                     {
                         Lifecycle = LifecycleState.Unload;
-                        await ExecuteCommand(value);
+                        if (IsLoaded)
+                        {
+                            await ExecuteCommand(value);
+                        }
                     }
                     finally
                     {
                         ReleaseSubscribers();
+                        IsLoaded = false;
                     }
                 });
             }
@@ -227,6 +240,16 @@ namespace CafeLib.Mobile.ViewModels
         {
             get => _isEnabled;
             set => SetValue(ref _isEnabled, value);
+        }
+
+        /// <summary>
+        /// Determines loaded state.
+        /// </summary>
+        private bool _isLoaded;
+        public bool IsLoaded
+        {
+            get => _isLoaded;
+            set => SetValue(ref _isLoaded, value);
         }
 
         /// <summary>
