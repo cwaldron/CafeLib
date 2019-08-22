@@ -17,9 +17,21 @@ namespace CafeLib.Mobile.ViewModels
         private readonly List<Guid> _onAppearingSubscribers;
         private readonly List<Guid> _onLoadSubscribers;
 
-        protected readonly Func<ICommand, Task> ExecuteCommand; 
+        private Func<ICommand, Task> ExecuteCommand { get; }
 
-        protected enum LifecycleState { Initial, Appearing, Load, Disappearing, Unload }
+        protected internal enum LifecycleState
+        {
+            Initial,
+            Appearing,
+            Load,
+            Disappearing,
+            Unload
+        }
+
+        /// <summary>
+        /// Init command.
+        /// </summary>
+        public ICommand InitCommand { get; }
 
         /// <summary>
         /// BaseViewModel constructor.
@@ -55,17 +67,26 @@ namespace CafeLib.Mobile.ViewModels
                         break;
                 }
             };
+
+            InitCommand = new XamAsyncCommand(async () =>
+            {
+                Lifecycle = LifecycleState.Initial;
+                await InitAsync();
+            });
         }
 
         /// <summary>
         /// Initialize the view model.
         /// </summary>
-        public virtual async Task InitAsync()
+        protected virtual async Task InitAsync()
         {
             await Task.CompletedTask;
         }
 
-        protected LifecycleState Lifecycle { get; private set; }
+        /// <summary>
+        /// Lifecycle state.
+        /// </summary>
+        protected internal LifecycleState Lifecycle { get; set; }
 
         /// <summary>
         /// Service resolver.
@@ -391,13 +412,38 @@ namespace CafeLib.Mobile.ViewModels
         }
     }
 
-    public class BaseViewModel<TParameter> : BaseViewModel where TParameter : class
+    public abstract class BaseViewModel<TParameter> : BaseViewModel where TParameter : class
     {
+        /// <summary>
+        /// Init command.
+        /// </summary>
+        public new IXamCommand<TParameter> InitCommand { get; }
+
+        /// <summary>
+        /// BaseViewModel constructor.
+        /// </summary>
+        protected BaseViewModel()
+        {
+            InitCommand = new XamAsyncCommand<TParameter>(async x =>
+            {
+                Lifecycle = LifecycleState.Initial;
+
+                if (typeof(TParameter) != typeof(object))
+                {
+                    await InitAsync(x);
+                }
+                else
+                {
+                    await InitAsync();
+                }
+            });
+        }
+
         /// <summary>
         /// Initialize and pass parameter to the view model.
         /// </summary>
         /// <param name="parameter">parameter passed to view model</param>
-        public virtual async Task InitAsync(TParameter parameter)
+        protected virtual async Task InitAsync(TParameter parameter)
         {
             await Task.CompletedTask;
         }
