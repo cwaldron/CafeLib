@@ -86,7 +86,7 @@ namespace CafeLib.Mobile.Views
             base.OnBindingContextChanged();
             if (BindingContext is BaseViewModel vm)
             {
-                Application.Current.RunOnMainThread(async () => await vm.InitCommand.ExecuteAsync());
+                Application.Current.RunOnMainThread(async () => await vm.Initialize());
             }
         }
 

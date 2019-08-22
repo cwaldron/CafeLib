@@ -29,9 +29,14 @@ namespace CafeLib.Mobile.ViewModels
         }
 
         /// <summary>
-        /// Init command.
+        /// Initialize view model.
         /// </summary>
-        public ICommand InitCommand { get; }
+        /// <returns></returns>
+        public async Task Initialize()
+        {
+            Lifecycle = LifecycleState.Initial;
+            await InitAsync();
+        }
 
         /// <summary>
         /// BaseViewModel constructor.
@@ -67,12 +72,6 @@ namespace CafeLib.Mobile.ViewModels
                         break;
                 }
             };
-
-            InitCommand = new XamAsyncCommand(async () =>
-            {
-                Lifecycle = LifecycleState.Initial;
-                await InitAsync();
-            });
         }
 
         /// <summary>
@@ -415,28 +414,22 @@ namespace CafeLib.Mobile.ViewModels
     public abstract class BaseViewModel<TParameter> : BaseViewModel where TParameter : class
     {
         /// <summary>
-        /// Init command.
+        /// Initialize view model.
         /// </summary>
-        public new IXamCommand<TParameter> InitCommand { get; }
-
-        /// <summary>
-        /// BaseViewModel constructor.
-        /// </summary>
-        protected BaseViewModel()
+        /// <param name="parameter">initialization parameter</param>
+        /// <returns></returns>
+        public async Task Initialize(TParameter parameter)
         {
-            InitCommand = new XamAsyncCommand<TParameter>(async x =>
-            {
-                Lifecycle = LifecycleState.Initial;
+            Lifecycle = LifecycleState.Initial;
 
-                if (typeof(TParameter) != typeof(object))
-                {
-                    await InitAsync(x);
-                }
-                else
-                {
-                    await InitAsync();
-                }
-            });
+            if (typeof(TParameter) != typeof(object))
+            {
+                await InitAsync(parameter);
+            }
+            else
+            {
+                await InitAsync();
+            }
         }
 
         /// <summary>

@@ -92,7 +92,7 @@ namespace CafeLib.Mobile.Extensions
         {
             var vm = app.ResolveViewModel<T>();
             app.MainPage = vm.AsNavigator();
-            app.GetDeviceService().RunOnMainThread(async () => await vm.InitCommand.ExecuteAsync());
+            app.GetDeviceService().RunOnMainThread(async () => await vm.Initialize());
         }
 
         /// <summary>
@@ -106,7 +106,7 @@ namespace CafeLib.Mobile.Extensions
         {
             var vm = app.ResolveViewModel<T>();
             app.MainPage = vm.AsNavigator();
-            app.GetDeviceService().RunOnMainThread(async () => await vm.InitCommand.ExecuteAsync(parameter));
+            app.GetDeviceService().RunOnMainThread(async () => await vm.Initialize(parameter));
         }
 
         /// <summary>

@@ -61,7 +61,7 @@ namespace CafeLib.Mobile.Extensions
             {
                 if (topPage.GetViewModel<T>() is BaseViewModel<TP> vm)
                 {
-                    await vm.InitCommand.ExecuteAsync(parameter);
+                    await vm.Initialize(parameter);
                 }
             });
         }
@@ -146,7 +146,7 @@ namespace CafeLib.Mobile.Extensions
         {
             Application.Current.Resolve<IDeviceService>().RunOnMainThread(async () =>
             {
-                await viewModel.InitCommand.ExecuteAsync();
+                await viewModel.Initialize();
                 await service.PushAsync(viewModel, animate);
             });
         }
@@ -178,7 +178,7 @@ namespace CafeLib.Mobile.Extensions
         {
             Application.Current.RunOnMainThread(async () =>
             {
-                await viewModel.InitCommand.ExecuteAsync(parameter);
+                await viewModel.Initialize(parameter);
                 await service.PushAsync(viewModel, animate);
             });
         }
@@ -208,7 +208,7 @@ namespace CafeLib.Mobile.Extensions
 
             Application.Current.RunOnMainThread(async () =>
             {
-                await viewModel.InitCommand.ExecuteAsync();
+                await viewModel.Initialize();
                 await service.PushAsync(viewModel, animate);
                 completionSource.SetResult(true);
             });
@@ -245,7 +245,7 @@ namespace CafeLib.Mobile.Extensions
 
             Application.Current.RunOnMainThread(async () =>
             {
-                await viewModel.InitCommand.ExecuteAsync(parameter);
+                await viewModel.Initialize(parameter);
                 await service.PushAsync(viewModel, animate);
                 completionSource.SetResult(true);
             });
@@ -287,7 +287,7 @@ namespace CafeLib.Mobile.Extensions
         {
             Application.Current.Resolve<IDeviceService>().RunOnMainThread(async () =>
             {
-                await viewModel.InitCommand.ExecuteAsync();
+                await viewModel.Initialize();
                 await service.PushModalAsync(viewModel, animate);
             });
         }
@@ -306,7 +306,7 @@ namespace CafeLib.Mobile.Extensions
         {
             Application.Current.Resolve<IDeviceService>().RunOnMainThread(async () =>
             {
-                await viewModel.InitCommand.ExecuteAsync(parameter);
+                await viewModel.Initialize(parameter);
                 await service.PushModalAsync(viewModel, animate);
             });
         }
@@ -351,7 +351,7 @@ namespace CafeLib.Mobile.Extensions
 
             Application.Current.RunOnMainThread(async () =>
             {
-                await viewModel.InitCommand.ExecuteAsync();
+                await viewModel.Initialize();
                 await service.PushModalAsync(viewModel, animate);
                 completionSource.SetResult(true);
             });
@@ -375,7 +375,7 @@ namespace CafeLib.Mobile.Extensions
 
             Application.Current.Resolve<IDeviceService>().RunOnMainThread(async () =>
             {
-                await viewModel.InitCommand.ExecuteAsync(parameter);
+                await viewModel.Initialize(parameter);
                 await service.PushModalAsync(viewModel, animate);
                 completionSource.SetResult(true);
             });
