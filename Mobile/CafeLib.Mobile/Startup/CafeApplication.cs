@@ -44,9 +44,12 @@ namespace CafeLib.Mobile.Startup
             Registry.AddScoped<IAlertService>(x => this);
         }
 
+        /// <summary>
+        /// Dispose application.
+        /// </summary>
         public void Dispose()
         {
-            throw new NotImplementedException();
+            Resolver.Dispose();
         }
 
         /// <summary>

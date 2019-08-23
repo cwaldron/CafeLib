@@ -7,15 +7,17 @@ namespace CafeLib.Core.Eventing
 {
     public class EventService : SingletonBase<EventService>, IEventService
     {
+        private bool _disposed;
+
         /// <summary>
         /// This map contains the event Message type key and a collection of subscribers associated with the message type.
         /// </summary>
-        private readonly ConcurrentDictionary<Type, ConcurrentDictionary<Guid, EventSubscriber>> _subscriptions;
+        private ConcurrentDictionary<Type, ConcurrentDictionary<Guid, EventSubscriber>> _subscriptions;
 
         /// <summary>
         /// This map provides type lookup.
         /// </summary>
-        private readonly ConcurrentDictionary<Guid, Type> _lookup;
+        private ConcurrentDictionary<Guid, Type> _lookup;
 
         /// <summary>
         /// Synchronizes access to internal tables.
@@ -123,6 +125,32 @@ namespace CafeLib.Core.Eventing
                 {
                     _subscriptions.TryRemove(subscriberType, out _);
                 }
+            }
+        }
+
+        /// <summary>
+        /// Dispose event service.
+        /// </summary>
+        public void Dispose()
+        {
+            Dispose(!_disposed);
+            _disposed = true;
+            GC.SuppressFinalize(this);
+        }
+
+        /// <summary>
+        /// Dispose event service resources.
+        /// </summary>
+        /// <param name="disposing">flag indicating disposing</param>
+        private void Dispose(bool disposing)
+        {
+            if (!disposing) return;
+            lock (Mutex)
+            {
+                _subscriptions.Clear();
+                _lookup.Clear();
+                _subscriptions = null;
+                _lookup = null;
             }
         }
     }

@@ -278,6 +278,14 @@ namespace CafeLib.Mobile.Services
         }
 
         /// <summary>
+        /// Dispose.
+        /// </summary>
+        public void Dispose()
+        {
+            _resolver?.Dispose();
+        }
+
+        /// <summary>
         /// Create an application navigator.
         /// </summary>
         /// <param name="page">content page</param>

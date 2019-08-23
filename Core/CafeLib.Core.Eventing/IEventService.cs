@@ -1,8 +1,10 @@
 ﻿using System;
+// ReSharper disable UnusedMember.Global
+// ReSharper disable UnusedMemberInSuper.Global
 
 namespace CafeLib.Core.Eventing
 {
-    public interface IEventService
+    public interface IEventService : IDisposable
     {
         /// <summary>
         /// Subscribe the specified handler.

@@ -22,6 +22,7 @@ namespace CafeLib.Mobile.Extensions
             var eventService = Application.Current.Resolve<IEventService>();
             eventService.Publish(new ApplicationExpiryMessage());
             eventService.Unsubscribe<ApplicationExpiryMessage>();
+            (app as CafeApplication)?.Dispose();
         }
 
         /// <summary>

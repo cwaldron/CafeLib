@@ -147,7 +147,7 @@ namespace CafeLib.Mobile.Startup
         }
 
         /// <summary>
-        /// 
+        /// Dispose.
         /// </summary>
         public void Dispose()
         {
