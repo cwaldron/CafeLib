@@ -35,7 +35,6 @@ namespace CafeLib.Mobile.Views
         /// </summary>
         public Action Disappearing => OnDisappearing;
 
-
         /// <summary>
         /// BaseContextView constructor.
         /// </summary>
@@ -82,6 +81,7 @@ namespace CafeLib.Mobile.Views
         /// </summary>
         protected virtual void OnLoad()
         {
+            ViewModel?.LoadCommand.Execute(null);
         }
 
         /// <summary>
@@ -89,6 +89,7 @@ namespace CafeLib.Mobile.Views
         /// </summary>
         protected virtual void OnUnload()
         {
+            ViewModel?.UnloadCommand.Execute(null);
             _subscriberHandles.ForEach(x => EventService.Unsubscribe(x));
             _subscriberHandles.Clear();
         }
