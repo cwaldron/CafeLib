@@ -1,6 +1,8 @@
-﻿namespace CafeLib.Core.IoC
+﻿using System;
+
+namespace CafeLib.Core.IoC
 {
-    public interface IServiceResolver
+    public interface IServiceResolver : IDisposable
     {
         /// <summary>
         /// Resolve the specified service type.

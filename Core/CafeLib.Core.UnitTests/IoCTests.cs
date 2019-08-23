@@ -10,15 +10,21 @@ namespace CafeLib.Core.UnitTests
         [Fact]
         public void IocTest()
         {
-            var resolver = IocFactory.CreateRegistry()
+            IDisposableService disposableService;
+            using (var resolver = IocFactory.CreateRegistry()
                 .AddLogging(builder => builder.AddConsole().AddDebug())
                 .AddSingleton<IFooService, FooService>()
                 .AddSingleton<IBarService, BarService>()
-                .GetResolver();
+                .AddSingleton<IDisposableService, DisposableService>()
+                .GetResolver())
+            {
+                //do the actual work here
+                var bar = resolver.Resolve<IBarService>();
+                bar.DoSomeRealWork();
+                disposableService = resolver.Resolve<IDisposableService>();
+            }
 
-            //do the actual work here
-            var bar = resolver.Resolve<IBarService>();
-            bar.DoSomeRealWork();
+            Assert.True(disposableService.IsDisposed);
         }
     }
 }

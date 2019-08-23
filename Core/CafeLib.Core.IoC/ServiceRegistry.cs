@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using CafeLib.Core.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
@@ -13,7 +12,7 @@ namespace CafeLib.Core.IoC
         #region Private Variables
 
         private readonly ServiceCollection _serviceCollection;
-        private IServiceProvider _serviceProvider;
+        private ServiceProvider _serviceProvider;
         private bool _disposed;
 
         #endregion
@@ -231,7 +230,7 @@ namespace CafeLib.Core.IoC
         private void Dispose(bool disposing)
         {
             if (!disposing) return;
-            _serviceProvider?.GetServices<IServiceProvider>().ForEach(x => (x as IDisposable)?.Dispose());
+            _serviceProvider.Dispose();
         }
 
         #endregion
