@@ -57,6 +57,9 @@ namespace CafeLib.Mobile.Views
             set => BindingContext = value;
         }
 
+        /// <summary>
+        /// Process OnAppearing lifecycle event.
+        /// </summary>
         protected virtual void OnAppearing()
         {
             if (ViewModel == null) return;
@@ -64,6 +67,9 @@ namespace CafeLib.Mobile.Views
             ViewModel.AppearingCommand.Execute(null);
         }
 
+        /// <summary>
+        /// Process OnDisappearing lifecycle event.
+        /// </summary>
         protected virtual void OnDisappearing()
         {
             if (ViewModel == null) return;
@@ -71,23 +77,30 @@ namespace CafeLib.Mobile.Views
             ViewModel.IsVisible = false;
         }
 
+        /// <summary>
+        /// Process OnLoad lifecycle event.
+        /// </summary>
         protected virtual void OnLoad()
         {
         }
 
+        /// <summary>
+        /// Process OnUnload lifecycle event.
+        /// </summary>
         protected virtual void OnUnload()
         {
             _subscriberHandles.ForEach(x => EventService.Unsubscribe(x));
             _subscriberHandles.Clear();
         }
 
+        /// <summary>
+        /// Process changes to the binding context.
+        /// </summary>
         protected override void OnBindingContextChanged()
         {
             base.OnBindingContextChanged();
-            if (BindingContext is BaseViewModel vm)
-            {
-                Application.Current.RunOnMainThread(async () => await vm.Initialize());
-            }
+            if (ViewModel == null) return;
+            Application.Current.RunOnMainThread(async () => await ViewModel.Initialize());
         }
 
         /// <summary>
