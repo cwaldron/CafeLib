@@ -147,6 +147,7 @@ namespace CafeLib.Core.Eventing
             if (!disposing) return;
             lock (Mutex)
             {
+                _subscriptions.ForEach(x => x.Value.Clear());
                 _subscriptions.Clear();
                 _lookup.Clear();
                 _subscriptions = null;
