@@ -3350,13 +3350,13 @@ namespace CafeLib.Mobile.Android
 			public static int main_appbar = 2131230820;
 			
 			// aapt resource value: 0x7F080065
-			public static int main_scrollview = 2131230821;
+			public static int main_tablayout = 2131230821;
 			
 			// aapt resource value: 0x7F080066
-			public static int main_tablayout = 2131230822;
+			public static int main_toolbar = 2131230822;
 			
 			// aapt resource value: 0x7F080067
-			public static int main_toolbar = 2131230823;
+			public static int main_viewpager = 2131230823;
 			
 			// aapt resource value: 0x7F080068
 			public static int masked = 2131230824;
@@ -3506,172 +3506,169 @@ namespace CafeLib.Mobile.Android
 			public static int shellcontent_appbar = 2131230871;
 			
 			// aapt resource value: 0x7F080098
-			public static int shellcontent_scrollview = 2131230872;
-			
-			// aapt resource value: 0x7F080099
-			public static int shellcontent_toolbar = 2131230873;
+			public static int shellcontent_toolbar = 2131230872;
 			
 			// aapt resource value: 0x7F080004
 			public static int SHIFT = 2131230724;
 			
+			// aapt resource value: 0x7F080099
+			public static int shortcut = 2131230873;
+			
 			// aapt resource value: 0x7F08009A
-			public static int shortcut = 2131230874;
+			public static int showCustom = 2131230874;
 			
 			// aapt resource value: 0x7F08009B
-			public static int showCustom = 2131230875;
+			public static int showHome = 2131230875;
 			
 			// aapt resource value: 0x7F08009C
-			public static int showHome = 2131230876;
+			public static int showTitle = 2131230876;
 			
 			// aapt resource value: 0x7F08009D
-			public static int showTitle = 2131230877;
+			public static int smallLabel = 2131230877;
 			
 			// aapt resource value: 0x7F08009E
-			public static int smallLabel = 2131230878;
+			public static int snackbar_action = 2131230878;
 			
 			// aapt resource value: 0x7F08009F
-			public static int snackbar_action = 2131230879;
+			public static int snackbar_text = 2131230879;
 			
 			// aapt resource value: 0x7F0800A0
-			public static int snackbar_text = 2131230880;
+			public static int snap = 2131230880;
 			
 			// aapt resource value: 0x7F0800A1
-			public static int snap = 2131230881;
+			public static int snapMargins = 2131230881;
 			
 			// aapt resource value: 0x7F0800A2
-			public static int snapMargins = 2131230882;
+			public static int spacer = 2131230882;
 			
 			// aapt resource value: 0x7F0800A3
-			public static int spacer = 2131230883;
+			public static int split_action_bar = 2131230883;
 			
 			// aapt resource value: 0x7F0800A4
-			public static int split_action_bar = 2131230884;
+			public static int src_atop = 2131230884;
 			
 			// aapt resource value: 0x7F0800A5
-			public static int src_atop = 2131230885;
+			public static int src_in = 2131230885;
 			
 			// aapt resource value: 0x7F0800A6
-			public static int src_in = 2131230886;
+			public static int src_over = 2131230886;
 			
 			// aapt resource value: 0x7F0800A7
-			public static int src_over = 2131230887;
+			public static int start = 2131230887;
 			
 			// aapt resource value: 0x7F0800A8
-			public static int start = 2131230888;
+			public static int status_bar_latest_event_content = 2131230888;
 			
 			// aapt resource value: 0x7F0800A9
-			public static int status_bar_latest_event_content = 2131230889;
+			public static int stretch = 2131230889;
 			
 			// aapt resource value: 0x7F0800AA
-			public static int stretch = 2131230890;
+			public static int submenuarrow = 2131230890;
 			
 			// aapt resource value: 0x7F0800AB
-			public static int submenuarrow = 2131230891;
-			
-			// aapt resource value: 0x7F0800AC
-			public static int submit_area = 2131230892;
+			public static int submit_area = 2131230891;
 			
 			// aapt resource value: 0x7F080005
 			public static int SYM = 2131230725;
 			
+			// aapt resource value: 0x7F0800AC
+			public static int tabMode = 2131230892;
+			
 			// aapt resource value: 0x7F0800AD
-			public static int tabMode = 2131230893;
+			public static int tag_transition_group = 2131230893;
 			
 			// aapt resource value: 0x7F0800AE
-			public static int tag_transition_group = 2131230894;
+			public static int tag_unhandled_key_event_manager = 2131230894;
 			
 			// aapt resource value: 0x7F0800AF
-			public static int tag_unhandled_key_event_manager = 2131230895;
+			public static int tag_unhandled_key_listeners = 2131230895;
 			
 			// aapt resource value: 0x7F0800B0
-			public static int tag_unhandled_key_listeners = 2131230896;
+			public static int text = 2131230896;
 			
 			// aapt resource value: 0x7F0800B1
-			public static int text = 2131230897;
-			
-			// aapt resource value: 0x7F0800B2
-			public static int text2 = 2131230898;
-			
-			// aapt resource value: 0x7F0800B7
-			public static int textinput_counter = 2131230903;
-			
-			// aapt resource value: 0x7F0800B8
-			public static int textinput_error = 2131230904;
-			
-			// aapt resource value: 0x7F0800B9
-			public static int textinput_helper_text = 2131230905;
-			
-			// aapt resource value: 0x7F0800B3
-			public static int textSpacerNoButtons = 2131230899;
-			
-			// aapt resource value: 0x7F0800B4
-			public static int textSpacerNoTitle = 2131230900;
-			
-			// aapt resource value: 0x7F0800B5
-			public static int textStart = 2131230901;
+			public static int text2 = 2131230897;
 			
 			// aapt resource value: 0x7F0800B6
-			public static int text_input_password_toggle = 2131230902;
+			public static int textinput_counter = 2131230902;
+			
+			// aapt resource value: 0x7F0800B7
+			public static int textinput_error = 2131230903;
+			
+			// aapt resource value: 0x7F0800B8
+			public static int textinput_helper_text = 2131230904;
+			
+			// aapt resource value: 0x7F0800B2
+			public static int textSpacerNoButtons = 2131230898;
+			
+			// aapt resource value: 0x7F0800B3
+			public static int textSpacerNoTitle = 2131230899;
+			
+			// aapt resource value: 0x7F0800B4
+			public static int textStart = 2131230900;
+			
+			// aapt resource value: 0x7F0800B5
+			public static int text_input_password_toggle = 2131230901;
+			
+			// aapt resource value: 0x7F0800B9
+			public static int time = 2131230905;
 			
 			// aapt resource value: 0x7F0800BA
-			public static int time = 2131230906;
+			public static int title = 2131230906;
 			
 			// aapt resource value: 0x7F0800BB
-			public static int title = 2131230907;
+			public static int titleDividerNoCustom = 2131230907;
 			
 			// aapt resource value: 0x7F0800BC
-			public static int titleDividerNoCustom = 2131230908;
+			public static int title_template = 2131230908;
 			
 			// aapt resource value: 0x7F0800BD
-			public static int title_template = 2131230909;
+			public static int top = 2131230909;
 			
 			// aapt resource value: 0x7F0800BE
-			public static int top = 2131230910;
+			public static int topPanel = 2131230910;
 			
 			// aapt resource value: 0x7F0800BF
-			public static int topPanel = 2131230911;
+			public static int touch_outside = 2131230911;
 			
 			// aapt resource value: 0x7F0800C0
-			public static int touch_outside = 2131230912;
+			public static int transition_current_scene = 2131230912;
 			
 			// aapt resource value: 0x7F0800C1
-			public static int transition_current_scene = 2131230913;
+			public static int transition_layout_save = 2131230913;
 			
 			// aapt resource value: 0x7F0800C2
-			public static int transition_layout_save = 2131230914;
+			public static int transition_position = 2131230914;
 			
 			// aapt resource value: 0x7F0800C3
-			public static int transition_position = 2131230915;
+			public static int transition_scene_layoutid_cache = 2131230915;
 			
 			// aapt resource value: 0x7F0800C4
-			public static int transition_scene_layoutid_cache = 2131230916;
+			public static int transition_transform = 2131230916;
 			
 			// aapt resource value: 0x7F0800C5
-			public static int transition_transform = 2131230917;
+			public static int uniform = 2131230917;
 			
 			// aapt resource value: 0x7F0800C6
-			public static int uniform = 2131230918;
+			public static int unlabeled = 2131230918;
 			
 			// aapt resource value: 0x7F0800C7
-			public static int unlabeled = 2131230919;
+			public static int up = 2131230919;
 			
 			// aapt resource value: 0x7F0800C8
-			public static int up = 2131230920;
+			public static int useLogo = 2131230920;
 			
 			// aapt resource value: 0x7F0800C9
-			public static int useLogo = 2131230921;
+			public static int view_offset_helper = 2131230921;
 			
 			// aapt resource value: 0x7F0800CA
-			public static int view_offset_helper = 2131230922;
+			public static int visible = 2131230922;
 			
 			// aapt resource value: 0x7F0800CB
-			public static int visible = 2131230923;
+			public static int withText = 2131230923;
 			
 			// aapt resource value: 0x7F0800CC
-			public static int withText = 2131230924;
-			
-			// aapt resource value: 0x7F0800CD
-			public static int wrap_content = 2131230925;
+			public static int wrap_content = 2131230924;
 			
 			static Id()
 			{
@@ -4760,6 +4757,9 @@ namespace CafeLib.Mobile.Android
 			
 			// aapt resource value: 0x7F0D00C4
 			public static int CardView_Light = 2131558596;
+			
+			// aapt resource value: 0x7F0D01F4
+			public static int collectionViewStyle = 2131558900;
 			
 			// aapt resource value: 0x7F0D00C5
 			public static int Platform_AppCompat = 2131558597;
