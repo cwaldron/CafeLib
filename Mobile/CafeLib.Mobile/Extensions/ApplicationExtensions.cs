@@ -42,6 +42,14 @@ namespace CafeLib.Mobile.Extensions
             => app.Resolve<IEventService>();
 
         /// <summary>
+        /// Get navigation service.
+        /// </summary>
+        /// <param name="app">application</param>
+        /// <returns>navigation service</returns>
+        public static INavigationService GetNavigationService(this Application app)
+            => app.Resolve<INavigationService>();
+
+        /// <summary>
         /// Get the application's resource.
         /// </summary>
         /// <typeparam name="T">resource type</typeparam>
