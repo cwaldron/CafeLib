@@ -283,6 +283,15 @@ namespace CafeLib.Mobile.ViewModels
         }
 
         /// <summary>
+        /// Close the view model.
+        /// </summary>
+        /// <param name="animate"></param>
+        protected virtual void Close(bool animate = false)
+        {
+            Page.Navigation.Close(this, animate);
+        }
+
+        /// <summary>
         /// Add event message subscribers.
         /// </summary>
         protected virtual void AddSubscribers()
@@ -363,15 +372,6 @@ namespace CafeLib.Mobile.ViewModels
         public NavigationPage AsNavigator()
         {
             return NavigationService.SetNavigator(this);
-        }
-
-        /// <summary>
-        /// Close the view model.
-        /// </summary>
-        /// <param name="animate"></param>
-        public virtual void Close(bool animate = false)
-        {
-            Page.Navigation.Close(this, animate);
         }
 
         /// <summary>
