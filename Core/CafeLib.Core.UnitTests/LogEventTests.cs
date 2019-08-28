@@ -1,7 +1,5 @@
 using CafeLib.Core.Extensions;
-using CafeLib.Core.IoC;
 using CafeLib.Core.Logging;
-using CafeLib.Core.UnitTests.Services;
 using Microsoft.Extensions.Logging;
 using Xunit;
 
