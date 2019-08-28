@@ -11,7 +11,7 @@ namespace CafeLib.Mobile.Startup
         private readonly IServiceRegistry _serviceRegistry;
 
         /// <summary>
-        /// ServiceProvider instance constructor.
+        /// CafeRegistry constructor.
         /// </summary>
         internal CafeRegistry()
         {
