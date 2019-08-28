@@ -26,5 +26,23 @@ namespace CafeLib.Core.UnitTests
 
             Assert.True(disposableService.IsDisposed);
         }
+
+        [Fact]
+        public void ServiceProviderTest()
+        {
+            var resolver = IocFactory.CreateRegistry()
+                .AddPropertyService()
+                .AddSingleton<ITestService>(x => new TestService())
+                .GetResolver();
+
+            var propertyService = resolver.Resolve<IPropertyService>();
+            Assert.NotNull(propertyService);
+
+            propertyService.SetProperty("name", "Kilroy");
+            Assert.Equal("Kilroy", propertyService.GetProperty<string>("name"));
+
+            var testService = resolver.Resolve<ITestService>();
+            Assert.Equal("Kilroy is here!", testService.Test());
+        }
     }
 }

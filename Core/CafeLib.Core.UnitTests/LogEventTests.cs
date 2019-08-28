@@ -50,23 +50,5 @@ namespace CafeLib.Core.UnitTests
             Assert.Equal(40, eventMessage.MessageInfo["state"]);
             Assert.Equal("Message 20 for state 40", logEventMessage.Message);
         }
-
-        [Fact]
-        public void ServiceProviderTest()
-        {
-            var resolver = IocFactory.CreateRegistry()
-                .AddPropertyService()
-                .AddSingleton<ITestService>(x => new TestService())
-                .GetResolver();
-
-            var propertyService = resolver.Resolve<IPropertyService>();
-            Assert.NotNull(propertyService);
-
-            propertyService.SetProperty("name", "Kilroy");
-            Assert.Equal("Kilroy", propertyService.GetProperty<string>("name"));
-
-            var testService = resolver.Resolve<ITestService>();
-            Assert.Equal("Kilroy is here!", testService.Test());
-        }
     }
 }
