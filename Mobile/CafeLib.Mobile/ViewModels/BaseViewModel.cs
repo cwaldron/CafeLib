@@ -411,6 +411,10 @@ namespace CafeLib.Mobile.ViewModels
         }
     }
 
+    /// <summary>
+    /// BaseViewModel with initialization parameter.
+    /// </summary>
+    /// <typeparam name="TParameter">initialization parameter type</typeparam>
     public abstract class BaseViewModel<TParameter> : BaseViewModel where TParameter : class
     {
         /// <summary>
@@ -439,16 +443,6 @@ namespace CafeLib.Mobile.ViewModels
         protected virtual async Task InitAsync(TParameter parameter)
         {
             await Task.CompletedTask;
-        }
-
-        /// <summary>
-        /// Close the view model.
-        /// </summary>
-        /// <param name="parameter">parameter to forward</param>
-        /// <param name="animate">animation flag</param>
-        public virtual void Close(TParameter parameter, bool animate = false)
-        {
-            Page.Navigation.Close(this, parameter, animate);
         }
     }
 }

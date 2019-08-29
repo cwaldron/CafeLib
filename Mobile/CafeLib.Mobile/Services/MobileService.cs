@@ -73,16 +73,6 @@ namespace CafeLib.Mobile.Services
         }
 
         /// <summary>
-        /// Resolve view model.
-        /// </summary>
-        /// <typeparam name="T">view model type</typeparam>
-        /// <returns>resolves the view model</returns>
-        public T ResolveViewModel<T>() where T : BaseViewModel
-        {
-            return _resolver.Resolve<T>();
-        }
-
-        /// <summary>
         /// Display an alert dialog.
         /// </summary>
         /// <param name="title">dialog title</param>
@@ -141,7 +131,7 @@ namespace CafeLib.Mobile.Services
         /// <returns></returns>
         public async Task PushAsync<T>(T viewModel, bool animate = false) where T : BaseViewModel
         {
-            var vm = viewModel ?? ResolveViewModel<T>();
+            var vm = viewModel ?? Resolve<T>();
             var page = vm.ResolvePage();
 
             if (Navigator.Navigation.Peek()?.GetType() != page.GetType())
@@ -160,7 +150,7 @@ namespace CafeLib.Mobile.Services
         /// <returns></returns>
         public async Task PushModalAsync<T>(T viewModel, bool animate = false) where T : BaseViewModel
         {
-            var vm = viewModel ?? ResolveViewModel<T>();
+            var vm = viewModel ?? Resolve<T>();
             var page = vm.ResolvePage();
             page.SetViewModel(vm);
             await Navigator.Navigation.PushModalAsync(page.HasToolbarItems() ? page.AsNavigationPage<ModalNavigationPage>() : page, animate);
@@ -210,7 +200,7 @@ namespace CafeLib.Mobile.Services
         {
             RunOnMainThread(() =>
             {
-                var vm = viewModel ?? ResolveViewModel<T>();
+                var vm = viewModel ?? Resolve<T>();
                 var page = vm.ResolvePage();
                 Navigator.Navigation.RemovePage(page);
             });
@@ -223,7 +213,7 @@ namespace CafeLib.Mobile.Services
         /// <returns>navigation page</returns>
         public NavigationPage SetNavigator<T>() where T : BaseViewModel
         {
-            return SetNavigator(ResolveViewModel<T>());
+            return SetNavigator(Resolve<T>());
         }
 
         /// <summary>

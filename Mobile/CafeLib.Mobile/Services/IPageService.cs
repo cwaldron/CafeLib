@@ -20,12 +20,5 @@ namespace CafeLib.Mobile.Services
         /// </summary>
         /// <returns>page instance that corresponds to the view model</returns>
         Page ResolvePage(BaseViewModel viewModel);
-
-        /// <summary>
-        /// Resolve view model
-        /// </summary>
-        /// <typeparam name="TViewModel">view model type</typeparam>
-        /// <returns>view model instance</returns>
-        TViewModel ResolveViewModel<TViewModel>() where TViewModel : BaseViewModel;
     }
 }

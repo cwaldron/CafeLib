@@ -68,15 +68,6 @@ namespace CafeLib.Mobile.Extensions
             => (app as CafeApplication)?.Resolver.Resolve<T>();
 
         /// <summary>
-        /// Resolve view model.
-        /// </summary>
-        /// <typeparam name="T">view model type</typeparam>
-        /// <param name="app">application</param>
-        /// <returns></returns>
-        public static T ResolveViewModel<T>(this Application app) where T : BaseViewModel
-            => app.Resolve<T>();
-
-        /// <summary>
         /// Runs an action on the main thread.
         /// </summary>
         /// <param name="app">application</param>
@@ -99,7 +90,7 @@ namespace CafeLib.Mobile.Extensions
         /// <param name="app">application</param>
         public static void StartOnViewModel<T>(this Application app) where T : BaseViewModel
         {
-            var vm = app.ResolveViewModel<T>();
+            var vm = app.Resolve<T>();
             app.MainPage = vm.AsNavigator();
             app.GetDeviceService().RunOnMainThread(async () => await vm.Initialize());
         }
@@ -113,7 +104,7 @@ namespace CafeLib.Mobile.Extensions
         /// <param name="app">application</param>
         public static void StartOnViewModel<T, TP>(this Application app, TP parameter) where T : BaseViewModel<TP> where TP : class
         {
-            var vm = app.ResolveViewModel<T>();
+            var vm = app.Resolve<T>();
             app.MainPage = vm.AsNavigator();
             app.GetDeviceService().RunOnMainThread(async () => await vm.Initialize(parameter));
         }
