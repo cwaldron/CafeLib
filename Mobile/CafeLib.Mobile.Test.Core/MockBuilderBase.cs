@@ -1,0 +1,24 @@
+﻿using System;
+// ReSharper disable UnusedMember.Global
+
+namespace CafeLib.Mobile.Test.Core
+{
+    public abstract class MockBuilderBase<T> where T : class
+    {
+        protected MobileUnitTest UnitTest { get; }
+
+        protected MockBuilderBase(MobileUnitTest test)
+        {
+            UnitTest = test ?? throw new ArgumentNullException(nameof(test));
+        }
+
+        public Func<T> OnCreate { protected get; set; }
+
+        public abstract T Build();
+
+        protected virtual T Create()
+        {
+            return Activator.CreateInstance<T>();
+        }
+    }
+}

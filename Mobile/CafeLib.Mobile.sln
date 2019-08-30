@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CafeLib.Mobile.Android", "C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CafeLib.Mobile.iOS", "CafeLib.Mobile.iOS\CafeLib.Mobile.iOS.csproj", "{179E0239-62A8-4AFE-BFFF-5FC0D53A5246}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CafeLib.Mobile.Test.Core", "CafeLib.Mobile.Test.Core\CafeLib.Mobile.Test.Core.csproj", "{74CDEF1D-16F3-483E-A4A2-53498553A401}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{179E0239-62A8-4AFE-BFFF-5FC0D53A5246}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{179E0239-62A8-4AFE-BFFF-5FC0D53A5246}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{179E0239-62A8-4AFE-BFFF-5FC0D53A5246}.Release|Any CPU.Build.0 = Release|Any CPU
+		{74CDEF1D-16F3-483E-A4A2-53498553A401}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{74CDEF1D-16F3-483E-A4A2-53498553A401}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{74CDEF1D-16F3-483E-A4A2-53498553A401}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{74CDEF1D-16F3-483E-A4A2-53498553A401}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
