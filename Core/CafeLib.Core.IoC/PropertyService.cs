@@ -19,13 +19,19 @@ namespace CafeLib.Core.IoC
         /// <inheritdoc />
         public T GetProperty<T>()
         {
-            return _dictionary.TryGetValue(typeof(T).FullName ?? throw new ArgumentNullException(typeof(T).Name), out var value) ? (T)value : default;
+            return GetProperty<T>(typeof(T).FullName ?? throw new ArgumentNullException(typeof(T).Name));
         }
 
         /// <inheritdoc />
         public void SetProperty<T>(T value)
         {
-            _dictionary.AddOrUpdate(typeof(T).FullName ?? throw new ArgumentNullException(typeof(T).Name), value, (k, v) => value);
+            SetProperty(typeof(T).FullName ?? throw new ArgumentNullException(typeof(T).Name), value);
+        }
+
+        /// <inheritdoc />
+        public bool RemoveProperty<T>()
+        {
+            return RemoveProperty(typeof(T).FullName);
         }
 
         /// <inheritdoc />
@@ -41,17 +47,30 @@ namespace CafeLib.Core.IoC
         }
 
         /// <inheritdoc />
+        public bool RemoveProperty(string key)
+        {
+            return _dictionary.TryRemove(key, out _);
+        }
+
+        /// <inheritdoc />
         public T GetProperty<T>(Guid guid)
         {
-            return _dictionary.TryGetValue(guid.ToString("B"), out var value) ? (T)value : default;
+            return GetProperty<T>(guid.ToString("B"));
         }
 
         /// <inheritdoc />
         public void SetProperty<T>(Guid guid, T value)
         {
-            _dictionary.AddOrUpdate(guid.ToString("B"), value, (k, v) => value);
+            SetProperty(guid.ToString("B"), value);
         }
 
+        /// <inheritdoc />
+        public bool RemoveProperty(Guid guid)
+        {
+            return RemoveProperty(guid.ToString("B"));
+        }
+
+        /// <inheritdoc />
         public T ToObject<T>()
         {
             return (T)_dictionary.ToObject();

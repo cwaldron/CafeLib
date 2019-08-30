@@ -20,6 +20,13 @@ namespace CafeLib.Core.IoC
         void SetProperty<T>(T value);
 
         /// <summary>
+        /// Remove entry from property bag keyed by its type.
+        /// </summary>
+        /// <typeparam name="T">property type</typeparam>
+        /// <returns>true if the property has been removed; otherwise false</returns>
+        bool RemoveProperty<T>();
+
+        /// <summary>
         /// Get property from property bag based on its key.
         /// </summary>
         /// <typeparam name="T">property type</typeparam>
@@ -36,6 +43,13 @@ namespace CafeLib.Core.IoC
         void SetProperty<T>(string key, T value);
 
         /// <summary>
+        /// Remove entry from property bag based on its key.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns>true if the property has been removed; otherwise false</returns>
+        bool RemoveProperty(string key);
+
+        /// <summary>
         /// Get property from property bag based on its key.
         /// </summary>
         /// <typeparam name="T">property type</typeparam>
@@ -50,6 +64,13 @@ namespace CafeLib.Core.IoC
         /// <param name="guid">property guid</param>
         /// <param name="value">property value</param>
         void SetProperty<T>(Guid guid, T value);
+
+        /// <summary>
+        /// Remove entry from property bag keyed by a guid.
+        /// </summary>
+        /// <param name="guid">property guid</param>
+        /// <returns>true if the property has been removed; otherwise false</returns>
+        bool RemoveProperty(Guid guid);
 
         /// <summary>
         /// Convert the property bag to an object.
