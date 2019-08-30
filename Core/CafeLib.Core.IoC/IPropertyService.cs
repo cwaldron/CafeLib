@@ -6,6 +6,13 @@ namespace CafeLib.Core.IoC
     public interface IPropertyService
     {
         /// <summary>
+        /// Determine whether property bag contains the property.
+        /// </summary>
+        /// <typeparam name="T">property type</typeparam>
+        /// <returns>true if the property contains the property; false otherwise</returns>
+        bool HasProperty<T>();
+
+        /// <summary>
         /// Get property from property bag
         /// </summary>
         /// <typeparam name="T">property type</typeparam>
@@ -23,8 +30,15 @@ namespace CafeLib.Core.IoC
         /// Remove entry from property bag keyed by its type.
         /// </summary>
         /// <typeparam name="T">property type</typeparam>
-        /// <returns>true if the property has been removed; otherwise false</returns>
+        /// <returns>true if the property has been removed; false otherwise</returns>
         bool RemoveProperty<T>();
+
+        /// <summary>
+        /// Determine whether property bag contains the property.
+        /// </summary>
+        /// <param name="key">property key</param>
+        /// <returns>true if the property contains the property; false otherwise</returns>
+        bool HasProperty(string key);
 
         /// <summary>
         /// Get property from property bag based on its key.
@@ -46,8 +60,15 @@ namespace CafeLib.Core.IoC
         /// Remove entry from property bag based on its key.
         /// </summary>
         /// <param name="key"></param>
-        /// <returns>true if the property has been removed; otherwise false</returns>
+        /// <returns>true if the property has been removed; false otherwise</returns>
         bool RemoveProperty(string key);
+
+        /// <summary>
+        /// Determine whether property bag contains the property.
+        /// </summary>
+        /// <param name="guid">property guid</param>
+        /// <returns>true if the property contains the property; false otherwise</returns>
+        bool HasProperty(Guid guid);
 
         /// <summary>
         /// Get property from property bag based on its key.
@@ -69,7 +90,7 @@ namespace CafeLib.Core.IoC
         /// Remove entry from property bag keyed by a guid.
         /// </summary>
         /// <param name="guid">property guid</param>
-        /// <returns>true if the property has been removed; otherwise false</returns>
+        /// <returns>true if the property has been removed; false otherwise</returns>
         bool RemoveProperty(Guid guid);
 
         /// <summary>

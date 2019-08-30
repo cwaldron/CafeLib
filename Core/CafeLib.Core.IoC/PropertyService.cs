@@ -17,6 +17,12 @@ namespace CafeLib.Core.IoC
         }
 
         /// <inheritdoc />
+        public bool HasProperty<T>()
+        {
+            return HasProperty(typeof(T).FullName ?? throw new ArgumentNullException(typeof(T).Name));
+        }
+
+        /// <inheritdoc />
         public T GetProperty<T>()
         {
             return GetProperty<T>(typeof(T).FullName ?? throw new ArgumentNullException(typeof(T).Name));
@@ -35,6 +41,12 @@ namespace CafeLib.Core.IoC
         }
 
         /// <inheritdoc />
+        public bool HasProperty(string key)
+        {
+            return _dictionary.ContainsKey(key);
+        }
+
+        /// <inheritdoc />
         public T GetProperty<T>(string key)
         {
             return _dictionary.TryGetValue(key, out var value) ? (T)value : default;
@@ -50,6 +62,12 @@ namespace CafeLib.Core.IoC
         public bool RemoveProperty(string key)
         {
             return _dictionary.TryRemove(key, out _);
+        }
+
+        /// <inheritdoc />
+        public bool HasProperty(Guid guid)
+        {
+            return HasProperty(guid.ToString("B"));
         }
 
         /// <inheritdoc />
