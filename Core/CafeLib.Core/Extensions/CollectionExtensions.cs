@@ -187,11 +187,11 @@ namespace CafeLib.Core.Extensions
         }
 
         /// <summary>
-        /// Add value to the dictionary.
+        /// Convert dictionary to an object.
         /// </summary>
         /// <typeparam name="T">value type</typeparam>
         /// <param name="dictionary"></param>
-        /// <returns></returns>
+        /// <returns>object</returns>
         public static object ToObject<T>(this IDictionary<string, T> dictionary)
         {
             try
