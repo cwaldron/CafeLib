@@ -45,5 +45,19 @@ namespace CafeLib.Core.UnitTests
             var testObject = propertyService.GetProperty<TestObject>();
             Assert.Equal(20, testObject.Value);
         }
+
+        [Fact]
+        public void PropertyServiceContainsPropertyTest()
+        {
+            var propertyService = Resolver.Resolve<IPropertyService>();
+            propertyService.SetProperty("name", "Kilroy");
+            Assert.Equal("Kilroy", propertyService.GetProperty<string>("name"));
+
+            Assert.True(propertyService.HasProperty("name"));
+
+            Assert.True(propertyService.RemoveProperty("name"));
+
+            Assert.False(propertyService.HasProperty("name"));
+        }
     }
 }
