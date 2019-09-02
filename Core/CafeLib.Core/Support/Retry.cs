@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+// ReSharper disable UnusedMember.Global
 
 namespace CafeLib.Core.Support
 {
@@ -62,9 +63,9 @@ namespace CafeLib.Core.Support
         /// Do retries on function if necessary.
         /// </summary>
         /// <typeparam name="T">return type</typeparam>
-        /// <param name="action">function action</param>
+        /// <param name="function">retry function</param>
         /// <returns>the action return result</returns>
-        public async Task<T> Do<T>(Func<Task<T>> action)
+        public async Task<T> Do<T>(Func<Task<T>> function)
         {
             var exceptions = new List<Exception>();
 
@@ -72,7 +73,7 @@ namespace CafeLib.Core.Support
             {
                 try
                 {
-                    return await action();
+                    return await function();
                 }
                 catch (TaskCanceledException)
                 {
@@ -86,6 +87,31 @@ namespace CafeLib.Core.Support
             }
 
             throw new AggregateException(exceptions);
+        }
+
+        #endregion
+
+        #region Static Methods
+
+        /// <summary>
+        /// Run retry action.
+        /// </summary>
+        /// <param name="action">retry action</param>
+        /// <returns>asynchronous task</returns>
+        public static Task Run(Action action)
+        {
+            return (new Retry()).Do(action);
+        }
+
+        /// <summary>
+        /// Run retry function.
+        /// </summary>
+        /// <typeparam name="T">return type</typeparam>
+        /// <param name="function">retry function</param>
+        /// <returns>asynchronous task</returns>
+        public static Task Run<T>(Func<Task<T>> function)
+        {
+            return (new Retry()).Do(function);
         }
 
         #endregion

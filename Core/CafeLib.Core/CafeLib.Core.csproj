@@ -13,6 +13,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Diagnostics\Retry.cs" />
     <Compile Remove="Extensions\StringExtensions - Copy.cs" />
   </ItemGroup>
 
