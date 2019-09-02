@@ -31,11 +31,11 @@ namespace CafeLib.Mobile.Test.Core.Support
             Func<VisualElement, double, double, SizeRequest> getNativeSizeFunc = null,
             bool useRealisticLabelMeasure = false, bool isInvokeRequired = false)
         {
-            this._invokeOnMainThread = invokeOnMainThread;
-            this._openUriAction = openUriAction;
-            this._getStreamAsync = getStreamAsync;
-            this._getNativeSizeFunc = getNativeSizeFunc;
-            this._useRealisticLabelMeasure = useRealisticLabelMeasure;
+            _invokeOnMainThread = invokeOnMainThread;
+            _openUriAction = openUriAction;
+            _getStreamAsync = getStreamAsync;
+            _getNativeSizeFunc = getNativeSizeFunc;
+            _useRealisticLabelMeasure = useRealisticLabelMeasure;
             IsInvokeRequired = isInvokeRequired;
         }
 

@@ -18,7 +18,6 @@ namespace CafeLib.Mobile.Test.Core
 
         public override T Build()
         {
-            UnitTest.CreateApplication();
             var vm = OnCreate();
             CloseCommandMock = new Mock<ICommand>();
             vm.CloseCommand = CloseCommandMock.Object;
