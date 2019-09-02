@@ -33,12 +33,12 @@ namespace CafeLib.Core.Support
         /// <summary>
         /// Retry constructor.
         /// </summary>
-        /// <param name="retryLimit"></param>
-        /// <param name="retryInterval"></param>
-        public Retry(int retryLimit = DefaultLimit, int retryInterval = DefaultInterval)
+        /// <param name="limit">retry limit</param>
+        /// <param name="interval">interval between retries</param>
+        public Retry(int limit = DefaultLimit, int interval = DefaultInterval)
         {
-            Limit = retryLimit > 0 ? retryLimit : 1;
-            Interval = retryInterval > 0 ? retryInterval : DefaultInterval;
+            Limit = limit > 0 ? limit : 1;
+            Interval = interval > 0 ? interval : DefaultInterval;
         }
 
         #endregion
@@ -104,6 +104,18 @@ namespace CafeLib.Core.Support
         }
 
         /// <summary>
+        /// Run retry action.
+        /// </summary>
+        /// <param name="limit">retry limit</param>
+        /// <param name="interval">interval between retries</param>
+        /// <param name="action">retry action</param>
+        /// <returns>asynchronous task</returns>
+        public static Task Run(int limit, int interval, Action action)
+        {
+            return (new Retry(limit, interval)).Do(action);
+        }
+
+        /// <summary>
         /// Run retry function.
         /// </summary>
         /// <typeparam name="T">return type</typeparam>
@@ -112,6 +124,19 @@ namespace CafeLib.Core.Support
         public static Task Run<T>(Func<Task<T>> function)
         {
             return (new Retry()).Do(function);
+        }
+
+        /// <summary>
+        /// Run retry function.
+        /// </summary>
+        /// <typeparam name="T">return type</typeparam>
+        /// <param name="limit">retry limit</param>
+        /// <param name="interval">interval between retries</param>
+        /// <param name="function">retry function</param>
+        /// <returns>asynchronous task</returns>
+        public static Task Run<T>(int limit, int interval, Func<Task<T>> function)
+        {
+            return (new Retry(limit, interval)).Do(function);
         }
 
         #endregion
