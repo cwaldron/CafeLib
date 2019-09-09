@@ -4,7 +4,7 @@
 
 namespace CafeLib.Core.Eventing
 {
-    public interface IEventService : IDisposable
+    public interface IEventService
     {
         /// <summary>
         /// Subscribe the specified handler.

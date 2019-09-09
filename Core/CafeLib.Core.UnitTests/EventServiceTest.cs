@@ -1,4 +1,5 @@
-﻿using CafeLib.Core.Eventing;
+﻿using System;
+using CafeLib.Core.Eventing;
 using CafeLib.Core.IoC;
 using CafeLib.Core.UnitTests.EventHosts;
 using Xunit;
@@ -6,7 +7,7 @@ using Xunit;
 
 namespace CafeLib.Core.UnitTests
 {
-    public class EventServiceTest
+    public class EventServiceTest : IDisposable
     {
         protected IServiceResolver Resolver;
 
@@ -22,6 +23,11 @@ namespace CafeLib.Core.UnitTests
 
             _fooHost = new FooEventHost(Resolver);
             _barHost = new BarEventHost(Resolver);
+        }
+
+        public void Dispose()
+        {
+            Resolver.Dispose();
         }
 
         [Fact]

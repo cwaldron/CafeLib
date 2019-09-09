@@ -5,7 +5,7 @@ using CafeLib.Core.Support;
 
 namespace CafeLib.Core.Eventing
 {
-    public class EventService : SingletonBase<EventService>, IEventService
+    public class EventService : SingletonBase<EventService>, IEventService, IDisposable
     {
         private bool _disposed;
 

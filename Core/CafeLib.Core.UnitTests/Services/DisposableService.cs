@@ -4,14 +4,14 @@ using Xunit;
 
 namespace CafeLib.Core.UnitTests.Services
 {
-    public interface IDisposableService : IDisposable
+    public interface IDisposableService
     {
         void DoThing(int number);
 
         bool IsDisposed { get; }
     }
 
-    public class DisposableService : IDisposableService
+    public class DisposableService : IDisposableService, IDisposable
     {
         private readonly ILogger<FooService> _logger;
         private int _disposed;
