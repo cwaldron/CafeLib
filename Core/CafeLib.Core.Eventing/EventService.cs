@@ -152,6 +152,7 @@ namespace CafeLib.Core.Eventing
                 _lookup.Clear();
                 _subscriptions = null;
                 _lookup = null;
+                ReleaseSingleton();
             }
         }
     }
