@@ -45,6 +45,7 @@ namespace CafeLib.Mobile.Test.Core
         {
             Subscribers.ForEach(x => Resolver.Resolve<IEventService>().Unsubscribe(x));
             Subscribers.Clear();
+            Resolver.Dispose();
         }
 
         /// <summary>
