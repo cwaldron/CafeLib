@@ -247,7 +247,7 @@ namespace CafeLib.Core.IoC
         private void Dispose(bool disposing)
         {
             if (!disposing) return;
-            _serviceProvider.Dispose();
+            _serviceProvider?.Dispose();
         }
 
         #endregion
