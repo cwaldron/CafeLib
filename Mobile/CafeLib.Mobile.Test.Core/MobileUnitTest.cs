@@ -16,9 +16,10 @@ namespace CafeLib.Mobile.Test.Core
     {
         protected List<Guid> Subscribers;
 
+        protected Mock<IAlertService> AlertService;
+        protected Mock<IDeviceService> DeviceService;
         protected Mock<INavigationService> NavigationService;
         protected Mock<IPageService> PageService;
-        protected Mock<IDeviceService> DeviceService;
 
         protected IServiceRegistry Registry { get; private set; }
 
@@ -84,11 +85,13 @@ namespace CafeLib.Mobile.Test.Core
             SetupRegistry();
 
             // Setup for all tests.
+            AlertService = new Mock<IAlertService>();
             NavigationService = new Mock<INavigationService>();
             PageService = new Mock<IPageService>();
 
             Registry
                 .AddSingleton<IDeviceService, FakeDeviceService>()
+                .AddSingleton(x => AlertService.Object)
                 .AddSingleton(x => NavigationService.Object)
                 .AddSingleton(x => PageService.Object);
         }

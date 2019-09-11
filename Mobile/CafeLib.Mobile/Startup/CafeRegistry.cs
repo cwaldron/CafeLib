@@ -22,14 +22,9 @@ namespace CafeLib.Mobile.Startup
                 .AddSingleton(x => mobileService.Value as IServiceResolver)
                 .AddSingleton(x => mobileService.Value as IPageService)
                 .AddSingleton(x => mobileService.Value as INavigationService)
-                .AddSingleton(x => mobileService.Value as IDeviceService);
+                .AddSingleton(x => mobileService.Value as IDeviceService)
+                .AddSingleton(x => mobileService.Value as IAlertService);
         }
-
-        internal IPageService PageService => GetResolver().Resolve<IPageService>();
-
-        internal INavigationService NavigationService => GetResolver().Resolve<INavigationService>();
-
-        internal IDeviceService DeviceService => GetResolver().Resolve<IDeviceService>();
 
         /// <summary>
         /// Logging service registration.

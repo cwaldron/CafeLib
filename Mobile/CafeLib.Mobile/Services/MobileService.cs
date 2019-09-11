@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using CafeLib.Core.Extensions;
 using CafeLib.Core.IoC;
 using CafeLib.Mobile.Extensions;
+using CafeLib.Mobile.Startup;
 using CafeLib.Mobile.Support;
 using CafeLib.Mobile.ViewModels;
 using CafeLib.Mobile.Views;
@@ -80,7 +81,7 @@ namespace CafeLib.Mobile.Services
         /// <param name="ok">accept button display</param>
         public Task DisplayAlert(string title, string message, string ok = DefaultAcceptText)
         {
-            return Application.Current.AlertDialog(title, message, ok);
+            return ((CafeApplication)Application.Current).AlertDialog(title, message, ok);
         }
 
         /// <summary>
@@ -93,7 +94,7 @@ namespace CafeLib.Mobile.Services
         /// <returns>true for OK, false for cancel</returns>
         public async Task<bool> DisplayConfirm(string title, string message, string ok = DefaultAcceptText, string cancel = DefaultCancelText)
         {
-            return await Application.Current.ConfirmDialog(title, message, ok, cancel);
+            return await ((CafeApplication)Application.Current).ConfirmDialog(title, message, ok, cancel);
         }
 
         /// <summary>
@@ -106,7 +107,7 @@ namespace CafeLib.Mobile.Services
         /// <returns>the selected option string</returns>
         public async Task<string> DisplayOptions(string title, string cancel, string delete, IEnumerable<string> options)
         {
-            return await Application.Current.OptionsDialog(title, cancel, delete, options);
+            return await ((CafeApplication)Application.Current).OptionsDialog(title, cancel, delete, options);
         }
 
         /// <summary>

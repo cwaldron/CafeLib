@@ -50,6 +50,14 @@ namespace CafeLib.Mobile.Extensions
             => app.Resolve<INavigationService>();
 
         /// <summary>
+        /// Get alert service
+        /// </summary>
+        /// <param name="app">application</param>
+        /// <returns>alert service</returns>
+        public static IAlertService GetAlertService(this Application app)
+            => app.Resolve<IAlertService>();
+
+        /// <summary>
         /// Get the application's resource.
         /// </summary>
         /// <typeparam name="T">resource type</typeparam>
@@ -117,7 +125,7 @@ namespace CafeLib.Mobile.Extensions
         /// <param name="message">message</param>
         /// <param name="ok"></param>
         public static Task AlertDialog(this Application app, string title, string message, string ok = "OK")
-            => (app as CafeApplication)?.DisplayAlert(title, message, ok);
+            => app.GetAlertService().DisplayAlert(title, message, ok);
 
         /// <summary>
         /// Display confirmation dialog
@@ -129,7 +137,7 @@ namespace CafeLib.Mobile.Extensions
         /// <param name="cancel">cancel</param>
         // ReSharper disable once MethodOverloadWithOptionalParameter
         public static Task<bool> ConfirmDialog(this Application app, string title, string message, string ok = "OK", string cancel = "Cancel")
-            => (app as CafeApplication)?.DisplayConfirm(title, message, ok, cancel);
+            => app.GetAlertService().DisplayConfirm(title, message, ok, cancel);
 
         /// <summary>
         /// Display option selection dialog.
@@ -141,6 +149,6 @@ namespace CafeLib.Mobile.Extensions
         /// <param name="options">option list</param>
         /// <returns></returns>
         public static Task<string> OptionsDialog(this Application app, string title, string cancel, string delete, IEnumerable<string> options)
-            => (app as CafeApplication)?.DisplayOptions(title, cancel, delete, options);
+            => app.GetAlertService().DisplayOptions(title, cancel, delete, options);
     }
 }
