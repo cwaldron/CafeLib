@@ -4,7 +4,7 @@ using CafeLib.Core.Eventing;
 using CafeLib.Core.IoC;
 using CafeLib.Mobile.Extensions;
 using CafeLib.Mobile.Services;
-using CafeLib.Mobile.Test.Core.Support;
+using CafeLib.Mobile.Test.Core.Fakes;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Xamarin.Forms;
@@ -24,7 +24,7 @@ namespace CafeLib.Mobile.Test.Core
 
         protected IServiceResolver Resolver => Registry.GetResolver();
 
-        protected MockApplication App { get; private set; }
+        protected FakeApplication App { get; private set; }
 
         public void Initialize()
         {
@@ -36,9 +36,9 @@ namespace CafeLib.Mobile.Test.Core
         public void CreateApplication()
         {
             Subscribers = new List<Guid>();
-            Device.PlatformServices = new MockPlatformServices();
-            Device.Info = new MockDeviceInfo();
-            App = new MockApplication(Registry);
+            Device.PlatformServices = new FakePlatformServices();
+            Device.Info = new FakeDeviceInfo();
+            App = new FakeApplication(Registry);
         }
 
         public void Terminate()
@@ -88,7 +88,7 @@ namespace CafeLib.Mobile.Test.Core
             PageService = new Mock<IPageService>();
 
             Registry
-                .AddSingleton<IDeviceService, MockDeviceService>()
+                .AddSingleton<IDeviceService, FakeDeviceService>()
                 .AddSingleton(x => NavigationService.Object)
                 .AddSingleton(x => PageService.Object);
         }

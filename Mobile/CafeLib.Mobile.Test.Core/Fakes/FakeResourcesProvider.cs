@@ -1,9 +1,10 @@
 ﻿using Xamarin.Forms;
 using Xamarin.Forms.Internals;
+// ReSharper disable UnusedMember.Global
 
-namespace CafeLib.Mobile.Test.Core.Support
+namespace CafeLib.Mobile.Test.Core.Fakes
 {
-    internal class MockResourcesProvider : ISystemResourcesProvider
+    internal class FakeResourcesProvider : ISystemResourcesProvider
     {
         public IResourceDictionary GetSystemResources()
         {

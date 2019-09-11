@@ -1,13 +1,14 @@
 ﻿using System;
+
 // ReSharper disable UnusedMember.Global
 
-namespace CafeLib.Mobile.Test.Core
+namespace CafeLib.Mobile.Test.Core.Fakes
 {
-    public abstract class MockBuilderBase<T> where T : class
+    public abstract class FakeBuilderBase<T> where T : class
     {
         protected MobileUnitTest UnitTest { get; }
 
-        protected MockBuilderBase(MobileUnitTest test)
+        protected FakeBuilderBase(MobileUnitTest test)
         {
             UnitTest = test ?? throw new ArgumentNullException(nameof(test));
         }

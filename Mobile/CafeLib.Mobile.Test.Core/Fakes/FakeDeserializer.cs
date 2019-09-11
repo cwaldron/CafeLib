@@ -2,9 +2,9 @@
 using System.Threading.Tasks;
 using Xamarin.Forms.Internals;
 
-namespace CafeLib.Mobile.Test.Core.Support
+namespace CafeLib.Mobile.Test.Core.Fakes
 {
-    internal class MockDeserializer : IDeserializer
+    internal class FakeDeserializer : IDeserializer
     {
         public Task<IDictionary<string, object>> DeserializePropertiesAsync()
         {

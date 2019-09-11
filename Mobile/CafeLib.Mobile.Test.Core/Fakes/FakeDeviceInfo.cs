@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Xamarin.Forms;
+﻿using Xamarin.Forms;
 using Xamarin.Forms.Internals;
+// ReSharper disable UnusedMember.Global
 
-namespace CafeLib.Mobile.Test.Core.Support
+namespace CafeLib.Mobile.Test.Core.Fakes
 {
-    public class MockDeviceInfo : DeviceInfo
+    public class FakeDeviceInfo : DeviceInfo
     {
-        public MockDeviceInfo()
+        public FakeDeviceInfo()
         {
             CurrentOrientation = DeviceOrientation.Portrait;
             PixelScreenSize = new Size(360.0, 760.0);

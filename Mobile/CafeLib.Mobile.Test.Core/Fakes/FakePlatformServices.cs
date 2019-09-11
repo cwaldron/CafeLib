@@ -5,20 +5,21 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using CafeLib.Mobile.Test.Core.Support;
+using CafeLib.Mobile.Test.Core.Fakes;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
 using FileMode = System.IO.FileMode;
 using FileAccess = System.IO.FileAccess;
 using FileShare = System.IO.FileShare;
 using Stream = System.IO.Stream;
+// ReSharper disable UnusedMember.Global
 
-[assembly: Dependency(typeof(MockDeserializer))]
-[assembly: Dependency(typeof(MockResourcesProvider))]
+[assembly: Dependency(typeof(FakeDeserializer))]
+[assembly: Dependency(typeof(FakeResourcesProvider))]
 
-namespace CafeLib.Mobile.Test.Core.Support
+namespace CafeLib.Mobile.Test.Core.Fakes
 {
-    internal class MockPlatformServices : IPlatformServices
+    internal class FakePlatformServices : IPlatformServices
     {
         private readonly Action<Action> _invokeOnMainThread;
         private readonly Action<Uri> _openUriAction;
@@ -26,7 +27,7 @@ namespace CafeLib.Mobile.Test.Core.Support
         private readonly Func<VisualElement, double, double, SizeRequest> _getNativeSizeFunc;
         private readonly bool _useRealisticLabelMeasure;
 
-        public MockPlatformServices(Action<Action> invokeOnMainThread = null, Action<Uri> openUriAction = null,
+        public FakePlatformServices(Action<Action> invokeOnMainThread = null, Action<Uri> openUriAction = null,
             Func<Uri, CancellationToken, Task<Stream>> getStreamAsync = null,
             Func<VisualElement, double, double, SizeRequest> getNativeSizeFunc = null,
             bool useRealisticLabelMeasure = false, bool isInvokeRequired = false)
@@ -101,7 +102,7 @@ namespace CafeLib.Mobile.Test.Core.Support
 
         public Ticker CreateTicker()
         {
-            return new MockTicker();
+            return new FakeTicker();
         }
 
         public void StartTimer(TimeSpan interval, Func<bool> callback)

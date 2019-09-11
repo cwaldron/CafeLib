@@ -5,9 +5,9 @@ using CafeLib.Mobile.Services;
 
 // ReSharper disable UnusedMember.Global
 
-namespace CafeLib.Mobile.Test.Core.Support
+namespace CafeLib.Mobile.Test.Core.Fakes
 {
-    internal class MockDeviceService : IDeviceService
+    internal class FakeDeviceService : IDeviceService
     {
         public bool IsOnMainThread()
         {

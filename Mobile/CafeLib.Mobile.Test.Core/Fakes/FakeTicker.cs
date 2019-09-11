@@ -1,8 +1,8 @@
 ﻿using Xamarin.Forms.Internals;
 
-namespace CafeLib.Mobile.Test.Core.Support
+namespace CafeLib.Mobile.Test.Core.Fakes
 {
-    internal class MockTicker : Ticker
+    internal class FakeTicker : Ticker
     {
         private bool _enabled;
 

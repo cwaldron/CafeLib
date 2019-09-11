@@ -1,4 +1,5 @@
 ﻿using System.Windows.Input;
+using CafeLib.Mobile.Test.Core.Fakes;
 using CafeLib.Mobile.ViewModels;
 using Moq;
 
@@ -6,7 +7,7 @@ using Moq;
 
 namespace CafeLib.Mobile.Test.Core
 {
-    public class ViewModelBuilder<T> : MockBuilderBase<T> where T : BaseViewModel
+    public class ViewModelBuilder<T> : FakeBuilderBase<T> where T : BaseViewModel
     {
         public Mock<ICommand> CloseCommandMock { get; set; }
 
