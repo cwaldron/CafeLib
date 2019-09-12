@@ -38,19 +38,6 @@ namespace CafeLib.Mobile.Extensions
         }
 
         /// <summary>
-        /// Brings a page to the top of the navigation stack.
-        /// </summary>
-        /// <param name="navigator">navigation object</param>
-        /// <param name="page">page to bring to the top of the navigation stack</param>
-        /// <returns></returns>
-        internal static void BringToTop(this INavigation navigator, Page page)
-        {
-            var topPage = navigator.NavigationStack.LastOrDefault();
-            if (page == topPage) return;
-            navigator.InsertPageBefore(topPage, page);
-        }
-
-        /// <summary>
         /// Returns the page at the top of the navigation stack.
         /// </summary>
         /// <param name="navigator">navigation object</param>
@@ -357,6 +344,19 @@ namespace CafeLib.Mobile.Extensions
         #region Helpers
 
         /// <summary>
+        /// Brings a page to the top of the navigation stack.
+        /// </summary>
+        /// <param name="navigator">navigation object</param>
+        /// <param name="page">page to bring to the top of the navigation stack</param>
+        /// <returns></returns>
+        private static void BringToTop(this INavigation navigator, Page page)
+        {
+            var topPage = navigator.NavigationStack.LastOrDefault();
+            if (page == topPage) return;
+            navigator.InsertPageBefore(topPage, page);
+        }
+
+        /// <summary>
         /// Find the proper navigator & page pair.
         /// </summary>
         /// <param name="navigator">navigation object</param>
@@ -395,7 +395,7 @@ namespace CafeLib.Mobile.Extensions
         /// <param name="navigator">navigation object</param>
         /// <param name="page">page to locates</param>
         /// <returns>-1: modal stack, 1: navigation stack, 0: neither</returns>
-        internal static int GetNavigationType(this INavigation navigator, Page page)
+        private static int GetNavigationType(this INavigation navigator, Page page)
         {
             return navigator.NavigationStack.Contains(page)
                 ? 1

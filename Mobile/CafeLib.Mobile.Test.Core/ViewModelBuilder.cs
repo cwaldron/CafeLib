@@ -14,13 +14,13 @@ namespace CafeLib.Mobile.Test.Core
         public ViewModelBuilder(MobileUnitTest test) 
             : base(test)
         {
+            CloseCommandMock = new Mock<ICommand>();
             OnCreate = Create;
         }
 
         public override T Build()
         {
             var vm = OnCreate();
-            CloseCommandMock = new Mock<ICommand>();
             vm.CloseCommand = CloseCommandMock.Object;
             return vm;
         }
