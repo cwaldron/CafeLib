@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 // ReSharper disable UnusedMember.Global
 
@@ -12,7 +13,6 @@ namespace CafeLib.Core.IoC
 
         private readonly ServiceCollection _serviceCollection;
         private ServiceProvider _serviceProvider;
-        private bool _rebuild;
         private bool _disposed;
 
         #endregion
@@ -21,16 +21,15 @@ namespace CafeLib.Core.IoC
 
         internal ServiceRegistry()
         {
-            _rebuild = true;
             _serviceCollection = new ServiceCollection();
-            _serviceCollection.AddSingleton<IServiceResolver>(x => this);
+            _serviceCollection.TryAddSingleton<IServiceResolver>(x => this);
         }
 
         #endregion
 
         #region Properties
 
-        public IServiceProvider ServiceProvider => GetServiceProvider();
+        public IServiceProvider ServiceProvider => _serviceProvider ?? (_serviceProvider = _serviceCollection.BuildServiceProvider());
 
         #endregion
 
@@ -43,8 +42,8 @@ namespace CafeLib.Core.IoC
         /// <returns>service registry</returns>
         public IServiceRegistry AddLogging(Action<ILoggingBuilder> configuration)
         {
+            if (_serviceProvider != null) throw new InvalidOperationException(nameof(_serviceProvider));
             _serviceCollection.AddLogging(configuration);
-            _rebuild = true;
             return this;
         }
 
@@ -55,8 +54,8 @@ namespace CafeLib.Core.IoC
         /// <returns>service registry</returns>
         public IServiceRegistry AddScoped<TService>() where TService : class
         {
-            _serviceCollection.AddScoped<TService>();
-            _rebuild = true;
+            if (_serviceProvider != null) throw new InvalidOperationException(nameof(_serviceProvider));
+            _serviceCollection.TryAddScoped<TService>();
             return this;
         }
 
@@ -68,8 +67,8 @@ namespace CafeLib.Core.IoC
         /// <returns>service registry</returns>
         public IServiceRegistry AddScoped<TService, TImpl>() where TService : class where TImpl : class, TService
         {
-            _serviceCollection.AddScoped<TService, TImpl>();
-            _rebuild = true;
+            if (_serviceProvider != null) throw new InvalidOperationException(nameof(_serviceProvider));
+            _serviceCollection.TryAddScoped<TService, TImpl>();
             return this;
         }
 
@@ -91,8 +90,8 @@ namespace CafeLib.Core.IoC
         /// <returns>service registry</returns>
         public IServiceRegistry AddSingleton<TService>() where TService : class
         {
-            _serviceCollection.AddSingleton<TService>();
-            _rebuild = true;
+            if (_serviceProvider != null) throw new InvalidOperationException(nameof(_serviceProvider));
+            _serviceCollection.TryAddSingleton<TService>();
             return this;
         }
 
@@ -104,8 +103,8 @@ namespace CafeLib.Core.IoC
         /// <returns>service registry</returns>
         public IServiceRegistry AddSingleton<TService, TImpl>() where TService : class where TImpl : class, TService
         {
-            _serviceCollection.AddSingleton<TService, TImpl>();
-            _rebuild = true;
+            if (_serviceProvider != null) throw new InvalidOperationException(nameof(_serviceProvider));
+            _serviceCollection.TryAddSingleton<TService, TImpl>();
             return this;
         }
 
@@ -127,8 +126,8 @@ namespace CafeLib.Core.IoC
         /// <returns>service registry</returns>
         public IServiceRegistry AddTransient<TService>() where TService : class
         {
-            _serviceCollection.AddTransient<TService>();
-            _rebuild = true;
+            if (_serviceProvider != null) throw new InvalidOperationException(nameof(_serviceProvider));
+            _serviceCollection.TryAddTransient<TService>();
             return this;
         }
 
@@ -140,8 +139,8 @@ namespace CafeLib.Core.IoC
         /// <returns>service registry</returns>
         public IServiceRegistry AddTransient<TService, TImpl>() where TService : class where TImpl : class, TService
         {
-            _serviceCollection.AddTransient<TService, TImpl>();
-            _rebuild = true;
+            if (_serviceProvider != null) throw new InvalidOperationException(nameof(_serviceProvider));
+            _serviceCollection.TryAddTransient<TService, TImpl>();
             return this;
         }
 
@@ -186,22 +185,6 @@ namespace CafeLib.Core.IoC
         #region Helpers
 
         /// <summary>
-        /// Obtain the service provider.
-        /// </summary>
-        /// <returns>service provider</returns>
-        private IServiceProvider GetServiceProvider()
-        {
-            // ReSharper disable once InvertIf
-            if (_rebuild)
-            {
-                _serviceProvider = _serviceCollection.BuildServiceProvider();
-                _rebuild = false;
-            }
-
-            return _serviceProvider;
-        }
-
-        /// <summary>
         /// Register service of scoped lifetime.
         /// </summary>
         /// <typeparam name="TService">service type</typeparam>
@@ -209,8 +192,8 @@ namespace CafeLib.Core.IoC
         /// <returns>service registry</returns>
         private IServiceRegistry AddScopedInternal<TService>(Func<IServiceProvider, TService> factory) where TService : class
         {
-            _serviceCollection.AddScoped(factory.Invoke);
-            _rebuild = true;
+            if (_serviceProvider != null) throw new InvalidOperationException(nameof(_serviceProvider));
+            _serviceCollection.TryAddScoped(factory.Invoke);
             return this;
         }
 
@@ -222,8 +205,8 @@ namespace CafeLib.Core.IoC
         /// <returns>service registry</returns>
         private IServiceRegistry AddSingletonInternal<TService>(Func<IServiceProvider, TService> factory) where TService : class
         {
-            _serviceCollection.AddSingleton(factory.Invoke);
-            _rebuild = true;
+            if (_serviceProvider != null) throw new InvalidOperationException(nameof(_serviceProvider));
+            _serviceCollection.TryAddSingleton(factory.Invoke);
             return this;
         }
 
@@ -235,8 +218,8 @@ namespace CafeLib.Core.IoC
         /// <returns>service registry</returns>
         private IServiceRegistry AddTransientInternal<TService>(Func<IServiceProvider, TService> factory) where TService : class
         {
-            _serviceCollection.AddTransient(factory.Invoke);
-            _rebuild = true;
+            if (_serviceProvider != null) throw new InvalidOperationException(nameof(_serviceProvider));
+            _serviceCollection.TryAddTransient(factory.Invoke);
             return this;
         }
 
@@ -247,7 +230,7 @@ namespace CafeLib.Core.IoC
         private void Dispose(bool disposing)
         {
             if (!disposing) return;
-            _serviceProvider?.Dispose();
+            _serviceProvider.Dispose();
         }
 
         #endregion
