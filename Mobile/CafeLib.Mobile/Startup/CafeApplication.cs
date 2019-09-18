@@ -41,7 +41,6 @@ namespace CafeLib.Mobile.Startup
         /// </summary>
         public virtual void Configure()
         {
-            Registry.AddScoped<IAlertService>(x => this);
         }
 
         /// <summary>
