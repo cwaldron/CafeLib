@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 
 namespace CafeLib.Core.IoC
 {
-    public interface IServiceRegistry : IDisposable
+    public interface IServiceRegistry
     {
         /// <summary>
         /// Logging service registration.

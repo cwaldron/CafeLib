@@ -45,22 +45,22 @@ namespace CafeLib.Core.UnitTests
             Assert.Equal("Kilroy is here!", testService.Test());
         }
 
-        [Fact]
-        public void ReplaceServiceAfterResolveTest()
-        {
-            var registry = IocFactory.CreateRegistry()
-                .AddPropertyService()
-                .AddSingleton<ITestService, TestService>();
+        //[Fact]
+        //public void ReplaceServiceAfterResolveTest()
+        //{
+        //    var registry = IocFactory.CreateRegistry()
+        //        .AddPropertyService()
+        //        .AddSingleton<ITestService, TestService>();
 
-            // Setup test service.
-            var resolver = registry.GetResolver();
-            var testService = resolver.Resolve<ITestService>();
-            Assert.Equal("Kilroy is here!", testService.Test());
+        //    // Setup test service.
+        //    var resolver = registry.GetResolver();
+        //    var testService = resolver.Resolve<ITestService>();
+        //    Assert.Equal("Kilroy is here!", testService.Test());
 
-            // Replace TestService with TestService2.
-            registry.AddSingleton<ITestService, TestService2>();
-            var testService2 = resolver.Resolve<ITestService>();
-            Assert.Equal("Eagle has landed!", testService2.Test());
-        }
+        //    // Replace TestService with TestService2.
+        //    registry.AddSingleton<ITestService, TestService2>();
+        //    var testService2 = resolver.Resolve<ITestService>();
+        //    Assert.Equal("Eagle has landed!", testService2.Test());
+        //}
     }
 }
