@@ -146,7 +146,7 @@ namespace CafeLib.Mobile.Startup
         /// </summary>
         public void Dispose()
         {
-            _serviceRegistry.Dispose();
+            GetResolver().Dispose();
         }
 
         /// <summary>
