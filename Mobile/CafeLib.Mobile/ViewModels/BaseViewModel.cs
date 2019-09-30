@@ -6,6 +6,7 @@ using CafeLib.Core.Eventing;
 using CafeLib.Core.IoC;
 using CafeLib.Mobile.Commands;
 using CafeLib.Mobile.Extensions;
+using CafeLib.Mobile.Messages;
 using CafeLib.Mobile.Services;
 using Xamarin.Forms;
 // ReSharper disable UnusedMember.Global
@@ -24,6 +25,7 @@ namespace CafeLib.Mobile.ViewModels
             Initial,
             Appearing,
             Load,
+            Close,
             Disappearing,
             Unload
         }
@@ -128,6 +130,8 @@ namespace CafeLib.Mobile.ViewModels
             {
                 _appearingCommand = new XamAsyncCommand(async () =>
                 {
+                    if (Lifecycle == LifecycleState.Close) return;
+
                     Lifecycle = LifecycleState.Appearing;
                     IsVisible = true;
                     ReleaseSubscribers();
@@ -288,6 +292,9 @@ namespace CafeLib.Mobile.ViewModels
         /// <param name="animate"></param>
         protected virtual void Close(bool animate = false)
         {
+            if (Lifecycle == LifecycleState.Close) return;
+            Lifecycle = LifecycleState.Close;
+            PublishEvent(new ViewModelCloseMessage(this));
             Page.Navigation.Close(this, animate);
         }
 
