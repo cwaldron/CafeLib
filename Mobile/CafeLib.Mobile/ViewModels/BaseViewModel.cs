@@ -292,9 +292,14 @@ namespace CafeLib.Mobile.ViewModels
         /// <param name="animate"></param>
         protected virtual void Close(bool animate = false)
         {
+            Close(new ViewModelCloseMessage(this));
+        }
+
+        protected void Close(ViewModelCloseMessage message, bool animate = false)
+        {
             if (Lifecycle == LifecycleState.Close) return;
             Lifecycle = LifecycleState.Close;
-            PublishEvent(new ViewModelCloseMessage(this));
+            PublishEvent(message);
             Page.Navigation.Close(this, animate);
         }
 

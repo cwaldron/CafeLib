@@ -1,13 +1,26 @@
-﻿using CafeLib.Core.Eventing;
+﻿using System;
+using CafeLib.Core.Eventing;
+using CafeLib.Mobile.Extensions;
 using CafeLib.Mobile.ViewModels;
+using Xamarin.Forms;
 
 namespace CafeLib.Mobile.Messages
 {
     public class ViewModelCloseMessage : EventMessage
     {
+        public object Parameter { get; }
+
+        public Type TargetType { get; protected set; }
+
         public ViewModelCloseMessage(BaseViewModel sender)
             : base(sender)
         {
+        }
+
+        public ViewModelCloseMessage(BaseViewModel sender, object parameter)
+            : base(sender)
+        {
+            Parameter = parameter;
         }
     }
 }
