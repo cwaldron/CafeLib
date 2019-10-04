@@ -24,6 +24,14 @@ namespace CafeLib.Mobile.ViewModels
         }
 
         /// <summary>
+        /// Update all properties.
+        /// </summary>
+        protected void UpdateProperties()
+        {
+            OnPropertyChanged(string.Empty);
+        }
+
+        /// <summary>
         /// Set a property value.
         /// </summary>
         /// <typeparam name="T"></typeparam>
