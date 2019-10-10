@@ -1,8 +1,6 @@
-﻿using CafeLib.Core.Eventing;
-using CafeLib.Core.IoC;
+﻿using CafeLib.Core.IoC;
 using CafeLib.Mobile.Effects;
 using CafeLib.Mobile.Extensions;
-using CafeLib.Mobile.Messages;
 using CafeLib.Mobile.ViewModels;
 using Xamarin.Forms;
 
