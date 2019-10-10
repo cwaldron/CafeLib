@@ -289,12 +289,17 @@ namespace CafeLib.Mobile.ViewModels
         /// <summary>
         /// Close the view model.
         /// </summary>
-        /// <param name="animate"></param>
+        /// <param name="animate">transition animation flag</param>
         protected virtual void Close(bool animate = false)
         {
             Close(new ViewModelCloseMessage(this));
         }
 
+        /// <summary>
+        /// Close view model with message
+        /// </summary>
+        /// <param name="message">view model close message</param>
+        /// <param name="animate">transition animation flag</param>
         protected void Close(ViewModelCloseMessage message, bool animate = false)
         {
             if (Lifecycle == LifecycleState.Close) return;

@@ -102,8 +102,12 @@ namespace CafeLib.Mobile.Commands
         }
     }
 
-
-    public class XamAsyncCommand<TParameter, TResult> : IXamAsyncCommand<TParameter, TResult>
+    /// <summary>
+    /// Xamarin command generic adapter with parameter and result.
+    /// </summary>
+    /// <typeparam name="TParameter">parameter type</typeparam>
+    /// <typeparam name="TResult">result type</typeparam>
+    public class XamAsyncCommand<TParameter, TResult> : IXamAsyncCommand<TParameter, TResult>, IXamCommand<TParameter, TResult>
     {
         private readonly Func<TParameter, Task<TResult>> _command;
         private readonly Func<TParameter, bool> _canExecute;
@@ -143,11 +147,14 @@ namespace CafeLib.Mobile.Commands
 
         public bool CanExecute(object parameter) => _canExecute((TParameter)parameter);
 
-#pragma warning disable RECS0165 // Asynchronous methods should return a Task instead of void
-        async void ICommand.Execute(object parameter)
-#pragma warning restore RECS0165 // Asynchronous methods should return a Task instead of void
+        void ICommand.Execute(object parameter)
         {
-            await ExecuteAsync((TParameter)parameter);
+            Execute((TParameter)parameter);
+        }
+
+        public TResult Execute(TParameter parameter)
+        {
+            return ExecuteAsync(parameter).Result;
         }
 
         public event EventHandler CanExecuteChanged;

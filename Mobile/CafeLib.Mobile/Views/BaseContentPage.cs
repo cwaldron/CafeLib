@@ -93,8 +93,7 @@ namespace CafeLib.Mobile.Views
         /// <returns>true: ignore behavior; false: default behavior</returns>
         protected override bool OnBackButtonPressed()
         {
-            Resolver.Resolve<IEventService>().Publish(new BackButtonPressedMessage(NavigationSource.Hardware));
-            return GetViewModel<BaseViewModel>() != null && GetViewModel<BaseViewModel>().BackButtonPressed.Execute(NavigationSource.Hardware);
+            return GetViewModel<BaseViewModel>()?.BackButtonPressed.Execute(NavigationSource.Hardware) ?? false;
         }
 
         /// <summary>
@@ -103,8 +102,7 @@ namespace CafeLib.Mobile.Views
         /// <returns>true: ignore behavior; false: default behavior</returns>
         public virtual bool OnSoftBackButtonPressed()
         {
-            Resolver.Resolve<IEventService>().Publish(new BackButtonPressedMessage(NavigationSource.Software));
-            return GetViewModel<BaseViewModel>() != null && GetViewModel<BaseViewModel>().BackButtonPressed.Execute(NavigationSource.Software);
+            return GetViewModel<BaseViewModel>()?.BackButtonPressed.Execute(NavigationSource.Software) ?? false;
         }
     }
 

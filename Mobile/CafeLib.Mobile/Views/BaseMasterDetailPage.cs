@@ -1,8 +1,6 @@
-﻿using CafeLib.Core.Eventing;
-using CafeLib.Core.IoC;
+﻿using CafeLib.Core.IoC;
 using CafeLib.Mobile.Effects;
 using CafeLib.Mobile.Extensions;
-using CafeLib.Mobile.Messages;
 using CafeLib.Mobile.ViewModels;
 using Xamarin.Forms;
 
@@ -59,7 +57,7 @@ namespace CafeLib.Mobile.Views
         protected override void OnAppearing()
         {
             base.OnAppearing();
-            GetViewModel<BaseViewModel>()?.AppearingCommand.Execute(null);
+            GetMasterDetailViewModel()?.AppearingCommand.Execute(null);
         }
 
         /// <summary>
@@ -68,7 +66,7 @@ namespace CafeLib.Mobile.Views
         protected override void OnDisappearing()
         {
             base.OnDisappearing();
-            GetViewModel<BaseViewModel>()?.DisappearingCommand.Execute(null);
+            GetMasterDetailViewModel()?.DisappearingCommand.Execute(null);
         }
 
         /// <summary>
@@ -76,7 +74,7 @@ namespace CafeLib.Mobile.Views
         /// </summary>
         protected virtual void OnLoad()
         {
-            GetViewModel<BaseViewModel>()?.LoadCommand.Execute(null);
+            GetMasterDetailViewModel()?.LoadCommand.Execute(null);
         }
 
         /// <summary>
@@ -84,17 +82,16 @@ namespace CafeLib.Mobile.Views
         /// </summary>
         protected virtual void OnUnload()
         {
-            GetViewModel<BaseViewModel>()?.UnloadCommand.Execute(null);
+            GetMasterDetailViewModel()?.UnloadCommand.Execute(null);
         }
 
         /// <summary>
         /// Process hardware back button press event.
-        /// </summary>
+        /// </summary>s
         /// <returns>true: ignore behavior; false: default behavior</returns>
         protected override bool OnBackButtonPressed()
         {
-            Resolver.Resolve<IEventService>().Publish(new BackButtonPressedMessage(NavigationSource.Hardware));
-            return GetViewModel<BaseViewModel>() != null && GetViewModel<BaseViewModel>().BackButtonPressed.Execute(NavigationSource.Hardware);
+            return GetMasterDetailViewModel()?.BackButtonPressed.Execute(NavigationSource.Hardware) ?? false;
         }
 
         /// <summary>
@@ -103,8 +100,26 @@ namespace CafeLib.Mobile.Views
         /// <returns>true: ignore behavior; false: default behavior</returns>
         public bool OnSoftBackButtonPressed()
         {
-            Resolver.Resolve<IEventService>().Publish(new BackButtonPressedMessage(NavigationSource.Software));
-            return GetViewModel<BaseViewModel>() != null && GetViewModel<BaseViewModel>().BackButtonPressed.Execute(NavigationSource.Software);
+            return GetMasterDetailViewModel()?.BackButtonPressed.Execute(NavigationSource.Software) ?? false;
+        }
+
+        /// <summary>
+        /// Return the proper view model from master-detail context. 
+        /// </summary>
+        /// <returns></returns>
+        private BaseViewModel GetMasterDetailViewModel()
+        {
+            switch (Detail)
+            {
+                case NavigationPage navPage:
+                    return navPage.CurrentPage.GetViewModel<BaseViewModel>();
+
+                case Page _:
+                    return Detail.GetViewModel<BaseViewModel>();
+
+                case null:
+                    return GetViewModel<BaseViewModel>();
+            }
         }
     }
 }
