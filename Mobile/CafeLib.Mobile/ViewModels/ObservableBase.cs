@@ -24,9 +24,9 @@ namespace CafeLib.Mobile.ViewModels
         }
 
         /// <summary>
-        /// Update all properties.
+        /// Refresh all properties.
         /// </summary>
-        protected void UpdateProperties()
+        protected void RefreshProperties()
         {
             OnPropertyChanged(string.Empty);
         }
