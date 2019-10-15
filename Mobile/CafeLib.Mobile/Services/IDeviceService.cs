@@ -21,6 +21,12 @@ namespace CafeLib.Mobile.Services
         void RunOnMainThread(Action action);
 
         /// <summary>
+        /// Schedules an action on the main thread.
+        /// </summary>
+        /// <param name="action"></param>
+        void QueueOnMainThread(Action action);
+
+        /// <summary>
         /// Runs an action on a background worker thread.
         /// </summary>
         /// <param name="action">action</param>

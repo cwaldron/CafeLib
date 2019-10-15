@@ -247,8 +247,17 @@ namespace CafeLib.Mobile.Services
             }
             else
             {
-                Device.BeginInvokeOnMainThread(action);
+                QueueOnMainThread(action);
             }
+        }
+
+        /// <summary>
+        /// Schedules an action on the main thread.
+        /// </summary>
+        /// <param name="action">action</param>
+        public void QueueOnMainThread(Action action)
+        {
+            Device.BeginInvokeOnMainThread(action);
         }
 
         /// <summary>

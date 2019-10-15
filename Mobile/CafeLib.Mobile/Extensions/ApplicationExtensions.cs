@@ -84,6 +84,14 @@ namespace CafeLib.Mobile.Extensions
             => app.GetDeviceService().RunOnMainThread(action);
 
         /// <summary>
+        /// Schedules an action on the main thread.
+        /// </summary>
+        /// <param name="app">application</param>
+        /// <param name="action">action</param>
+        public static void QueueOnMainThread(this Application app, Action action)
+            => app.GetDeviceService().QueueOnMainThread(action);
+
+        /// <summary>
         /// Runs an action on a worker thread.
         /// </summary>
         /// <param name="app">application</param>
