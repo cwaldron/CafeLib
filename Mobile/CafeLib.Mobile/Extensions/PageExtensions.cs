@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using CafeLib.Core.Extensions;
+using CafeLib.Mobile.Services;
 using CafeLib.Mobile.ViewModels;
 using Xamarin.Forms;
 // ReSharper disable UnusedMember.Global
@@ -19,6 +20,16 @@ namespace CafeLib.Mobile.Extensions
             return page.IsNavigationPage()
                 ? page
                 : typeof(T).CreateInstance<T>(page);
+        }
+
+        /// <summary>
+        /// Releases the page instance via its associated view model.
+        /// </summary>
+        /// <param name="pageService">page service</param>
+        /// <param name="viewModel">view model associated with the page</param>
+        internal static void ReleasePage(this IPageService pageService, BaseViewModel viewModel)
+        {
+            ((MobileService)pageService).ReleasePage(viewModel);
         }
 
         /// <summary>

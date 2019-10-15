@@ -20,17 +20,5 @@ namespace CafeLib.Mobile.Services
         /// </summary>
         /// <returns>page instance that corresponds to the view model</returns>
         Page ResolvePage(BaseViewModel viewModel);
-
-        /// <summary>
-        /// Releases the page from the associated view model type.
-        /// </summary>
-        /// <typeparam name="TViewModel">view model type</typeparam>
-        void ReleasePage<TViewModel>() where TViewModel : BaseViewModel;
-
-        /// <summary>
-        /// Releases the page from the associated view model type.
-        /// </summary>
-        /// <returns>page instance that corresponds to the view model</returns>
-        void ReleasePage(BaseViewModel viewModel);
     }
 }

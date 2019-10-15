@@ -74,25 +74,6 @@ namespace CafeLib.Mobile.Services
         }
 
         /// <summary>
-        /// Releases the page from the associated view model type.
-        /// </summary>
-        /// <typeparam name="TViewModel">view model type</typeparam>
-        public void ReleasePage<TViewModel>() where TViewModel : BaseViewModel
-        {
-            ReleasePage(typeof(TViewModel));
-        }
-
-        /// <summary>
-        /// Resolve the page associated to the view model.
-        /// </summary>
-        /// <param name="viewModel">view model</param>
-        /// <returns>page instance that corresponds to the view model type</returns>
-        public void ReleasePage(BaseViewModel viewModel)
-        {
-            ReleasePage(viewModel.GetType());
-        }
-
-        /// <summary>
         /// Display an alert dialog.
         /// </summary>
         /// <param name="title">dialog title</param>
@@ -355,9 +336,19 @@ namespace CafeLib.Mobile.Services
         }
 
         /// <summary>
-        /// 
+        /// Resolve the page associated to the view model.
         /// </summary>
-        /// <param name="viewModelType"></param>
+        /// <param name="viewModel">view model</param>
+        /// <returns>page instance that corresponds to the view model type</returns>
+        internal void ReleasePage(BaseViewModel viewModel)
+        {
+            ReleasePage(viewModel.GetType());
+        }
+
+        /// <summary>
+        /// Resolve the page associated to the view model.
+        /// </summary>
+        /// <param name="viewModelType">view model type</param>
         private void ReleasePage(Type viewModelType)
         {
             var page = ResolvePage(viewModelType);

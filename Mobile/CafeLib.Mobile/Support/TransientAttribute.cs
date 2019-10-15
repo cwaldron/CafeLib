@@ -9,7 +9,7 @@ namespace CafeLib.Mobile.Support
         public bool IsTransient { get; }
 
         /// <summary>
-        /// Page resolver constructor
+        /// Attributed use to indicate type is transient.
         /// </summary>
         public TransientAttribute(bool transient = true)
         {
