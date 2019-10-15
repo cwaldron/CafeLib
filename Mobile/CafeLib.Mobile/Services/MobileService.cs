@@ -64,13 +64,32 @@ namespace CafeLib.Mobile.Services
         }
 
         /// <summary>
-        /// Resolve viewmodel type to is associated view.
+        /// Resolve the page associated to the view model.
         /// </summary>
         /// <param name="viewModel">view model</param>
         /// <returns>page instance that corresponds to the view model type</returns>
         public Page ResolvePage(BaseViewModel viewModel)
         {
             return ResolvePage(viewModel.GetType());
+        }
+
+        /// <summary>
+        /// Releases the page from the associated view model type.
+        /// </summary>
+        /// <typeparam name="TViewModel">view model type</typeparam>
+        public void ReleasePage<TViewModel>() where TViewModel : BaseViewModel
+        {
+            ReleasePage(typeof(TViewModel));
+        }
+
+        /// <summary>
+        /// Resolve the page associated to the view model.
+        /// </summary>
+        /// <param name="viewModel">view model</param>
+        /// <returns>page instance that corresponds to the view model type</returns>
+        public void ReleasePage(BaseViewModel viewModel)
+        {
+            ReleasePage(viewModel.GetType());
         }
 
         /// <summary>
@@ -336,6 +355,19 @@ namespace CafeLib.Mobile.Services
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="viewModelType"></param>
+        private void ReleasePage(Type viewModelType)
+        {
+            var page = ResolvePage(viewModelType);
+            var attr = page?.GetType().GetCustomAttribute<TransientAttribute>();
+            if (attr == null || !attr.IsTransient) return;
+            var resolver = GetPageResolver(viewModelType);
+            resolver?.Release();
+        }
+
+        /// <summary>
         /// Resolves page associated with the viewmodel.
         /// </summary>
         /// <param name="viewModelType">view model type</param>
@@ -374,12 +406,18 @@ namespace CafeLib.Mobile.Services
         /// <returns></returns>
         private Page GetPageFromResolver(Type viewModelType)
         {
-            // Leave if no page resolver exist for this view model type.
-            if (!_pageResolvers.ContainsKey(viewModelType)) return default;
+            var resolver = GetPageResolver(viewModelType);
+            return (Page)resolver?.Resolve();
+        }
 
-            // Resolve the page.
-            var pageResolver = _pageResolvers[viewModelType];
-            return (Page)pageResolver.Resolve();
+        /// <summary>
+        /// Obtain the page resolver associated with the view model type.
+        /// </summary>
+        /// <param name="viewModelType">view model type</param>
+        /// <returns></returns>
+        private PageResolver GetPageResolver(Type viewModelType)
+        {
+            return _pageResolvers.ContainsKey(viewModelType) ? _pageResolvers[viewModelType] : default;
         }
     }
 }

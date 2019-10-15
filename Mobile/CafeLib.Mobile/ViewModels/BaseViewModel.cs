@@ -426,6 +426,14 @@ namespace CafeLib.Mobile.ViewModels
         {
             return Application.Current.OptionsDialog(title, cancel, destroy, options);
         }
+
+        /// <summary>
+        /// Releases the page from the associated view model type.
+        /// </summary>
+        internal void ReleasePage()
+        {
+            PageService.ReleasePage(this);
+        }
     }
 
     /// <summary>

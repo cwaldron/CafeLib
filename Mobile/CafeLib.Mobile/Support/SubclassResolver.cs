@@ -30,5 +30,13 @@ namespace CafeLib.Mobile.Support
         {
             return _resolveInstance ?? (_resolveInstance = (T)Activator.CreateInstance(_resolveType));
         }
+
+        /// <summary>
+        /// Release the resolved instance.
+        /// </summary>
+        public void Release()
+        {
+            _resolveInstance = default;
+        }
     }
 }

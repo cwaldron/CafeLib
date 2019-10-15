@@ -33,6 +33,8 @@ namespace CafeLib.Mobile.Extensions
                 {
                     await nav.PopModalAsync(animate);
                 }
+
+                viewModel.ReleasePage();
             });
         }
 
