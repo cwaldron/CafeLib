@@ -6,37 +6,38 @@ namespace CafeLib.Mobile.Collections
 {
     public class ObservableQueue<T> : ObservableCollection<T>
     {
-        public ObservableQueue(int limit = -1)
+        public uint Limit { get; }
+
+        /// <summary>
+        /// ObservableQueue constructor.
+        /// </summary>
+        /// <param name="limit">queue size limit.</param>
+        public ObservableQueue(uint limit = uint.MaxValue)
         {
-            Limit = limit > 0 ? limit : int.MaxValue;
+            Limit = limit;
         }
 
-        public int Limit { get; set; }
-
-        public ObservableQueue(IEnumerable<T> collection, int limit = -1)
+        /// <summary>
+        /// ObservableQueue constructor.
+        /// </summary>
+        /// <param name="collection">collection of items</param>
+        /// <param name="limit">queue size limit.</param>
+        public ObservableQueue(IEnumerable<T> collection, uint limit = uint.MaxValue)
             : this(limit)
         {
             foreach (var item in collection)
-                Add(item);
-        }
-
-        public ObservableQueue(List<T> list, int limit = -1)
-            : this(limit)
-        {
-            foreach (var item in list)
-                Add(item);
-        }
-
-        public ObservableQueue(ObservableCollection<T> list, int limit = -1)
-            : this(limit)
-        {
-            foreach (var item in list)
+            {
                 if (Count < limit)
                 {
                     Add(item);
                 }
+            }
         }
 
+        /// <summary>
+        /// Remove an item from the queue.
+        /// </summary>
+        /// <returns>item</returns>
         public virtual T Dequeue()
         {
             CheckReentrancy();
@@ -45,6 +46,10 @@ namespace CafeLib.Mobile.Collections
             return item;
         }
 
+        /// <summary>
+        /// Place an item onto the queue.
+        /// </summary>
+        /// <param name="item">item</param>
         public virtual void Enqueue(T item)
         {
             CheckReentrancy();
@@ -59,6 +64,11 @@ namespace CafeLib.Mobile.Collections
             Add(item);
         }
 
+        /// <summary>
+        /// Remove an item from the queue.
+        /// </summary>
+        /// <param name="item">item</param>
+        /// <returns></returns>
         protected bool TryDequeue(out T item)
         {
             CheckReentrancy();
