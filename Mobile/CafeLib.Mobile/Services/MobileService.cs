@@ -360,9 +360,7 @@ namespace CafeLib.Mobile.Services
         /// <param name="viewModelType">view model type</param>
         private void ReleasePage(Type viewModelType)
         {
-            var page = ResolvePage(viewModelType);
-            var attr = page?.GetType().GetCustomAttribute<TransientAttribute>();
-            if (attr == null || !attr.IsTransient) return;
+            if (ResolvePage(viewModelType)?.GetType().GetCustomAttribute<TransientAttribute>() == null) return;
             var resolver = GetPageResolver(viewModelType);
             resolver?.Release();
         }

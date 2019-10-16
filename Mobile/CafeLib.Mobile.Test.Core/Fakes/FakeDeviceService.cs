@@ -19,6 +19,12 @@ namespace CafeLib.Mobile.Test.Core.Fakes
             action();
         }
 
+        public void QueueOnMainThread(Action action)
+        {
+            Thread.Sleep(1000);
+            action();
+        }
+
         public void RunOnWorkerThread(Action action, CancellationToken cancellationToken = default)
         {
             Task.Run(action, cancellationToken);

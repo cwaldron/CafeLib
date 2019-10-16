@@ -1,4 +1,7 @@
-﻿using CafeLib.Core.IoC;
+﻿using System;
+using System.Reflection;
+using CafeLib.Core.IoC;
+using CafeLib.Mobile.Support;
 using CafeLib.Mobile.ViewModels;
 
 // ReSharper disable UnusedMember.Global
@@ -16,6 +19,8 @@ namespace CafeLib.Mobile.Extensions
         /// <returns>service registry</returns>
         public static IServiceRegistry AddViewModel<T>(this IServiceRegistry serviceRegistry, bool transient = false) where T : BaseViewModel
         {
+            var attr = typeof(T).GetTypeInfo().GetCustomAttribute<TransientAttribute>();
+            transient = attr != null || transient;
             return !transient ? serviceRegistry.AddViewModelSingleton<T>() : serviceRegistry.AddViewModelTransient<T>();
         }
 

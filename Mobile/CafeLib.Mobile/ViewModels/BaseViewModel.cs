@@ -292,7 +292,7 @@ namespace CafeLib.Mobile.ViewModels
         /// <param name="animate">transition animation flag</param>
         protected virtual void Close(bool animate = false)
         {
-            Close(new ViewModelCloseMessage(this));
+            Close(new ViewModelCloseMessage(this), animate);
         }
 
         /// <summary>
