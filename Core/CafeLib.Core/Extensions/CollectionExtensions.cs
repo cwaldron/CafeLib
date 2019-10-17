@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Dynamic;
 using System.Linq;
+using System.Threading.Tasks;
+
 // ReSharper disable UnusedMember.Global
 
 namespace CafeLib.Core.Extensions
@@ -63,6 +65,18 @@ namespace CafeLib.Core.Extensions
         {
             var index = 0;
             return enumerable.Select(item => eachFunc.Invoke(item, index++)).ToList();
+        }
+
+        /// <summary>
+        /// Asynchronous for each extension.
+        /// </summary>
+        /// <typeparam name="T">item type</typeparam>
+        /// <param name="enumerable">enumerable</param>
+        /// <param name="action">iterative action</param>
+        public static Task ForEachAsync<T>(this IEnumerable<T> enumerable, Action<T> action)
+        {
+            var tasks = enumerable.Select(x => new Task(() => action.Invoke(x))).ToArray();
+            return Task.WhenAll(tasks);
         }
 
         /// <summary>
