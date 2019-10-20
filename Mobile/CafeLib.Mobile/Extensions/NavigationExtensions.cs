@@ -41,32 +41,11 @@ namespace CafeLib.Mobile.Extensions
         /// <summary>
         /// Returns the page at the top of the navigation stack.
         /// </summary>
-        /// <param name="navigator">navigation object</param>
-        /// <returns>page at top of navigation stack</returns>
-        public static Page Peek(this INavigation navigator)
-        {
-            return navigator.NavigationStack.LastOrDefault();
-        }
-
-        /// <summary>
-        /// Returns the page at the top of the navigation stack.
-        /// </summary>
         /// <param name="service">navigation service</param>
         /// <returns>page at top of navigation service navigation page</returns>
         public static Page Peek(this INavigationService service)
         {
-            return service.Navigator.Navigation.Peek();
-        }
-
-        /// <summary>
-        /// Determine whether the viewmodel type is at the top of the current navigation stack
-        /// </summary>
-        /// <param name="service"></param>
-        /// <param name="viewModel">view model</param>
-        /// <returns>true if view model is at the top of current navigation stack; false otherwise</returns>
-        public static bool IsTop(this INavigationService service, BaseViewModel viewModel)
-        {
-            return service.Peek().BindingContext == viewModel;
+            return service.Navigator.CurrentPage;
         }
 
         /// <summary>

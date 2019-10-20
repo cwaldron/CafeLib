@@ -2,7 +2,6 @@
 using Android.Content;
 using Android.Support.V4.App;
 using CafeLib.Mobile.Android.Renderers;
-using CafeLib.Mobile.Extensions;
 using CafeLib.Mobile.Views;
 using Xamarin.Forms;
 using View = Android.Views.View;
@@ -37,7 +36,7 @@ namespace CafeLib.Mobile.Android.Renderers
         {
             var result = false;
 
-            if (Element?.Navigation.Peek() is ISoftNavigationPage page)
+            if (Element?.CurrentPage is ISoftNavigationPage page)
             {
                 result = page.OnSoftBackButtonPressed();
             }
