@@ -9,9 +9,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.2.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="2.2.0" />
-    <PackageReference Include="Xamarin.Forms" Version="4.2.0.778463" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="3.0.0" />
+    <PackageReference Include="Xamarin.Forms" Version="4.3.0.908675" />
   </ItemGroup>
 
   <ItemGroup>
@@ -23,6 +23,9 @@
     </Reference>
     <Reference Include="CafeLib.Core.IoC">
       <HintPath>..\..\Core\CafeLib.Core.IoC\bin\Debug\netstandard2.0\CafeLib.Core.IoC.dll</HintPath>
+    </Reference>
+    <Reference Include="CafeLib.Core.Logging">
+      <HintPath>..\..\Core\CafeLib.Core.Logging\bin\Debug\netstandard2.0\CafeLib.Core.Logging.dll</HintPath>
     </Reference>
   </ItemGroup>
 

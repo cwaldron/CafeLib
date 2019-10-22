@@ -1,6 +1,7 @@
 ﻿using System;
 using Android.Content;
 using Android.Support.V4.App;
+using Android.Support.V7.Widget;
 using CafeLib.Mobile.Android.Renderers;
 using CafeLib.Mobile.Views;
 using Xamarin.Forms;
@@ -30,6 +31,25 @@ namespace CafeLib.Mobile.Android.Renderers
                 // insights as it will just be noise.
                 System.Diagnostics.Debug.WriteLine($"Exception when disposing navigation page - {ex.Message}");
             }
+        }
+
+        protected override void OnAttachedToWindow()
+        {
+            base.OnAttachedToWindow();
+
+            Toolbar toolbar = null;
+
+            for (var ii = 0; ii < ChildCount; ++ii)
+            {
+                var child = GetChildAt(ii);
+                toolbar = child as Toolbar;
+                if (toolbar != null)
+                {
+                    break;
+                }
+            }
+
+            toolbar?.SetNavigationOnClickListener(this);
         }
 
         public new void OnClick(View v)

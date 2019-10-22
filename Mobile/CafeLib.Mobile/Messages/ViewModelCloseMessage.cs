@@ -23,4 +23,17 @@ namespace CafeLib.Mobile.Messages
             Parameter = parameter;
         }
     }
+
+    public class ViewModelCloseMessage<T> : ViewModelCloseMessage where T : BaseViewModel
+    {
+        public ViewModelCloseMessage(T sender)
+            : base(sender)
+        {
+        }
+
+        public ViewModelCloseMessage(T sender, object parameter) 
+            : base(sender, parameter)
+        {
+        }
+    }
 }
