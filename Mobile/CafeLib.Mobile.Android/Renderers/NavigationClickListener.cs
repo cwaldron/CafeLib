@@ -15,17 +15,12 @@ namespace CafeLib.Mobile.Android.Renderers
 
         public void OnClick(View v)
         {
-            var result = false;
-
-            if (_navigationPage?.CurrentPage is ISoftNavigationPage page)
+            if (_navigationPage.CurrentPage is ISoftNavigationPage page && page.OnSoftBackButtonPressed())
             {
-                result = page.OnSoftBackButtonPressed();
+                return;
             }
 
-            if (!result)
-            {
-                _navigationPage?.PopAsync();
-            }
+            _navigationPage?.PopAsync();
         }
     }
 }
