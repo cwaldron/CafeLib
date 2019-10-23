@@ -2,16 +2,18 @@
 using Android.Content;
 using Android.Support.V4.App;
 using Android.Support.V7.Widget;
-using CafeLib.Mobile.Android.Renderers;
 using CafeLib.Mobile.Views;
 using Xamarin.Forms;
+using Xamarin.Forms.Platform.Android;
+using Xamarin.Forms.Platform.Android.AppCompat;
+using NavigationPageRenderer = CafeLib.Mobile.Android.Renderers.NavigationPageRenderer;
 using View = Android.Views.View;
 
 [assembly: ExportRenderer(typeof(NavigationPage), typeof(NavigationPageRenderer))]
 
 namespace CafeLib.Mobile.Android.Renderers
 {
-    public class NavigationPageRenderer : Xamarin.Forms.Platform.Android.AppCompat.NavigationPageRenderer, View.IOnClickListener
+    public class NavigationPageRenderer : Xamarin.Forms.Platform.Android.AppCompat.NavigationPageRenderer
     {
         public NavigationPageRenderer(Context context)
             : base(context)
@@ -37,6 +39,40 @@ namespace CafeLib.Mobile.Android.Renderers
         {
             base.OnAttachedToWindow();
 
+            // See if the Element is really a master-detail page.
+            var page = FindMasterDetailPage();
+
+            var clickListener = page != null
+                ? new MasterDetailMenuClickListener(Element, Platform.GetRenderer(page) as MasterDetailPageRenderer)
+                : (IOnClickListener) new NavigationClickListener(Element);
+
+            var toolbar = FindToolbar();
+            toolbar?.SetNavigationOnClickListener(clickListener);
+        }
+
+        protected override void SetupPageTransition(FragmentTransaction transaction, bool isPush)
+        {
+            if (isPush)
+                transaction.SetCustomAnimations(global::Android.Resource.Animation.SlideInLeft, global::Android.Resource.Animation.SlideInLeft, 0, 0);
+            else
+                transaction.SetCustomAnimations(0, global::Android.Resource.Animation.SlideOutRight, 0, 0);
+        }
+
+        private Page FindMasterDetailPage()
+        {
+            for (var element = Element.Parent; element != null; element = element.Parent)
+            {
+                if (element is MasterDetailPage page)
+                {
+                    return page;
+                }
+            }
+
+            return null;
+        }
+
+        private Toolbar FindToolbar()
+        {
             Toolbar toolbar = null;
 
             for (var ii = 0; ii < ChildCount; ++ii)
@@ -49,30 +85,7 @@ namespace CafeLib.Mobile.Android.Renderers
                 }
             }
 
-            toolbar?.SetNavigationOnClickListener(this);
-        }
-
-        public new void OnClick(View v)
-        {
-            var result = false;
-
-            if (Element?.CurrentPage is ISoftNavigationPage page)
-            {
-                result = page.OnSoftBackButtonPressed();
-            }
-
-            if (!result)
-            {
-                Element?.PopAsync();
-            }
-        }
-
-        protected override void SetupPageTransition(FragmentTransaction transaction, bool isPush)
-        {
-            if (isPush)
-                transaction.SetCustomAnimations(global::Android.Resource.Animation.SlideInLeft, global::Android.Resource.Animation.SlideInLeft, 0, 0);
-            else
-                transaction.SetCustomAnimations(0, global::Android.Resource.Animation.SlideOutRight, 0, 0);
+            return toolbar;
         }
     }
 }
