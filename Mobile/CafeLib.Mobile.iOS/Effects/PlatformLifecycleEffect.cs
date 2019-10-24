@@ -33,6 +33,8 @@ namespace CafeLib.Mobile.iOS.Effects
 
         private void IsViewLoadedObserver(NSObservedChange nsObservedChange)
         {
+            if (nsObservedChange?.OldValue == null) return;
+
             if (!nsObservedChange.NewValue.Equals(NSNull.Null))
             {
                 _viewLifecycleEffect?.OnLoad(Element);
