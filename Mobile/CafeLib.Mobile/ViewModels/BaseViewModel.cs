@@ -49,12 +49,12 @@ namespace CafeLib.Mobile.ViewModels
             _onLoadSubscribers = new List<Guid>();
             Resolver = Application.Current.Resolve<IServiceResolver>();
             Lifecycle = LifecycleState.Initial;
-            AppearingCommand = new Command(() => { });
-            DisappearingCommand = new Command(() => { });
-            CloseCommand = new Command(() => Close());
+            AppearingCommand = new XamAsyncCommand(() => { });
+            DisappearingCommand = new XamAsyncCommand(() => { });
+            CloseCommand = new XamAsyncCommand(() => Close());
+            LoadCommand = new XamAsyncCommand(() => { });
+            UnloadCommand = new XamAsyncCommand(() => { });
             FocusCommand = new Command(() => { });
-            LoadCommand = new Command(() => { });
-            UnloadCommand = new Command(() => { });
             BackButtonPressed = new XamCommand<NavigationSource, bool>(x =>
             {
                 Close();
@@ -122,8 +122,8 @@ namespace CafeLib.Mobile.ViewModels
         /// <summary>
         /// Appearing command.
         /// </summary>
-        private ICommand _appearingCommand;
-        public ICommand AppearingCommand
+        private IXamAsyncCommand _appearingCommand;
+        public IXamAsyncCommand AppearingCommand
         {
             get => _appearingCommand;
             set
@@ -153,8 +153,8 @@ namespace CafeLib.Mobile.ViewModels
         /// <summary>
         /// Disappearing command.
         /// </summary>
-        private ICommand _disappearingCommand;
-        public ICommand DisappearingCommand
+        private IXamAsyncCommand _disappearingCommand;
+        public IXamAsyncCommand DisappearingCommand
         {
             get => _disappearingCommand;
             set
@@ -178,8 +178,8 @@ namespace CafeLib.Mobile.ViewModels
         /// <summary>
         /// Load command.
         /// </summary>
-        private ICommand _loadCommand;
-        public ICommand LoadCommand
+        private IXamAsyncCommand _loadCommand;
+        public IXamAsyncCommand LoadCommand
         {
             get => _loadCommand;
             set
@@ -205,8 +205,8 @@ namespace CafeLib.Mobile.ViewModels
         /// <summary>
         /// Load command.
         /// </summary>
-        private ICommand _unloadCommand;
-        public ICommand UnloadCommand
+        private IXamAsyncCommand _unloadCommand;
+        public IXamAsyncCommand UnloadCommand
         {
             get => _unloadCommand;
             set

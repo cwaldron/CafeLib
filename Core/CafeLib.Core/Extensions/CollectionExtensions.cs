@@ -75,7 +75,18 @@ namespace CafeLib.Core.Extensions
         /// <param name="action">iterative action</param>
         public static Task ForEachAsync<T>(this IEnumerable<T> enumerable, Action<T> action)
         {
-            var tasks = enumerable.Select(x => new Task(() => action.Invoke(x))).ToArray();
+            return enumerable.ForEachAsync(async x => { action.Invoke(x); await Task.CompletedTask; });
+        }
+
+        /// <summary>
+        /// Asynchronous for each extension.
+        /// </summary>
+        /// <typeparam name="T">item type</typeparam>
+        /// <param name="enumerable">enumerable</param>
+        /// <param name="task">iterative task</param>
+        public static Task ForEachAsync<T>(this IEnumerable<T> enumerable, Func<T, Task> task)
+        {
+            var tasks = enumerable.Select(task).ToArray();
             return Task.WhenAll(tasks);
         }
 

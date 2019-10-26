@@ -10,8 +10,8 @@ namespace CafeLib.Mobile.Commands
         {
         }
 
-        public BackButtonCommand(Action<NavigationSource> command, Action<NavigationSource> canExecute)
-            : base(p => { command(p); return true; }, p => { canExecute(p); return true; })
+        public BackButtonCommand(Action<NavigationSource> command, Func<NavigationSource, bool> canExecute)
+            : base(p => { command(p); return true; }, canExecute)
         {
         }
     }
