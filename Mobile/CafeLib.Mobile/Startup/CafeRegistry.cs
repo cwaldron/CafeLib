@@ -1,7 +1,7 @@
 ﻿using System;
 using CafeLib.Core.IoC;
+using CafeLib.Mobile.Extensions;
 using CafeLib.Mobile.Services;
-using Microsoft.Extensions.Logging;
 // ReSharper disable UnusedMember.Global
 
 namespace CafeLib.Mobile.Startup
@@ -18,22 +18,12 @@ namespace CafeLib.Mobile.Startup
             var mobileService = new Lazy<MobileService>(() => new MobileService(GetResolver()));
             _serviceRegistry = IocFactory.CreateRegistry()
                 .AddEventService()
-                .AddPropertyService()
+                .AddDictionaryService()
                 .AddSingleton(x => mobileService.Value as IServiceResolver)
                 .AddSingleton(x => mobileService.Value as IPageService)
                 .AddSingleton(x => mobileService.Value as INavigationService)
                 .AddSingleton(x => mobileService.Value as IDeviceService)
                 .AddSingleton(x => mobileService.Value as IAlertService);
-        }
-
-        /// <summary>
-        /// Logging service registration.
-        /// </summary>
-        /// <param name="configuration">configuration action</param>
-        /// <returns>service registry interface</returns>
-        public IServiceRegistry AddLogging(Action<ILoggingBuilder> configuration)
-        {
-            return _serviceRegistry.AddLogging(configuration);
         }
 
         /// <summary>
@@ -157,6 +147,16 @@ namespace CafeLib.Mobile.Startup
         public T Resolve<T>() where T : class
         {
             return GetResolver().Resolve<T>();
+        }
+
+        /// <summary>
+        /// Resolve a service.
+        /// </summary>
+        /// <param name="serviceType">service type</param>
+        /// <returns></returns>
+        public object GetService(Type serviceType)
+        {
+            return GetResolver().Resolve(serviceType);
         }
     }
 }

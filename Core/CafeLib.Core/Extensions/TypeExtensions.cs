@@ -36,6 +36,18 @@ namespace CafeLib.Core.Extensions
         }
 
         /// <summary>
+        /// Create instance of specified type.
+        /// </summary>
+        /// <param name="type">type object</param>
+        /// <param name="args">constructor arguments</param>
+        /// <returns>instance object</returns>
+        public static object CreateInstance(this Type type, params object[] args)
+        {
+            var activator = FindConstructor(type, args);
+            return activator?.Invoke(args);
+        }
+
+        /// <summary>
         /// Gets the default constructor.
         /// </summary>
         /// <param name="type"></param>
@@ -73,15 +85,24 @@ namespace CafeLib.Core.Extensions
         }
 
         /// <summary>
-        /// Default value comparison for value types.
+        /// Checks whether an object is equal to its default value.
         /// </summary>
-        /// <typeparam name="T">type</typeparam>
-        /// <param name="value">value</param>
-        /// <returns>true if equal value type default value otherwise false</returns>
-        public static bool IsDefault<T>(this T value) where T : struct
+        /// <param name="value">object value</param>
+        /// <returns>true if equal to default value otherwise false</returns>
+        public static bool IsDefault(this object value)
         {
-            var isDefault = value.Equals(default(T));
-            return isDefault;
+            return value == default || value.Equals(default);
+        }
+
+        /// <summary>
+        /// Checks whether an object is equal to default value of the type
+        /// </summary>
+        /// <param name="type">type</param>
+        /// <param name="value">object value</param>
+        /// <returns>true if equal to default value otherwise false</returns>
+        public static bool IsDefault(this Type type, object value)
+        {
+            return value == type.Default() || value.Equals(type.Default());
         }
 
         /// <summary>
@@ -97,6 +118,26 @@ namespace CafeLib.Core.Extensions
                 .Where(t => !t.IsAbstract)
                 .Where(t => t.DeclaredConstructors.Any(c => !c.IsStatic && c.IsPublic))
                 .Select(t => t);
+        }
+
+        /// <summary>
+        /// Get default value of type.
+        /// </summary>
+        /// <param name="type">type</param>
+        /// <returns>default value</returns>
+        public static object Default(this Type type)
+        {
+            return typeof(TypeExtensions).GetMethods().Single(x => x.Name == "Default" && x.IsGenericMethod).MakeGenericMethod(type).Invoke(null, null);
+        }
+
+        /// <summary>
+        /// Get default value of type.
+        /// </summary>
+        /// <typeparam name="T">type</typeparam>
+        /// <returns>default value</returns>
+        public static T Default<T>()
+        {
+            return default;
         }
 
         /// <summary>
@@ -149,14 +190,12 @@ namespace CafeLib.Core.Extensions
             return types.Where(x => x.Name.EndsWith(endsWith));
         }
 
-
         /// <summary>
         /// Convert object properties to an object map.
         /// </summary>
-        /// <param name="type">type</param>
         /// <param name="instance"></param>
         /// <returns>object map</returns>
-        public static IDictionary<string, object> ToObjectMap<T>(this Type type, T instance)
+        public static IDictionary<string, object> ToObjectMap<T>(this T instance)
         {
             var objectMap = new Dictionary<string, object>();
             if (instance != null)
@@ -185,6 +224,23 @@ namespace CafeLib.Core.Extensions
             var expressions = parameters.Select(p => (Expression) p).ToArray();
             var call = Expression.Call(Expression.Constant(instance), method, expressions);
             return Expression.Lambda(call, parameters).Compile();
+        }
+
+        /// <summary>
+        /// Seek the type class graph for search type
+        /// </summary>
+        /// <param name="type">initial type</param>
+        /// <param name="search">type to search for</param>
+        /// <returns>search type if found; otherwise null</returns>
+        public static Type Seek(this Type type, Type search)
+        {
+            for (var seek = type; seek != null; seek = seek.BaseType)
+            {
+                if (seek == search || seek.IsGenericType && seek.GetGenericTypeDefinition() == search)
+                    return seek;
+            }
+
+            return null;
         }
     }
 }

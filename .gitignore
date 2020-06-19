@@ -1,14 +1,14 @@
-#OS junk files
-[Tt]humbs.db
-*.DS_Store
 
-#Visual Studio files
-*.[Oo]bj
+#Ignore thumbnails created by Windows
+Thumbs.db
+#Ignore files built by Visual Studio
+*.obj
+*.exe
+*.pdb
 *.user
 *.aps
 *.pch
 *.vspscc
-*.vssscc
 *_i.c
 *_p.c
 *.ncb
@@ -16,31 +16,20 @@
 *.tlb
 *.tlh
 *.bak
-*.[Cc]ache
+*.cache
 *.ilk
 *.log
-*.lib
-*.sbr
-*.sdf
-*.pyc
-ipch/
-obj/
-.vs/
 [Bb]in
 [Dd]ebug*/
+*.lib
+*.sbr
+obj/
 [Rr]elease*/
-Ankh.NoLoad
-
-#Tooling
 _ReSharper*/
-*.resharper
 [Tt]est[Rr]esult*
-
-#Project files
-[Bb]uild/
-
-#Subversion files
-.svn
-
-# Office Temp Files
-~$*
+.vs/
+.idea/
+#Nuget packages folder
+packages/
+*.DotSettings
+Repo/

@@ -1,4 +1,5 @@
 ﻿using System;
+using CafeLib.Mobile.Support;
 using Xamarin.Forms;
 // ReSharper disable UnusedMember.Global
 
@@ -35,6 +36,7 @@ namespace CafeLib.Mobile.Commands
     public class XamCommand<T> : IXamCommand<T>
     {
         private readonly Command<T> _command;
+        private readonly ThreadSafeBool _isLocked = new ThreadSafeBool();
 
         /// <summary>
         /// XamCommand constructor.
@@ -62,7 +64,7 @@ namespace CafeLib.Mobile.Commands
         /// <returns><c>true</c> command can be executed; otherwise, <c>false</c>.</returns>
         public bool CanExecute(object parameter)
         {
-            return _command.CanExecute(parameter);
+            return !_isLocked && _command.CanExecute(parameter);
         }
 
         /// <summary>
@@ -90,12 +92,23 @@ namespace CafeLib.Mobile.Commands
             add => _command.CanExecuteChanged += value;
             remove => _command.CanExecuteChanged -= value;
         }
+
+        public void Lock()
+        {
+            _isLocked.Set(true);
+        }
+
+        public void Unlock()
+        {
+            _isLocked.Set(false);
+        }
     }
 
     public class XamCommand<TParameter, TResult> : IXamCommand<TParameter, TResult>
     {
         private readonly Func<TParameter, TResult> _command;
         private readonly Func<TParameter, bool> _canExecute;
+        private readonly ThreadSafeBool _isLocked = new ThreadSafeBool();
 
         /// <summary>
         /// XamCommand constructor.
@@ -130,7 +143,7 @@ namespace CafeLib.Mobile.Commands
             return result;
         }
 
-        public bool CanExecute(object parameter) => _canExecute((TParameter)parameter);
+        public bool CanExecute(object parameter) => !_isLocked && _canExecute((TParameter)parameter);
 
         public void Execute(object parameter)
         {
@@ -142,6 +155,16 @@ namespace CafeLib.Mobile.Commands
         public void ChangeCanExecute()
         {
             CanExecuteChanged?.Invoke(this, EventArgs.Empty);
+        }
+
+        public void Lock()
+        {
+            _isLocked.Set(true);
+        }
+
+        public void Unlock()
+        {
+            _isLocked.Set(false);
         }
     }
 }

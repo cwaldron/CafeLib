@@ -1,8 +1,11 @@
 ﻿using System;
 
+// ReSharper disable UnusedMemberInSuper.Global
+// ReSharper disable UnusedMember.Global
+
 namespace CafeLib.Core.IoC
 {
-    public interface IServiceResolver : IDisposable
+    public interface IServiceResolver : IServiceProvider, IDisposable
     {
         /// <summary>
         /// Resolve the specified service type.

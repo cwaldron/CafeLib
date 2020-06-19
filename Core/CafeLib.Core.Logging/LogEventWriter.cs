@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Globalization;
-using CafeLib.Core.Diagnostics;
 using CafeLib.Core.Extensions;
+using CafeLib.Core.Support;
 using Microsoft.Extensions.Logging;
 
 namespace CafeLib.Core.Logging
@@ -9,7 +9,7 @@ namespace CafeLib.Core.Logging
     /// <summary>
     /// Log event writer.
     /// </summary>
-    public class LogEventWriter : ILogEventWriter, ILogEventMessenger
+    public class LogEventWriter : ILogEventWriter, ILogEventReceiver
     {
         #region Priavate Variables
 

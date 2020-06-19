@@ -1,4 +1,6 @@
+using CafeLib.Core.Collections;
 using CafeLib.Core.IoC;
+using CafeLib.Core.UnitTests.Logging;
 using CafeLib.Core.UnitTests.Services;
 using Microsoft.Extensions.Logging;
 using Xunit;
@@ -12,7 +14,7 @@ namespace CafeLib.Core.UnitTests
         {
             IDisposableService disposableService;
             using (var resolver = IocFactory.CreateRegistry()
-                .AddLogging(builder => builder.AddConsole().AddDebug())
+                .AddSingleton<ILoggerFactory, TestLogFactory>()
                 .AddSingleton<IFooService, FooService>()
                 .AddSingleton<IBarService, BarService>()
                 .AddSingleton<IDisposableService, DisposableService>()
@@ -28,18 +30,38 @@ namespace CafeLib.Core.UnitTests
         }
 
         [Fact]
+        public void IocTestUsingResolutionType()
+        {
+            IDisposableService disposableService;
+            using (var resolver = IocFactory.CreateRegistry()
+                .AddSingleton<ILoggerFactory, TestLogFactory>()
+                .AddSingleton<IFooService, FooService>()
+                .AddSingleton<IBarService, BarService>()
+                .AddSingleton<IDisposableService, DisposableService>()
+                .GetResolver())
+            {
+                //do the actual work here
+                var bar = (IBarService)resolver.Resolve(typeof(IBarService));
+                bar.DoSomeRealWork();
+                disposableService = resolver.Resolve<IDisposableService>();
+            }
+
+            Assert.True(disposableService.IsDisposed);
+        }
+
+        [Fact]
         public void ServiceProviderTest()
         {
             var resolver = IocFactory.CreateRegistry()
-                .AddPropertyService()
+                .AddSingleton<IDictionaryService>(x => DictionaryService.Current)
                 .AddSingleton<ITestService>(x => new TestService())
                 .GetResolver();
 
-            var propertyService = resolver.Resolve<IPropertyService>();
+            var propertyService = resolver.Resolve<IDictionaryService>();
             Assert.NotNull(propertyService);
 
-            propertyService.SetProperty("name", "Kilroy");
-            Assert.Equal("Kilroy", propertyService.GetProperty<string>("name"));
+            propertyService.SetEntry("name", "Kilroy");
+            Assert.Equal("Kilroy", propertyService.GetEntry<string>("name"));
 
             var testService = resolver.Resolve<ITestService>();
             Assert.Equal("Kilroy is here!", testService.Test());

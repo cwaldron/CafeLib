@@ -40,14 +40,16 @@
     <Folder Include="Resources\" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Effects\PlatformLifecycleEffect.cs" />
-    <Compile Include="Runtime\Messaging.cs" />
+    <Compile Include="Renderers\CafeContentPageRenderer.cs" />
+    <Compile Include="Renderers\CafeContentViewRenderer.cs" />
+    <Compile Include="Toolkit.cs" />
     <Compile Include="Renderers\NavigationPageRenderer.cs" />
+    <Compile Include="Runtime\Messaging.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Xamarin.Forms">
-      <Version>4.3.0.908675</Version>
+      <Version>4.6.0.800</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>

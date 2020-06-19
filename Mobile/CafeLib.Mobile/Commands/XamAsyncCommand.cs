@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using CafeLib.Mobile.Support;
 
 // ReSharper disable UnusedMember.Global
 
@@ -11,7 +12,7 @@ namespace CafeLib.Mobile.Commands
     /// </summary>
     public class XamAsyncCommand : XamAsyncCommand<object>, IXamAsyncCommand
     {
-        private static readonly object Parameter = new object();
+        private static readonly object _parameter = new object();
 
         /// <summary>
         /// XamAsyncCommand constructor.
@@ -52,12 +53,12 @@ namespace CafeLib.Mobile.Commands
 
         public Task ExecuteAsync()
         {
-            return ExecuteAsync(Parameter);
+            return ExecuteAsync(_parameter);
         }
 
         public bool CanExecute()
         {
-            return CanExecute(Parameter);
+            return CanExecute(_parameter);
         }
     }
 
@@ -69,6 +70,7 @@ namespace CafeLib.Mobile.Commands
         private bool _isBusy;
         private readonly Func<T, Task> _action;
         private readonly Func<T, bool> _canExecute;
+        private readonly ThreadSafeBool _isLocked = new ThreadSafeBool();
 
         /// <summary>
         /// XamAsyncCommand constructor.
@@ -93,14 +95,14 @@ namespace CafeLib.Mobile.Commands
 
         bool ICommand.CanExecute(object parameter)
         {
-            return CanExecute((T) parameter);
+            return CanExecute((T)parameter);
         }
 
-        #pragma warning disable RECS0165 // Asynchronous methods should return a Task instead of void
+#pragma warning disable RECS0165 // Asynchronous methods should return a Task instead of void
         async void ICommand.Execute(object parameter)
-        #pragma warning restore RECS0165 // Asynchronous methods should return a Task instead of void
+#pragma warning restore RECS0165 // Asynchronous methods should return a Task instead of void
         {
-            await ExecuteAsync((T) parameter);
+            await ExecuteAsync((T)parameter);
         }
 
         public event EventHandler CanExecuteChanged;
@@ -128,9 +130,22 @@ namespace CafeLib.Mobile.Commands
             ChangeCanExecute();
         }
 
-        public bool CanExecute(T parameter)
+        public bool CanExecute(T parameter) => !_isLocked && !_isBusy && (_canExecute?.Invoke(parameter) ?? true);
+
+        /// <summary>
+        /// Locks the command to prevent execution.
+        /// </summary>
+        public void Lock()
         {
-            return !_isBusy && (_canExecute?.Invoke(parameter) ?? true);
+            _isLocked.Set(true);
+        }
+
+        /// <summary>
+        /// Unlocks the command to permit execution.
+        /// </summary>
+        public void Unlock()
+        {
+            _isLocked.Set(false);
         }
     }
 
@@ -143,6 +158,7 @@ namespace CafeLib.Mobile.Commands
     {
         private readonly Func<TParameter, Task<TResult>> _command;
         private readonly Func<TParameter, bool> _canExecute;
+        private readonly ThreadSafeBool _isLocked = new ThreadSafeBool();
 
         /// <summary>
         /// XamAsyncCommand constructor.
@@ -186,7 +202,7 @@ namespace CafeLib.Mobile.Commands
             return result;
         }
 
-        public bool CanExecute(object parameter) => _canExecute((TParameter)parameter);
+        public bool CanExecute(object parameter) => !_isLocked && _canExecute((TParameter)parameter);
 
         void ICommand.Execute(object parameter)
         {
@@ -203,6 +219,22 @@ namespace CafeLib.Mobile.Commands
         public void ChangeCanExecute()
         {
             CanExecuteChanged?.Invoke(this, EventArgs.Empty);
+        }
+
+        /// <summary>
+        /// Locks the command to prevent execution.
+        /// </summary>
+        public void Lock()
+        {
+            _isLocked.Set(true);
+        }
+
+        /// <summary>
+        /// Unlocks the command to permit execution.
+        /// </summary>
+        public void Unlock()
+        {
+            _isLocked.Set(false);
         }
     }
 }
