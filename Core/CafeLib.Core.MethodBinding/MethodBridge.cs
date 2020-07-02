@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using CafeLib.Core.Extensions;
+// ReSharper disable UnusedMember.Global
 
-namespace CafeLib.Core.Binding
+namespace CafeLib.Core.MethodBinding
 {
     public abstract class MethodBridge
     {
@@ -72,12 +73,12 @@ namespace CafeLib.Core.Binding
         private void Populate()
         {
 			foreach (var methodInfo in GetType().GetTypeInfo().DeclaredMethods)
-			{
-				foreach (var attribute in methodInfo.GetCustomAttributes(typeof(MethodExportAttribute), false))
-				{
-					var attr = (MethodExportAttribute) attribute;
-					MapBridgeEntry(attr.ExportName, methodInfo);
-				}
+            {
+                var attr = methodInfo.GetCustomAttribute<MethodExportAttribute>();
+                if (attr != null)
+                {
+                    MapBridgeEntry(attr.ExportName ?? methodInfo.Name, methodInfo);
+                }
 			}
         }
 

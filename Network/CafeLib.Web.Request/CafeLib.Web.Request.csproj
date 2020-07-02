@@ -2,20 +2,19 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
-    <Copyright></Copyright>
-    <Description>Provides producer-consumer support.</Description>
-    <PackageReleaseNotes></PackageReleaseNotes>
     <Version>0.7.5</Version>
+    <Description>HTTP client request library</Description>
+    <Copyright></Copyright>
+    <PackageReleaseNotes></PackageReleaseNotes>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageIconUrl></PackageIconUrl>
+    <AssemblyVersion>0.7.5.0</AssemblyVersion>
+    <FileVersion>0.7.5.0</FileVersion>
     <PackageIcon>cafelib.png</PackageIcon>
-    <Authors>Chris Solutions</Authors>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CafeLib.Core.Collections\CafeLib.Core.Collections.csproj" />
-    <ProjectReference Include="..\CafeLib.Core.Runnable\CafeLib.Core.Runnable.csproj" />
-    <ProjectReference Include="..\CafeLib.Core\CafeLib.Core.csproj" />
+    <PackageReference Include="CafeLib.Core" Version="0.7.5" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
   </ItemGroup>
 
   <ItemGroup>

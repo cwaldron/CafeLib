@@ -1,21 +1,21 @@
 ﻿using System;
-using System.Collections.Concurrent;
+using System.Collections;
+using System.Collections.Generic;
 using System.Threading;
-
 // ReSharper disable UnusedMember.Global
 
-namespace CafeLib.Core.Queueing
+namespace CafeLib.Core.Collections
 {
     /// <summary>
-    /// Core producer/consumer queue.
+    /// ReaderWriterQueue.
     /// </summary>
-    internal class QueueCore<T> : IDisposable
+    public class ReaderWriterPriorityQueue<T> : IPriorityQueue<T>, IDisposable
     {
         #region Private Members
 
         private SemaphoreSlim _producer;
         private SemaphoreSlim _consumer;
-        private ConcurrentQueue<T> _queue;
+        private PriorityQueue<T> _queue;
         private bool _disposed;
 
         #endregion
@@ -34,7 +34,7 @@ namespace CafeLib.Core.Queueing
         /// <summary>
         /// QueueCore constructor.
         /// </summary>
-        public QueueCore()
+        public ReaderWriterPriorityQueue()
         {
             Clear();
         }
@@ -42,7 +42,7 @@ namespace CafeLib.Core.Queueing
         /// <summary>
         /// QueueCore finalizer.
         /// </summary>
-        ~QueueCore()
+        ~ReaderWriterPriorityQueue()
         {
             Dispose(false);
         }
@@ -52,12 +52,34 @@ namespace CafeLib.Core.Queueing
         #region Methods
 
         /// <summary>
+        /// Clears the queue.
+        /// </summary>
+        public void Clear()
+        {
+            Dispose(true);
+            _producer = new SemaphoreSlim(0, int.MaxValue);
+            _consumer = new SemaphoreSlim(int.MaxValue, int.MaxValue);
+            _queue = new PriorityQueue<T>();
+        }
+
+        /// <summary>
         /// Enqueue a request context and release the semaphore that
         /// a thread is waiting on.
         /// </summary>
         public void Enqueue(T item)
         {
-            _queue.Enqueue(item);
+            Enqueue(item, 0);
+        }
+
+        /// <summary>
+        /// Enqueue a request context and release the semaphore that
+        /// a thread is waiting on.
+        /// </summary>
+        /// <param name="item"></param>
+        /// <param name="priority"></param>
+        public void Enqueue(T item, int priority)
+        {
+            _queue.Enqueue(item, priority);
             _consumer.Wait();
             _producer.Release();
         }
@@ -73,15 +95,26 @@ namespace CafeLib.Core.Queueing
             return item;
         }
 
-        /// <summary>
-        /// Clears the queue.
-        /// </summary>
-        public void Clear()
+        public bool TryDequeue(out T result)
         {
-            Dispose(true);
-            _producer = new SemaphoreSlim(0, int.MaxValue);
-            _consumer = new SemaphoreSlim(int.MaxValue, int.MaxValue);
-            _queue = new ConcurrentQueue<T>();
+            _producer.Wait();
+            _consumer.Release();
+            return _queue.TryDequeue(out result);
+        }
+
+        public bool TryPeek(out T result)
+        {
+            return _queue.TryPeek(out result);
+        }
+
+        public IEnumerator<T> GetEnumerator()
+        {
+            return _queue.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
         }
 
         #endregion
