@@ -336,7 +336,7 @@ namespace CafeLib.Data.Sources.Sqlite
         /// <param name="token">Cancellation token</param>
         public async Task<int> UpsertAsync<TEntity>(IConnectionInfo connectionInfo, IEnumerable<TEntity> data, Expression<Func<TEntity, object>>[] expressions, CancellationToken token = default) where TEntity : class, IEntity
         {
-            return await SqlCommandProvider.UpsertAsync(connectionInfo, data, expressions, token);
+            return await SqlCommandProvider.UpsertAsync(connectionInfo, data, expressions, token).ConfigureAwait(false);
         }
     }
 }
