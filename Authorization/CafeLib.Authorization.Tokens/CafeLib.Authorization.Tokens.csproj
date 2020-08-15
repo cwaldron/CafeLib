@@ -4,14 +4,13 @@
     <TargetFramework>netstandard2.1</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Version>0.8.0</Version>
-    <Description>Provides useful collections and collection services.</Description>
+    <Description>Authorization token support.</Description>
     <PackageIcon>cafelib.png</PackageIcon>
-    <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CafeLib.Core.Dynamic\CafeLib.Core.Dynamic.csproj" />
-    <ProjectReference Include="..\CafeLib.Core\CafeLib.Core.csproj" />
+    <PackageReference Include="CafeLib.Core" Version="0.8.0" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.7.1" />
   </ItemGroup>
 
   <ItemGroup>
