@@ -32,6 +32,23 @@ namespace CafeLib.Authorization.Tokens
             _tokenString = tokenString;
         }
 
+        /// <summary>
+        /// Validate token with secret.
+        /// </summary>
+        /// <param name="secret"></param>
+        /// <returns></returns>
+        public Token Validate(string secret)
+        {
+            return Validate(TokenBuilder.DefaultIssuer, TokenBuilder.DefaultAudience, secret);
+        }
+
+        /// <summary>
+        /// Validate token
+        /// </summary>
+        /// <param name="issuer">issuer</param>
+        /// <param name="audience">audience</param>
+        /// <param name="secret">secret</param>
+        /// <returns></returns>
         public Token Validate(string issuer, string audience, string secret)
         {
             _token = GetTokenFromString(ToString(), issuer, audience, secret);
@@ -39,6 +56,44 @@ namespace CafeLib.Authorization.Tokens
             return this;
         }
 
+        /// <summary>
+        /// Validate token with secret.
+        /// </summary>
+        /// <param name="secret"></param>
+        /// <param name="response"></param>
+        /// <returns></returns>
+        public bool TryValidate(string secret, out TokenResponse response)
+        {
+            return TryValidate(TokenBuilder.DefaultIssuer, TokenBuilder.DefaultAudience, secret, out response);
+        }
+
+        /// <summary>
+        /// Validate token
+        /// </summary>
+        /// <param name="issuer">issuer</param>
+        /// <param name="audience">audience</param>
+        /// <param name="secret">secret</param>
+        /// <param name="response"></param>
+        /// <returns></returns>
+        public bool TryValidate(string issuer, string audience, string secret, out TokenResponse response)
+        {
+            try
+            {
+                var token = Validate(issuer, audience, secret);
+                response = new TokenResponse { Token = token };
+                return true;
+            }
+            catch (Exception ex)
+            {
+                response = new TokenResponse { Exception = ex, Message = ex.Message };
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Convert token to token string.
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
             if (string.IsNullOrWhiteSpace(_tokenString))
@@ -73,7 +128,7 @@ namespace CafeLib.Authorization.Tokens
 
             var param = new TokenValidationParameters
             {
-                ClockSkew = TimeSpan.FromMinutes(1),
+                ClockSkew = TimeSpan.Zero,
                 ValidIssuer = issuer,
                 ValidAudience = audience,
                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret))
@@ -86,7 +141,7 @@ namespace CafeLib.Authorization.Tokens
         private static ClaimCollection GetClaims(SecurityToken token)
         {
             var jwt = (JwtSecurityToken)token;
-            return new ClaimCollection(jwt.Payload.ToDictionary(x => x.Key, x => x.Value.ToString()));
+            return new ClaimCollection(jwt.Claims.ToDictionary(x => x.Type, x => x.Value.ToString()));
         }
 
         #endregion
