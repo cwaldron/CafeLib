@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using CafeLib.Data.Mapping;
 
-namespace CafeLib.Authorization.Identity
+namespace CafeLib.Data.UnitTest.Identity
 {
     /// <summary>
     /// Represents a user in the identity system
