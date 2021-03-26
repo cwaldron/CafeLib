@@ -66,7 +66,7 @@ namespace CafeLib.Core.Extensions
                 var parameters = constructorInfo.GetParameters();
                 if (!parameters.Any()) return false;
                 var match = true;
-                parameters.ForEach((p, i) => match &= p.ParameterType.IsInstanceOfType(args[i]));
+                parameters.ForEach((p, i) => match &= i < args.Length ? p.ParameterType.IsInstanceOfType(args[i]) : p.HasDefaultValue);
                 return match;
             }
         }
@@ -155,6 +155,28 @@ namespace CafeLib.Core.Extensions
             {
                 return new List<TypeInfo>();
             }
+        }
+
+        /// <summary>
+        /// Get derive types.
+        /// </summary>
+        /// <param name="types">list of types</param>
+        /// <param name="baseType">base type</param>
+        /// <returns>enumerable list of derived types</returns>
+        public static IEnumerable<Type> Inherits(this IEnumerable<Type> types, Type baseType)
+        {
+            return types.Where(baseType.IsAssignableFrom);
+        }
+
+        /// <summary>
+        /// Get derived types
+        /// </summary>
+        /// <typeparam name="TBase">base type</typeparam>
+        /// <param name="types">list of types</param>
+        /// <returns>enumerable list of derived types</returns>
+        public static IEnumerable<Type> Inherits<TBase>(this IEnumerable<Type> types)
+        {
+            return types.Inherits(typeof(TBase));
         }
 
         /// <summary>

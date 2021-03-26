@@ -2,7 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using CafeLib.Core.Eventing;
-using CafeLib.Core.Support;
+// ReSharper disable UnusedMember.Global
 
 namespace CafeLib.Core.Runnable
 {
@@ -13,10 +13,46 @@ namespace CafeLib.Core.Runnable
     {
         #region Private Variables
 
-        private static readonly object _mutex = new object();
-        private int _delay;
-        private bool _disposed;
-        private CancellationTokenSource _cancellationSource;
+        private readonly AsyncLocal<int> _delay;
+        private readonly AsyncLocal<bool> _disposed;
+        private readonly AsyncLocal<CancellationTokenSource> _cancellationSource;
+        private readonly AsyncLocal<string> _name;
+
+        #endregion
+
+        #region Constructors
+
+        /// <summary>
+        /// RunnerBase default constructor.
+        /// </summary>
+        protected RunnerBase()
+        {
+            _delay = new AsyncLocal<int> { Value = 0 };
+            _disposed = new AsyncLocal<bool> { Value = false };
+            _cancellationSource = new AsyncLocal<CancellationTokenSource> { Value = null };
+            _name = new AsyncLocal<string> { Value = GetType().Name };
+        }
+
+        /// <summary>
+        /// ServiceRunnerBase constructor.
+        /// </summary>
+        /// <param name="delay">runner delay duration</param>
+        protected RunnerBase(int delay)
+            : this(null, delay)
+        {
+        }
+
+        /// <summary>
+        /// RunnerBase constructor.
+        /// </summary>
+        /// <param name="name">name of runner base</param>
+        /// <param name="delay">runner delay duration</param>
+        protected RunnerBase(string name, int delay)
+            : this()
+        {
+            Name = name;
+            Delay = delay;
+        }
 
         #endregion
 
@@ -29,47 +65,50 @@ namespace CafeLib.Core.Runnable
         #region Properties
 
         /// <summary>
+        /// Disposed flag.
+        /// </summary>
+        private bool Disposed
+        {
+            get => _disposed.Value;
+            set => _disposed.Value = value;
+        }
+
+        /// <summary>
+        /// CancellationSource
+        /// </summary>
+        private CancellationTokenSource CancellationSource
+        {
+            get => _cancellationSource.Value;
+            set => _cancellationSource.Value = value;
+        }
+
+        /// <summary>
+        /// Runner cancellation token.
+        /// </summary>
+        protected CancellationToken CancellationToken => CancellationSource.Token;
+
+        /// <summary>
         /// Runner name.
         /// </summary>
-        protected string Name { get; }
+        protected string Name
+        {
+            get => _name.Value;
+            set => _name.Value = !string.IsNullOrWhiteSpace(value) ? value : _name.Value;
+        }
 
         /// <summary>
         /// Runner delay duration in milliseconds.
         /// </summary>
         protected int Delay
         {
-            get => _delay;
-            set => _delay = value > 0 ? value : default;
+            get => _delay.Value;
+            set => _delay.Value = value > 0 ? value : 0;
         }
 
         /// <summary>
         /// Determines whether the service is running.
         /// </summary>
-        public bool IsRunning => _cancellationSource != null && !_cancellationSource.IsCancellationRequested;
-
-        #endregion
-
-        #region Constructors
-
-        /// <summary>
-        /// ServiceRunnerBase constructor.
-        /// </summary>
-        /// <param name="delay">runner delay duration</param>
-        protected RunnerBase(int delay)
-            : this((uint)delay)
-        {
-        }
-
-        /// <summary>
-        /// ServiceRunnerBase constructor.
-        /// </summary>
-        /// <param name="delay">runner delay duration</param>
-        protected RunnerBase(uint delay = default)
-        {
-            Name = GetType().Name;
-            _cancellationSource = null;
-            Delay = (int)delay;
-        }
+        public bool IsRunning => !_cancellationSource.Value?.IsCancellationRequested ?? false;
 
         #endregion
 
@@ -78,35 +117,31 @@ namespace CafeLib.Core.Runnable
         /// <summary>
         /// Start the service.
         /// </summary>
-        public virtual async Task Start()
+        /// <returns>start task</returns>
+        public virtual Task Start()
         {
             if (!IsRunning)
             {
-                lock (_mutex)
-                {
-                    _cancellationSource = new CancellationTokenSource();
-                    OnAdvise(new RunnerEventMessage(ErrorLevel.Ignore, $"{Name} started."));
-                    RunTask();
-                }
+                CancellationSource = new CancellationTokenSource();
+                OnAdvise(new RunnerEventMessage($"{Name} started."));
+                RunLoop();
             }
-            await Task.CompletedTask;
+
+            return Task.CompletedTask;
         }
 
         /// <summary>
         /// Stop the service.
         /// </summary>
-        public virtual async Task Stop()
+        public virtual Task Stop()
         {
             if (IsRunning)
             {
-                lock (_mutex)
-                {
-                    _cancellationSource.Cancel();
-                }
-                OnAdvise(new RunnerEventMessage(ErrorLevel.Ignore, $"{Name} stopped."));
+                CancellationSource.Cancel();
+                OnAdvise(new RunnerEventMessage($"{Name} stopped."));
             }
 
-            await Task.CompletedTask;
+            return Task.CompletedTask;
         }
 
         #endregion
@@ -117,50 +152,6 @@ namespace CafeLib.Core.Runnable
         /// Run the service.
         /// </summary>
         protected abstract Task Run();
-
-        /// <summary>
-        /// Run loop.
-        /// </summary>
-        /// <returns>awaitable task</returns>
-        protected async Task RunLoop()
-        {
-            while (IsRunning)
-            {
-                try
-                {
-                    await Run();
-                }
-                catch (Exception ex)
-                {
-                    OnAdvise(new RunnerEventMessage($"{Name} exception: {ex.Message} {ex.InnerException?.Message}"));
-                }
-
-                await Task.Delay(Delay, _cancellationSource.Token);
-            }
-        }
-
-        /// <summary>
-        /// Run the task in the background.
-        /// </summary>
-        protected void RunTask()
-        {
-            Task.Run(async () =>
-            {
-                try
-                {
-                    await RunLoop();
-                }
-                catch
-                {
-                    // ignore
-                }
-                finally
-                {
-                    ExitTask();
-                }
-
-            }, _cancellationSource.Token);
-        }
 
         /// <summary>
         /// Raise advise event.
@@ -176,15 +167,27 @@ namespace CafeLib.Core.Runnable
         #region Helpers
 
         /// <summary>
-        /// Exit the background task.
+        /// Run the loop in the background.
         /// </summary>
-        private void ExitTask()
+        private void RunLoop()
         {
-            lock (_mutex)
+            Task.Run(async () =>
             {
-                _cancellationSource?.Dispose();
-                _cancellationSource = null;
-            }
+                while (IsRunning)
+                {
+                    try
+                    {
+                        await Run();
+                    }
+                    catch (Exception ex)
+                    {
+                        OnAdvise(new RunnerEventMessage($"{Name} exception: {ex.Message} {ex.InnerException?.Message}"));
+                    }
+
+                    await Task.Delay(Delay, CancellationSource.Token);
+                }
+
+            }, CancellationSource.Token);
         }
 
         #endregion
@@ -196,8 +199,8 @@ namespace CafeLib.Core.Runnable
         /// </summary>
         public void Dispose()
         {
-            Dispose(!_disposed);
-            _disposed = true;
+            Dispose(!Disposed);
+            Disposed = true;
             GC.SuppressFinalize(this);
         }
 
@@ -210,16 +213,15 @@ namespace CafeLib.Core.Runnable
             if (!disposing) return;
             try
             {
-                _cancellationSource?.Dispose();
+                CancellationSource?.Dispose();
             }
             catch
             {
                 // ignore
             }
-            finally
-            {
-                _cancellationSource = null;
-            }
+
+            CancellationSource = null;
+            Delay = 0;
         }
 
         #endregion
