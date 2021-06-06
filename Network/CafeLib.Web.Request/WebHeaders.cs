@@ -78,7 +78,7 @@ namespace CafeLib.Web.Request
 
         public void Add(string key, string value)
         {
-            var items = (IList)Headers.GetOrAdd(key, x => new List<string>());
+            var items = (IList) Headers.GetOrAdd(key, x => new List<string>());
             items.Add(value);
         }
 

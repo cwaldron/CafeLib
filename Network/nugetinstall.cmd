@@ -1,17 +1,17 @@
 @echo off
 setlocal
 
-:: Library
-set lib=Network
+:: Type
+set type=Network
 
 :: Settings
-set msbld=msbuild.exe
-set nuget=nuget.exe
+set msbld=dotnet build
+set nuget=dotnet nuget
 set configuration=Debug
 set libPath=bin\%configuration%
 set apikey=
 set nugetRepo=C:\Nuget\repo
-set sourcepath=C:\Projects\ChrisSolutions\CafeLib\%lib%
+set sourcepath=.
 set version=
 
 :: Parse arguments
@@ -38,7 +38,7 @@ echo Create Nuget Package for %solution% ...
 for %%X in (%libs%) DO @echo on&&%msbld% %sourcepath%\%%X\%%X.csproj -t:pack -p:PackageVersion=%version% -p:Configuration=%configuration%&&@echo off
 
 echo Push Package to Nuget repository ...
-for %%X in (%libs%) DO @echo on&&%nuget% push %sourcepath%\%%X\%libPath%\%%X.%version%.nupkg %apikey% -source %nugetRepo%&&@echo off
+for %%X in (%libs%) DO @echo on&&%nuget% push %sourcepath%\%%X\%libPath%\%%X.%version%.nupkg %apikey% -s %nugetRepo%&&@echo off
 goto exit
 
 :usage

@@ -2,10 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-// ReSharper disable InvertIf
-// ReSharper disable SuggestVarOrType_SimpleTypes
-// ReSharper disable SuggestVarOrType_BuiltInTypes
-// ReSharper disable StaticMemberInGenericType
 
 namespace CafeLib.Core.Collections
 {
@@ -15,7 +11,6 @@ namespace CafeLib.Core.Collections
 
         private readonly List<T> _list;
         private readonly int _comparison;
-        private static readonly object _mutex = new object();
 
         #endregion
 
@@ -48,7 +43,7 @@ namespace CafeLib.Core.Collections
         {
             get
             {
-                lock (_mutex)
+                lock (HeapLock.Mutex)
                 {
                     return _list.Count - 1;
                 }
@@ -66,7 +61,7 @@ namespace CafeLib.Core.Collections
 
         public IEnumerator<T> GetEnumerator()
         {
-            lock (_mutex)
+            lock (HeapLock.Mutex)
             {
                 return _list.Skip(1).GetEnumerator();
             }
@@ -74,7 +69,7 @@ namespace CafeLib.Core.Collections
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            lock (_mutex)
+            lock (HeapLock.Mutex)
             {
                 return ((IEnumerable<T>)_list).GetEnumerator();
             }
@@ -87,7 +82,7 @@ namespace CafeLib.Core.Collections
         /// <param name="item">item to add to heap.</param>
         public void Add(T item)
         {
-            lock (_mutex)
+            lock (HeapLock.Mutex)
             {
                 int slot = _list.Count;
                 _list.Add(item);
@@ -108,7 +103,7 @@ namespace CafeLib.Core.Collections
         /// </summary>
         public void Clear()
         {
-            lock (_mutex)
+            lock (HeapLock.Mutex)
             {
                 _list.Clear();
                 _list.Add(default);
@@ -121,7 +116,7 @@ namespace CafeLib.Core.Collections
         /// <returns></returns>
         public T Peek()
         {
-            lock (_mutex)
+            lock (HeapLock.Mutex)
             {
                 if (Count > 0)
                 {
@@ -138,7 +133,7 @@ namespace CafeLib.Core.Collections
         /// <returns>value</returns>
         public T Remove()
         {
-            lock (_mutex)
+            lock (HeapLock.Mutex)
             {
                 if (Count == 0)
                     return default;

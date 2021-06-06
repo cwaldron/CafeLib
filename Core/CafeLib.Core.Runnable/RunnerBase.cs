@@ -102,7 +102,8 @@ namespace CafeLib.Core.Runnable
         /// <summary>
         /// Run the service.
         /// </summary>
-        protected abstract Task Run();
+        /// <param name="token"></param>
+        protected abstract Task Run(CancellationToken token);
 
         /// <summary>
         /// Raise advise event.
@@ -128,7 +129,7 @@ namespace CafeLib.Core.Runnable
                 {
                     try
                     {
-                        await Run().ConfigureAwait(false);
+                        await Run(_cancellationSource.Token).ConfigureAwait(false);
                     }
                     catch (Exception ex)
                     {
@@ -137,8 +138,7 @@ namespace CafeLib.Core.Runnable
 
                     await Task.Delay(Delay, _cancellationSource.Token).ConfigureAwait(false);
                 }
-
-            }, _cancellationSource.Token);
+            });
         }
 
         #endregion
@@ -165,14 +165,12 @@ namespace CafeLib.Core.Runnable
             try
             {
                 _cancellationSource?.Dispose();
+                _cancellationSource = null;
             }
             catch
             {
                 // ignore
             }
-
-            _cancellationSource = null;
-            _delay = 0;
         }
 
         #endregion
