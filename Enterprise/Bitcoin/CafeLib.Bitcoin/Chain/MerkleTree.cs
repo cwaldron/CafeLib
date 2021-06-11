@@ -23,12 +23,7 @@ namespace CafeLib.Bitcoin.Chain
     /// </summary>
     public class MerkleTree : IDisposable
     {
-        public static UInt256 ComputeMerkleRoot(IEnumerable<Transaction> txs)
-        {
-            using var mt = new MerkleTree();
-            mt.AddTransactions(txs);
-            return mt.GetMerkleRoot();
-        }
+        private bool _disposed;
 
         private long _count;
         private readonly List<MerkleTreeNode> _nodes = new List<MerkleTreeNode>();
@@ -45,65 +40,11 @@ namespace CafeLib.Bitcoin.Chain
                 AddTransaction(tx);
         }
 
-        /// <summary>
-        /// Update the incremental state by one additional transaction hash.
-        /// This creates at most one MerkleTreeNode per level of the tree.
-        /// These are reused as subtrees fill up.
-        /// </summary>
-        /// <param name="tx"></param>
-        void AddTransaction(Transaction tx)
+        public static UInt256 ComputeMerkleRoot(IEnumerable<Transaction> txs)
         {
-            _count++;
-            var newHash = tx.Hash;
-            if (_count == 1)
-            {
-                // First transaction.
-                _nodes.Add(new MerkleTreeNode(newHash, null));
-            } else
-            {
-                var n = _nodes[0];
-                if (n.HasBoth)
-                {
-                    // Reuse previously filled nodes.
-                    var n0 = n;
-                    while (n?.HasBoth == true)
-                    {
-                        n.RightOfParent = !n.RightOfParent;
-                        n.HasRight = false;
-                        n.HasLeft = false;
-                        n = n.Parent;
-                    }
-                    n0.SetLeftHash(newHash);
-                }
-                else
-                {
-                    // Complete leaf node, compute completed hashes and propagate upwards.
-                    n.SetRightHash(newHash);
-                    do
-                    {
-                        newHash = ComputeHash(n);
-                        var np = n.Parent;
-                        if (np == null)
-                        {
-                            _nodes.Add(new MerkleTreeNode(newHash, n));
-                            break;
-                        }
-                        if (n.IsLeftOfParent)
-                            np.SetLeftHash(newHash);
-                        else
-                            np.SetRightHash(newHash);
-                        n = np;
-                    } while (n.HasBoth);
-                }
-            }
-        }
-
-        private static UInt256 ComputeHash(MerkleTreeNode node)
-        {
-            // This ToArray call could be eliminated.
-            var h = new UInt256();
-            Hashes.Hash256(node.LeftRightHashes, h);
-            return h;
+            using var mt = new MerkleTree();
+            mt.AddTransactions(txs);
+            return mt.GetMerkleRoot();
         }
 
         /// <summary>
@@ -139,12 +80,12 @@ namespace CafeLib.Bitcoin.Chain
 
             UInt256 newHash;
 
-            do 
+            do
             {
                 if (!hasBoth)
                     node.LeftHash.Span.CopyTo(node.RightHash.Span);
 
-                newHash = ComputeHash(node);
+                newHash = node.ComputeHash();
                 var np = node.Parent;
                 if (np != null)
                 {
@@ -160,7 +101,7 @@ namespace CafeLib.Bitcoin.Chain
                     }
                 }
                 node = np;
-            } 
+            }
             while (node != null);
 
             return newHash;
@@ -171,41 +112,89 @@ namespace CafeLib.Bitcoin.Chain
             return ComputeHashMerkleRoot();
         }
 
-        #region IDisposable Support
+        #region IDisposable
 
-        private bool _disposedValue; // To detect redundant calls
+        /// <summary>
+        /// Dispose.
+        /// </summary>
+        public void Dispose()
+        {
+            Dispose(!_disposed);
+            _disposed = true;
+            GC.SuppressFinalize(this);
+        }
 
         protected virtual void Dispose(bool disposing)
         {
-            if (!_disposedValue)
+            if (!disposing) return;
+            try
             {
-                if (disposing)
-                {
-                    // TODO: dispose managed state (managed objects).
-                    _sha256.Dispose();
-                }
-
-                // TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.
-                // TODO: set large fields to null.
-
-                _disposedValue = true;
+                _sha256.Dispose();
+            }
+            catch
+            {
+                // ignore
             }
         }
 
-        // TODO: override a finalizer only if Dispose(bool disposing) above has code to free unmanaged resources.
-        // ~KzMerkleTree() {
-        //   // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
-        //   Dispose(false);
-        // }
+        #endregion
 
-        // This code added to correctly implement the disposable pattern.
-        public void Dispose()
+        #region Helpers
+
+        /// <summary>
+        /// Update the incremental state by one additional transaction hash.
+        /// This creates at most one MerkleTreeNode per level of the tree.
+        /// These are reused as subtrees fill up.
+        /// </summary>
+        /// <param name="tx"></param>
+        private void AddTransaction(Transaction tx)
         {
-            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
-            Dispose(true);
-            // TODO: uncomment the following line if the finalizer is overridden above.
-            // GC.SuppressFinalize(this);
+            _count++;
+            var newHash = tx.Hash;
+            if (_count == 1)
+            {
+                // First transaction.
+                _nodes.Add(new MerkleTreeNode(newHash, null));
+            } 
+            else
+            {
+                var n = _nodes[0];
+                if (n.HasBoth)
+                {
+                    // Reuse previously filled nodes.
+                    var n0 = n;
+                    while (n?.HasBoth == true)
+                    {
+                        n.RightOfParent = !n.RightOfParent;
+                        n.HasRight = false;
+                        n.HasLeft = false;
+                        n = n.Parent;
+                    }
+                    n0.SetLeftHash(newHash);
+                }
+                else
+                {
+                    // Complete leaf node, compute completed hashes and propagate upwards.
+                    n.SetRightHash(newHash);
+                    do
+                    {
+                        newHash = n.ComputeHash();
+                        var np = n.Parent;
+                        if (np == null)
+                        {
+                            _nodes.Add(new MerkleTreeNode(newHash, n));
+                            break;
+                        }
+                        if (n.IsLeftOfParent)
+                            np.SetLeftHash(newHash);
+                        else
+                            np.SetRightHash(newHash);
+                        n = np;
+                    } while (n.HasBoth);
+                }
+            }
         }
+
         #endregion
     }
 }

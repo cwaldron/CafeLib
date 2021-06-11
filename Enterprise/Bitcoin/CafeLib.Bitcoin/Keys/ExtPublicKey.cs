@@ -11,7 +11,6 @@ using CafeLib.Bitcoin.Extensions;
 
 namespace CafeLib.Bitcoin.Keys
 {
-
     public class ExtPublicKey : ExtKey
     {
         public PublicKey PublicKey { get; private set; }
@@ -38,23 +37,35 @@ namespace CafeLib.Bitcoin.Keys
         }
 
         /// <summary>
-        /// Computes the public key specified by a key path.
+        /// Derives a child hierarchical deterministic public key specified by a key path.
         /// At each derivation, there's a small chance the index specified will fail.
         /// If any generation fails, null is returned.
         /// </summary>
-        /// <param name="kp"></param>
+        /// <param name="keyPath">key path</param>
         /// <returns>null on derivation failure. Otherwise the derived private key.</returns>
-        public ExtPublicKey Derive(KeyPath kp) => DeriveBase(kp) as ExtPublicKey;
+        public ExtPublicKey Derive(KeyPath keyPath) => DeriveBase(keyPath) as ExtPublicKey;
 
+        /// <summary>
+        /// Derives a child hierarchical deterministic public key specified by a key path.
+        /// </summary>
+        /// <param name="path">key path</param>
+        /// <returns>extended public key</returns>
+        public ExtPublicKey Derive(string path) => DeriveBase(new KeyPath(path)) as ExtPublicKey;
+
+        /// <summary>
+        /// Derives a child hierarchical deterministic public key specified by a key path.
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
         public ExtPublicKey Derive(int index) => DeriveBase(index, false) as ExtPublicKey;
 
         /// <summary>
-        /// 
+        /// Derives a child hierarchical deterministic public key specified by a key path.
         /// </summary>
         /// <param name="index"></param>
         /// <param name="hardened"></param>
         /// <returns></returns>
-        public override ExtKey DeriveBase(int index, bool hardened)
+        protected override ExtKey DeriveBase(int index, bool hardened)
         {
             var cek = new ExtPublicKey 
             {
@@ -71,7 +82,6 @@ namespace CafeLib.Bitcoin.Keys
         public override void Encode(ByteSpan code)
         {
             code[0] = Depth;
-
             Fingerprint.AsSpan().CopyTo(code.Slice(1, 4));
             code[5] = (byte)((Child >> 24) & 0xFF);
             code[6] = (byte)((Child >> 16) & 0xFF);

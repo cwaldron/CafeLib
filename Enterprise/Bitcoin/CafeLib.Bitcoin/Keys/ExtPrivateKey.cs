@@ -6,6 +6,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using CafeLib.Bitcoin.Buffers;
 using CafeLib.Bitcoin.Crypto;
 using CafeLib.Bitcoin.Extensions;
@@ -37,18 +38,11 @@ namespace CafeLib.Bitcoin.Keys
             Child = 0;
             Fingerprint = 0;
 
-            if (PrivateKey == null || !PrivateKey.IsValid) goto fail;
+            if (PrivateKey == null || !PrivateKey.IsValid) return null;
 
             // Verify that all the required derivation paths yield valid keys.
             if (required == null) return this;
-            foreach (var r in required) 
-                if (Derive(r) == null) 
-                    goto fail;
-
-            return this;
-
-        fail:
-            return null;
+            return required.Any(r => Derive(r) == null) ? null : this;
         }
 
         /// <summary>
@@ -72,7 +66,7 @@ namespace CafeLib.Bitcoin.Keys
         /// <param name="required">if not null, each key path will be verified as valid on the generated key or returns null.</param>
         /// <param name="hmacKey">Default is current global Kz.MasterBip32Key which may default to "Bitcoin seed".</param>
         /// <returns>Returns this key unless required key paths aren't valid for generated key.</returns>
-        public ExtPrivateKey SetMasterBip32(ReadOnlyByteSpan hmacData, IEnumerable<KeyPath> required = null, string hmacKey = null)
+        public ExtPrivateKey SetMasterBip32(byte[] hmacData, IEnumerable<KeyPath> required = null, string hmacKey = null)
         {
             hmacKey ??= MasterBip32Key;
             var vout = Hashes.HmacSha512(hmacKey.Utf8NormalizedToBytes(), hmacData);
@@ -150,7 +144,7 @@ namespace CafeLib.Bitcoin.Keys
         /// <param name="required">if not null, each key path will be verified as valid on the generated key or returns null.</param>
         /// <param name="hmacKey">Default is current global Kz.MasterBip32Key which may default to "Bitcoin seed".</param>
         /// <returns>Returns new key unless required key paths aren't valid for specified key in which case null is returned.</returns>
-        public static ExtPrivateKey MasterBip32(ReadOnlyByteSpan hmacData, IEnumerable<KeyPath> required = null, string hmacKey = null)
+        public static ExtPrivateKey MasterBip32(byte[] hmacData, IEnumerable<KeyPath> required = null, string hmacKey = null)
             => new ExtPrivateKey().SetMasterBip32(hmacData, required, hmacKey);
 
         /// <summary>
@@ -192,10 +186,29 @@ namespace CafeLib.Bitcoin.Keys
         /// <param name="kp"></param>
         /// <returns>null on derivation failure. Otherwise the derived private key.</returns>
         public ExtPrivateKey Derive(KeyPath kp) => DeriveBase(kp) as ExtPrivateKey;
-        public ExtPrivateKey Derive(int index, bool hardened = false) => DeriveBase(index, hardened) as ExtPrivateKey;
-        public ExtPrivateKey Derive(uint indexWithHardened) => Derive((int)(indexWithHardened & ~HardenedBit), (indexWithHardened & HardenedBit) != 0);
 
-        public override ExtKey DeriveBase(int index, bool hardened)
+        /// <summary>
+        /// Derives a child hierarchical deterministic public key specified by a key path.
+        /// </summary>
+        /// <param name="path">key path</param>
+        /// <returns>extended public key</returns>
+        public ExtPrivateKey Derive(string path) => DeriveBase(new KeyPath(path)) as ExtPrivateKey;
+
+        /// <summary>
+        /// Derives a child hierarchical deterministic public key specified by a key path.
+        /// </summary>
+        /// <param name="index"></param>
+        /// <param name="hardened"></param>
+        /// <returns></returns>
+        public ExtPrivateKey Derive(int index, bool hardened = false) => DeriveBase(index, hardened) as ExtPrivateKey;
+
+        /// <summary>
+        /// Derives a child hierarchical deterministic public key specified by a key path.
+        /// </summary>
+        /// <param name="index"></param>
+        /// <param name="hardened"></param>
+        /// <returns></returns>
+        protected override ExtKey DeriveBase(int index, bool hardened)
         {
             Trace.Assert(index >= 0);
             var cek = new ExtPrivateKey {
@@ -218,11 +231,11 @@ namespace CafeLib.Bitcoin.Keys
             code[6] = (byte)((Child >> 16) & 0xFF);
             code[7] = (byte)((Child >> 8) & 0xFF);
             code[8] = (byte)(Child & 0xFF);
-            ChainCode.Span.CopyTo(code.Slice(9, 32));
+            ChainCode.Span.CopyTo(code.Slice(9, UInt256.Length));
             code[41] = 0;
             var key = PrivateKey.Bytes;
-            Debug.Assert(key.Length == 32);
-            key.CopyTo(code.Slice(42, 32));
+            Debug.Assert(key.Length == UInt256.Length);
+            key.CopyTo(code.Slice(42, UInt256.Length));
         }
 
         public void Decode(ReadOnlyByteSpan code)
@@ -230,8 +243,8 @@ namespace CafeLib.Bitcoin.Keys
             Depth = code[0];
             Fingerprint = BitConverter.ToInt32(code[1..5]);
             Child = (uint)code[5] << 24 | (uint)code[6] << 16 | (uint)code[7] << 8 | code[8];
-            ChainCode = new UInt256(code.Slice(9, 32));
-            PrivateKey.Set(code.Slice(42, 32));
+            ChainCode = new UInt256(code.Slice(9, UInt256.Length));
+            PrivateKey.Set(code.Slice(42, UInt256.Length));
         }
 
         public Base58ExtPrivateKey ToBase58() => new Base58ExtPrivateKey(this);

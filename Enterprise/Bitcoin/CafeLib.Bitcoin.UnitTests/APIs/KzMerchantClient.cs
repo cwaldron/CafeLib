@@ -60,7 +60,7 @@ namespace CafeLib.Bitcoin.UnitTests.APIs
             _baseUrl = baseUrl;
             _httpClient = new HttpClient();
             _httpClient.DefaultRequestHeaders.Accept.Clear();
-            _httpClient.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+            _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             _httpClient.DefaultRequestHeaders.Add("User-Agent", UserAgent);
             if (token != string.Empty)
                 _httpClient.DefaultRequestHeaders.Add("token", token);
@@ -76,7 +76,7 @@ namespace CafeLib.Bitcoin.UnitTests.APIs
         {
             var feeQuote = _lastFeeQuote;
 
-            if (feeQuote?.expiryTime > DateTime.UtcNow)
+            if (feeQuote?.ExpiryTime > DateTime.UtcNow)
                 return feeQuote;
 
             var url = $"{_baseUrl}/mapi/feeQuote";
@@ -87,9 +87,9 @@ namespace CafeLib.Bitcoin.UnitTests.APIs
 
             var verified = e.VerifySignature(ref _pubKey);
 
-            feeQuote = JsonConvert.DeserializeObject<FeeQuote>(e.payload);
+            feeQuote = JsonConvert.DeserializeObject<FeeQuote>(e.Payload);
 
-            if (!verified && feeQuote.minerId != null)
+            if (!verified && feeQuote.MinerId != null)
                 throw new InvalidOperationException("Miner did not verify.");
 
             _lastFeeQuote = feeQuote;
@@ -104,22 +104,30 @@ namespace CafeLib.Bitcoin.UnitTests.APIs
 
         public class FeeQuoteRate
         {
-            public int satoshis;
-            public int bytes;
+            [JsonProperty("satoshis")]
+            public int Satoshis { get; set; }
+
+            [JsonProperty("bytes")]
+            public int Bytes { get; set; }
 
             public Amount ComputeFee(long length)
             {
-                var fee = (length * satoshis) / bytes;
-                if (length > 0 && fee == 0 && satoshis != 0) fee = 1;
+                var fee = (length * Satoshis) / Bytes;
+                if (length > 0 && fee == 0 && Satoshis != 0) fee = 1;
                 return new Amount(fee);
             }
         }
 
         public class FeeQuoteType
         {
-            public string feeType;
-            public FeeQuoteRate miningFee;
-            public FeeQuoteRate relayFee;
+            [JsonProperty("feeType")]
+            public string FeeType { get; set; }
+
+            [JsonProperty("miningFee")]
+            public FeeQuoteRate MiningFee { get; set; }
+
+            [JsonProperty("RelayFee")]
+            public FeeQuoteRate RelayFee { get; set; }
         }
 
         public class FeeQuote
@@ -151,21 +159,36 @@ namespace CafeLib.Bitcoin.UnitTests.APIs
 }
 #endif
             #endregion
-            public string apiVersion;
-            public DateTime timestamp;
-            public DateTime expiryTime;
-            public string minerId;
-            public string currentHighestBlockHash;
-            public int currentHighestBlockHeight;
-            public string minerReputation;
-            public FeeQuoteType[] fees;
+            [JsonProperty("apiVersion")]
+            public string ApiVersion { get; set; }
 
-            public (FeeQuoteRate standard, FeeQuoteRate data) MiningRates => (fees?.SingleOrDefault(f => f.feeType == "standard")?.miningFee, fees?.SingleOrDefault(f => f.feeType == "data")?.miningFee);
+            [JsonProperty("timestamp")]
+            public DateTime Timestamp { get; set; }
 
-            public (FeeQuoteRate standard, FeeQuoteRate data) RelayRates => (fees?.SingleOrDefault(f => f.feeType == "standard")?.relayFee, fees?.SingleOrDefault(f => f.feeType == "data")?.relayFee);
+            [JsonProperty("expiryTime")]
+            public DateTime ExpiryTime { get; set; }
+
+            [JsonProperty("minerId")]
+            public string MinerId { get; set; }
+
+            [JsonProperty("currentHighestBlockHash")]
+            public string CurrentHighestBlockHash { get; set; }
+
+            [JsonProperty("currentHighestBlockHeight")]
+            public int CurrentHighestBlockHeight { get; set; }
+
+            [JsonProperty("minerReputation")]
+            public string MinerReputation { get; set; }
+
+            [JsonProperty("fees")]
+            public FeeQuoteType[] Fees { get; set; }
+
+            public (FeeQuoteRate standard, FeeQuoteRate data) MiningRates => (Fees?.SingleOrDefault(f => f.FeeType == "standard")?.MiningFee, Fees?.SingleOrDefault(f => f.FeeType == "data")?.MiningFee);
+
+            public (FeeQuoteRate standard, FeeQuoteRate data) RelayRates => (Fees?.SingleOrDefault(f => f.FeeType == "standard")?.RelayFee, Fees?.SingleOrDefault(f => f.FeeType == "data")?.RelayFee);
 
             /// <summary>
-            /// 
+            /// Compute Mining Fee.
             /// </summary>
             /// <param name="txLength">Serialized transaction size in bytes.</param>
             /// <param name="dataLength">Sum of output script bytes that begin with OP_FALSE OP_RETURN.</param>
@@ -197,12 +220,12 @@ namespace CafeLib.Bitcoin.UnitTests.APIs
 
             var verified = e.VerifySignature(ref _pubKey);
 
-            status = JsonConvert.DeserializeObject<TransactionStatus>(e.payload);
+            status = JsonConvert.DeserializeObject<TransactionStatus>(e.Payload);
 
             if (srl != null)
             {
                 srl.Verified = verified;
-                srl.Success = status?.returnResult == "success";
+                srl.Success = status?.ReturnResult == "success";
             }
 
             return status;
@@ -236,18 +259,35 @@ namespace CafeLib.Bitcoin.UnitTests.APIs
 }
 #endif
             #endregion
-            public string apiVersion;
-            public DateTime timestamp;
-            public string returnResult;
-            public string resultDescription;
-            public string blockHash;
-            public int? blockHeight;
-            public int confirmations;
-            public string minerId;
-            public int txSecondMempoolExpiry;
+            [JsonProperty("apiVersion")]
+            public string ApiVersion { get; set; }
+
+            [JsonProperty("timestamp")]
+            public DateTime Timestamp { get; set; }
+
+            [JsonProperty("returnResult")]
+            public string ReturnResult { get; set; }
+
+            [JsonProperty("resultDescription")]
+            public string ResultDescription { get; set; }
+
+            [JsonProperty("blockHash")]
+            public string BlockHash { get; set; }
+
+            [JsonProperty("blockHeight")]
+            public int? BlockHeight { get; set; }
+
+            [JsonProperty("confirmations")]
+            public int Confirmations { get; set; }
+
+            [JsonProperty("minerId")]
+            public string MinerId { get; set; }
+
+            [JsonProperty("txSecondMempoolExpiry")]
+            public int TxSecondMempoolExpiry { get; set; }
         }
 
-        async public Task<PostTransactionResponse> PostTransaction(byte[] txBytes, KzServiceRequestLog srl)
+        public async Task<PostTransactionResponse> PostTransaction(byte[] txBytes, KzServiceRequestLog srl)
         {
 
             var ptr = (PostTransactionResponse)null;
@@ -281,7 +321,7 @@ namespace CafeLib.Bitcoin.UnitTests.APIs
 
                 srl.Verified = e.VerifySignature(ref _pubKey);
 
-                ptr = JsonConvert.DeserializeObject<PostTransactionResponse>(e.payload);
+                ptr = JsonConvert.DeserializeObject<PostTransactionResponse>(e.Payload);
 
                 srl.Success = ptr?.returnResult == "success";
             }
@@ -291,8 +331,12 @@ namespace CafeLib.Bitcoin.UnitTests.APIs
 
         public class PostTransactionResponse
         {
-            public string apiVersion;
-            public DateTime timestamp;
+            [JsonProperty("apiVersion")]
+            public string ApiVersion { get; set; }
+
+            [JsonProperty("timestamp")]
+            public DateTime Timestamp { get; set; }
+
             public string txid;
             public string returnResult;
             public string resultDescription;
@@ -321,18 +365,27 @@ namespace CafeLib.Bitcoin.UnitTests.APIs
  }
 #endif
             #endregion
-            public string payload;
-            public string signature;
-            public string publicKey;
-            public string encoding;
-            public string mimetype;
+            [JsonProperty("payload")]
+            public string Payload { get; set; }
+
+            [JsonProperty("signature")]
+            public string Signature { get; set; }
+
+            [JsonProperty("publicKey")]
+            public string PublicKey { get; set; }
+
+            [JsonProperty("encoding")]
+            public string Encoding { get; set; }
+
+            [JsonProperty("mimetype")]
+            public string MimeType { get; set; }
 
             public bool VerifySignature(ref PublicKey pubKey)
             {
 
-                var verifyHash = Hashes.Sha256(payload.Utf8ToBytes());
-                var verifySignature = signature?.HexToBytes();
-                pubKey ??= new PublicKey(publicKey?.HexToBytes());
+                var verifyHash = Hashes.Sha256(Payload.Utf8ToBytes());
+                var verifySignature = Signature?.HexToBytes();
+                pubKey ??= new PublicKey(PublicKey?.HexToBytes());
                 var verified = pubKey?.Verify(verifyHash, verifySignature) ?? false;
 
                 return verified;
