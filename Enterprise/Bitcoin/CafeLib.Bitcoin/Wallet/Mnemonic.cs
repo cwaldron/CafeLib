@@ -66,8 +66,8 @@ namespace CafeLib.Bitcoin.Wallet
 		/// </summary>
 		/// <param name="entropy">Binary data to encode.</param>
 		/// <param name="language">Optional language key to select WordList from WordLists. Defaults to English.</param>
-		public static Mnemonic FromEntropy(Span<byte> entropy, Languages language = Languages.English) => new Mnemonic(entropy, language);
-		public static Mnemonic FromEntropy(Span<byte> entropy, string[] wordList, Languages language = Languages.Unknown) => new Mnemonic(entropy, wordList, language);
+		public static Mnemonic FromEntropy(byte[] entropy, Languages language = Languages.English) => new Mnemonic(entropy, language);
+		public static Mnemonic FromEntropy(byte[] entropy, string[] wordList, Languages language = Languages.Unknown) => new Mnemonic(entropy, wordList, language);
 
 		/// <summary>
 		/// Create a new KzMnemonic from given entropy encoded as base 6 string of digits. e.g. Die rolls.
@@ -110,7 +110,7 @@ namespace CafeLib.Bitcoin.Wallet
 
 			Language = language;
 			WordList = wordList;
-			Words = ConvertDataToWords(Entropy, WordList);
+			Words = ConvertEntropyToWords(Entropy, WordList);
 		}
 
 		/// <summary>
@@ -165,12 +165,12 @@ namespace CafeLib.Bitcoin.Wallet
 		/// <param name="entropy">Binary data to encode.</param>
 		/// <param name="wordList"></param>
 		/// <param name="language">Optional language key. Defaults to Unknown.</param>
-		public Mnemonic(ByteSpan entropy, string[] wordList, Languages language = Languages.Unknown)
+		public Mnemonic(IEnumerable<byte> entropy, string[] wordList, Languages language = Languages.Unknown)
 		{
 			Entropy = entropy.ToArray();
 			Language = language;
 			WordList = wordList;
-			Words = ConvertDataToWords(Entropy, WordList);
+			Words = ConvertEntropyToWords(Entropy, WordList);
 		}
 
 		/// <summary>
@@ -178,10 +178,10 @@ namespace CafeLib.Bitcoin.Wallet
 		/// </summary>
 		/// <param name="entropy">Binary data to encode.</param>
 		/// <param name="language">Optional language key to select WordList from WordLists. Defaults to English.</param>
-		public Mnemonic(ByteSpan entropy, Languages language = Languages.English)
+		public Mnemonic(IEnumerable<byte> entropy, Languages language = Languages.English)
 			: this(entropy, WordLists.GetWords(language), language) { }
 
-		private static string ConvertDataToWords(ByteSpan entropy, string[] wordList)
+		private static string ConvertEntropyToWords(ByteSpan entropy, string[] wordList)
 		{
 			var checksum = GetChecksum(entropy);
 			var bin = ConvertBytesToBinaryString(entropy) + checksum;
@@ -228,13 +228,23 @@ namespace CafeLib.Bitcoin.Wallet
 			return (Languages.Unknown, null);
 		}
 
+        /// <summary>
+        /// The checksum is a substring of the binary representation of the SHA256 hash of entropy.
+        /// For every four bytes of entropy, one additional bit of the hash is used.
+        /// </summary>
+        /// <param name="entropy"></param>
+        /// <returns></returns>
+        public static string GetChecksum(byte[] entropy) => GetChecksum(new ReadOnlySequence<byte>(entropy));
+
+        private static string GetChecksum(ByteSpan entropy) => GetChecksum(new ReadOnlySequence<byte>(entropy.ToArray()));
+
 		/// <summary>
 		/// The checksum is a substring of the binary representation of the SHA256 hash of entropy.
 		/// For every four bytes of entropy, one additional bit of the hash is used.
 		/// </summary>
 		/// <param name="entropy"></param>
 		/// <returns></returns>
-		public static string GetChecksum(ReadOnlyByteSequence entropy)
+		private static string GetChecksum(ReadOnlyByteSequence entropy)
 		{
 			var hash = entropy.Sha256();
 			var bits = (int)entropy.Length * 8;
@@ -251,16 +261,6 @@ namespace CafeLib.Bitcoin.Wallet
 
 			return sb.ToString();
 		}
-
-		/// <summary>
-		/// The checksum is a substring of the binary representation of the SHA256 hash of entropy.
-		/// For every four bytes of entropy, one additional bit of the hash is used.
-		/// </summary>
-		/// <param name="entropy"></param>
-		/// <returns></returns>
-		public static string GetChecksum(byte[] entropy) => GetChecksum(new ReadOnlySequence<byte>(entropy));
-
-		public static string GetChecksum(ByteSpan entropy) => GetChecksum(new ReadOnlySequence<byte>(entropy.ToArray()));
 
 		/// <summary>
 		/// Returns words converted into a binary string of "0" and "1" based on wordList.
